@@ -1,4 +1,4 @@
-=== Scénarios d’usage
+=== Scénario d’usage
 
 // Mettre ici le scénario d’usage que vous avez construit lors des séances
 // encadrées par les experts SES. Vous pouvez mettre un scénario amélioré
