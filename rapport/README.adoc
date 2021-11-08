@@ -1,5 +1,5 @@
-= Rapport d’avancement du groupe “x.y”
-PACT groupe xy (Les plus beaux)
+= Rapport d’avancement du groupe “5.2”
+
 ifdef::env-gitlab,env-browser[:outfilesuffix: .adoc]
 :doctype: book
 :stem: latexmath
@@ -12,60 +12,53 @@ ifdef::env-gitlab,env-browser[:outfilesuffix: .adoc]
 
 // Partie non numérotée
 :sectnums!:
-== « Nom du groupe »
+== PACT groupe 5.2 : Télékip52
 
 === Membres du groupe
 
-* Nom1
-* Nom2
-* Nom3
-* Nom4
-* Nom5
-* Nom6
+* Bohorquez Caro Maria
+* DARRE Victor
+* MENDIHARAT Titouan
+* KHAIR Mohamed
+* ROUX Nelson
+* WEBERT Nans
 
 === Tuteur
 
-* xx yy
+* LE FEUVRE Jean
 
 === Encadrant génie logiciel
 
-* xx yy
+* LINGUAGLOSSA Leonardo
 
 == Résumé du sujet choisi en français (PAN1)
 
-*_Note: 15 lignes max_*
+_N’en avez-vous pas marre de remplir incessamment les mêmes formulaires sur internet ? Et si on vous proposait une extension web qui les remplirait automatiquement ? Voilà notre concept : mettez vos informations personnelles (carte d’identité, justificatif de domicile….) dans une seule application puis laissez l’extension web remplir tous vos formulaires !_
 
-Décrire votre projet sans le scénariser : De quoi s’agit-il ? En quoi
-cette idée est compatible avec le thème de PACT ? Qu’est-ce qu’il
-permettrait de faire de façon générale.
+Voici le but de notre application : remplir automatiquement les formulaires. Notre idée part d'un constat simple : de plus en plus de démarches doivent être réalisées en ligne. Afin de les faciliter, nous avons pour projet de créer un outils qui englobe toutes vos informations sur un fichier (chiffré). Il sera ensuite utilisé pour remplir automatiquement les formulaires via une extension web !
 
 == English Summary (PAN1)
 
-*_Note : 15 lignes max, version anglaise du texte précédent_*
+_Are you tired of filling out the same forms over and over again on the internet? What if we offered you a web extension that would fill them in automatically? This is our concept: put your personal information (identity card, proof of address, etc.) in a single application then let the web extension fill in all your forms!_
 
-Ligula dapibus egestas. Donec sed velit ac lectus mattis sagittis.
+This is the purpose of our application: automatically fill out forms. Our idea starts from a statement : more and more procedures must be carried out online. In order to help with these steps, we plan on creating a tool which encompasses all your information in one (encrypted) file. It will then be used to automatically fill in the forms through a web extension!
 
-In hac habitasse platea dictumst. Maecenas in ligula. Duis tincidunt
-odio sollicitudin quam. Nullam non mauris. Phasellus lacinia, velit sit
-amet bibendum euismod, leo diam interdum ligula, eu scelerisque sem
-purus in tellus.
+// *Notes concenant le rapport*
 
-*Notes concenant le rapport*
+// Les différentes pages du document sont rédigées en utilisant le langage
+// AsciiDoc. Le squelette de rapport contient des exemples avec entre autres:
 
-Les différentes pages du document sont rédigées en utilisant le langage
-AsciiDoc. Le squelette de rapport contient des exemples avec entre autres:
+// * des images,
+// * des liens,
+// * des équations.
 
-* des images,
-* des liens,
-* des équations.
+// La structure du rapport (parties, sections et la relation avec les
+// différents fichiers) se trouve dans le fichier courant.
 
-La structure du rapport (parties, sections et la relation avec les
-différents fichiers) se trouve dans le fichier courant.
-
-**Prenez le temps** de supprimer le texte de remplissage et les sections non
-utilisées pour l'instant. Vous pouvez par exemple commenter ces parties non
-utilisées pour qu'elles n'apparaissent pas dans le document final. En Asciidoc,
-il suffit de les précéder de deux slashs (`//`).
+// **Prenez le temps** de supprimer le texte de remplissage et les sections non
+// utilisées pour l'instant. Vous pouvez par exemple commenter ces parties non
+// utilisées pour qu'elles n'apparaissent pas dans le document final. En Asciidoc,
+// il suffit de les précéder de deux slashs (`//`).
 
 // en PDF on ne peut pas controler la position de la toc
 // Macros non supportées
