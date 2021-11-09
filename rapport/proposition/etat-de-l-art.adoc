@@ -19,8 +19,8 @@ En comparaison à ceux-ci, ce qui nous différentie, est le fait de remplir les 
 
 ==== Extensions déjà existantes
 
-* Roboform: Garde, gère et auto rempli les identifiants et les mots de passe.
-* Formfiller
+* Roboform: Garde, gère et auto rempli les identifiants et les mots de passe. Bien qu'il ne remplisse pas des documents, il utilise un système similaire au notre pour remplir les cases. 
+* Formfiller: permet de modifier les PDF. C'est l'utilisateur qui les remplit, l'application permet uniquementde "défaire" le caractère immodifiable du PDF.
 * DocFly
 
 
