@@ -15,11 +15,14 @@ Il existe déjà des auto complétions par les navigateurs :
 * <<ChromeNative>>
 * <<FirefoxNative>>
 * <<EdgeNative>>
+En comparaison à ceux-ci, ce qui nous différentie, est le fait de remplir les cases où des documents sont demandés.
 
 ==== Extensions déjà existantes
 
-* Roboform
+* Roboform: Garde, gère et auto rempli les identifiants et les mots de passe.
 * Formfiller
+* DocFly
+
 
 // ==== Exemples de citations
 
