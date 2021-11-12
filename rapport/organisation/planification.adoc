@@ -8,24 +8,26 @@
 
 [cols=",^,^,,",options="header",]
 |====
-|Tâche |Qui |Quand |Fait |Remarques
-|sujet | | | |
-|sujet en anglais | | | |
-|scenario | | | |
-|architecture (schéma et documentation) | | | |
-|découpage en modules | | | |
-|planning temporel (ce document, personnalisé) | | | |
+|Tâche                                         |Qui              |Quand |Fait |Remarques
+|sujet                                         | Nans et Titouan |      |     |
+|sujet en anglais                              | Titouan         |      |     |
+|scenario                                      | Maria           |      |     |
+|architecture (schéma et documentation)        | Nans et Titouan |      |     |
+|découpage en modules                          | Maria           |      |     |
+|planning temporel (ce document, personnalisé) | Maria           |      |     |
 |====
 
 * présentation 15mn
 
 [cols=",^,^,,",options="header",]
 |====
-|Tâche |Qui |Quand |Fait |Remarques
-|préparation du document | | | |
-|répartition de la parole | | | |
-|répétition | | | |
+|Tâche                    |Qui    |Quand     |Fait  |Remarques
+|préparation du document  | Nans  |          |      |
+|répartition de la parole |       |          |      |
+|répétition               |       |          |      |
 |====
+
+//// 
 
 ==== Taches / PAN2 25/01/22
 
@@ -109,3 +111,5 @@
 |====
 
 * …
+
+////

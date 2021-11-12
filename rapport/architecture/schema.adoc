@@ -36,6 +36,8 @@ Ce bloc est le centre de notre projet. Il sera lui même séparé en deux partie
 
 * L'interface de l'application
 
+En savoir plus sur électron : <<Electron>>
+
 ====== Serveur Web
 
 Il s'agit d'un serveur web qui expose une API. Cette interface pourra lire, écrire, et modifier le fichier chiffré.
