@@ -13,6 +13,7 @@
 |sujet en anglais                              | Titouan         |      |     |
 |scenario                                      | Maria           |      |     |
 |architecture (schéma et documentation)        | Nans et Titouan |      |     |
+|story board                                   | Maria           |      |     |
 |découpage en modules                          | Maria           |      |     |
 |planning temporel (ce document, personnalisé) | Maria           |      |     |
 |====
