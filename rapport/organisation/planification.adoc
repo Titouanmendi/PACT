@@ -27,6 +27,31 @@
 |répétition               |       |          |      |
 |====
 
+
+* Répartition des modules
+
+[cols=",^,^,,",options="header",]
+|====
+|Tâche                    |analyse sémantique    |base de données     |mise en oeuvre interface web  |service web
+|Maria                    |                      |                    |                              |            
+|Victor                   |                      |          x         |                              |     x      
+|Mohamed                  |                      |                    |               x              |            
+|Titouan                  |           x          |          x         |                              |          
+|Nelson                   |                      |          x         |               x              |     x      
+|Nans                     |           x          |                    |                              |              
+|====
+
+[cols=",^,^,,",options="header",]
+|====
+|Tâche                    | communication client serveur |intégration et test | interface design (app) | usage et focus group
+|Maria                    |               x              |           x          |           x            |
+|Victor                   |                              |                      |           x            |
+|Mohamed                  |               x              |                      |                        |          x
+|Titouan                  |               x              |                      |                        |
+|Nelson                   |                              |                      |                        |
+|Nans                     |                              |           x          |                        |          x
+|====
+
 //// 
 
 ==== Taches / PAN2 25/01/22
