@@ -9,5 +9,5 @@
 _Manel a 19 ans, elle a quitté la maison familiale._
 
 Elle rentre donc dans la « vie adulte ». Elle a dû lancer ses démarches pour la CAF, faire les démarches pour trouver son appartement, renouveler sa carte d’identité… En les faisant, elle a remarqué que tous les sites des démarches administratives demandent plus ou moins les mêmes papiers, et c’est vraiment une perte de temps de devoir les retrouver, scanner, transmettre à l’ordinateur, les télécharger et ensuite de les mettre sur le site… A ce propos, Rémi lui parle de AutoForm. Une extension web qui pré-remplit les formulaires administratifs ! Il lui explique qu’elle est simple d’utilisation ; en effet il suffit d’y renseigner les documents et informations une fois et ensuite, comme par magie, le formulaire est pré-rempli !
-Manel a quelques réserves concernant la protection de ses données, mais Rémi lui explique qu’il y a deux façons de l’utiliser : soit elle garde tous ses documents dans drive, soit elle les met sur le serveur de notre solution.
-Une fois rassurée, elle installe l’extension ce qui simplifie grandement la création de son compte en banque !
+Manel a quelques réserves concernant la protection de ses données, mais Rémi lui explique qu'elle n'a pas de soucis à se faire, tous les documents ne seront gardés que en "local". Ainsi, seule elle aura accès à ses documents.
+Une fois rassurée, elle installe l’extension ainsi que l'application ce qui simplifie grandement la création de son compte en banque !

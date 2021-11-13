@@ -16,10 +16,10 @@ ifdef::env-gitlab,env-browser[:outfilesuffix: .adoc]
 
 === Membres du groupe
 
-* Bohorquez Caro Maria
+* BOHORQUEZ CARO Maria
 * DARRE Victor
-* MENDIHARAT Titouan
 * KHAIR Mohamed
+* MENDIHARAT Titouan
 * ROUX Nelson
 * WEBERT Nans
 
@@ -30,6 +30,10 @@ ifdef::env-gitlab,env-browser[:outfilesuffix: .adoc]
 === Encadrant génie logiciel
 
 * LINGUAGLOSSA Leonardo
+
+=== Encadrante interface et design
+
+* MORVAN Aliénor
 
 == Résumé du sujet choisi en français (PAN1)
 

@@ -15,13 +15,16 @@ Il existe déjà des auto complétions par les navigateurs :
 * <<ChromeNative>>
 * <<FirefoxNative>>
 * <<EdgeNative>>
-En comparaison à ceux-ci, ce qui nous différentie, est le fait de remplir les cases où des documents sont demandés.
+
+En comparaison à ceux-ci, ce qui nous différentie, est le fait de remplir les cases où des documents sont demandés. Ces autto complétions par les navigateurs sont capables de remplir les cases "nom de famille", "prénom", "mail", "adresse" et autres mais leur portée reste assez restreinte.
 
 ==== Extensions déjà existantes
 
 * Roboform: Garde, gère et auto rempli les identifiants et les mots de passe. Bien qu'il ne remplisse pas des documents, il utilise un système similaire au notre pour remplir les cases. 
-* Formfiller: permet de modifier les PDF. C'est l'utilisateur qui les remplit, l'application permet uniquementde "défaire" le caractère immodifiable du PDF.
-* DocFly
+
+* Formfiller et DocFly: permettent de modifier les PDF. C'est l'utilisateur qui les remplit, l'application permet uniquement de "défaire" le caractère immodifiable du PDF.
+
+ 
 
 
 // ==== Exemples de citations

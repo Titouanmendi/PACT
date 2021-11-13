@@ -6,21 +6,21 @@
 // besoins. Ajouter une image ou une figure pour montrer à quoi cela
 // ressemble si besoin._
 
-Notre projet s'appuie à la base sur un constat que nous avons remarqué : les démarches administratives sont très souvent voire tout le temps en ligne. Chaque membre de notre groupe en a pu faire l'expérience lors de notre entrée à Télécom ! Tout d'abord avec les démarches de Télécom, mais également des démarches pour nos logements respectifs !
+Notre projet s'appuie sur un constat que nous avons fait : les démarches administratives sont très souvent voire tout le temps en ligne. Chaque membre de notre groupe en a pu faire l'expérience lors de notre entrée à Télécom ! Tout d'abord avec les démarches de Télécom, mais également des démarches pour nos logements respectifs !
 
-Nous faisons donc beaucoup de démarches en ligne, et cela est parfois difficile. Nous voulons donc créer un outil qui puissent aider un maximum de personnes lors de démarches par internet.
+Nous faisons beaucoup de démarches en ligne, et cela est parfois long et difficile. Nous voulons donc créer un outil qui puisse aider un maximum de personnes lors de démarches par internet.
 
 Pour résoudre ce problème, nous avons tout d'abord pensé à une extension qui s'occuperait de tout faire en remplissant le formulaire, mais après quelques recherches, il pouvait y avoir certains problèmes au niveau des accès du fichier chiffré par l'extension.
 
-Pour résoudre ce problème, nous avons donc complété l'idée de notre extension par un "logiciel" qui sera créer avec le framework électron. Ainsi, cela devrait faciliter la réalisation de notre projet.
+Pour résoudre ce problème, nous avons donc complété l'idée de notre extension par un "logiciel" qui sera créé avec le framework électron. Cela devrait rendre notre projet plus faisable.
 
-Comme vous l'avez compris, un fichier chiffrés sera utilisé et sera sur l'ordinateur de l'utilisateur (comme ceci, il n'y a pas de problème de RGPD). Ce fichier sera accessible par l'extension en passant par l'application électron. 
+Comme vous l'avez compris, un fichier chiffré sera utilisé et sera sur l'ordinateur de l'utilisateur (comme ceci, il n'y a pas de problème de RGPD). Ce fichier sera accessible par l'extension en passant par l'application électron. 
 Ce fichier sera édité par l'application électron, et ainsi, l'utilisateur pourra remplir ses données via l'application avec une interface.
 
-L'extension sera intelligente et elle détectera les champs a remplir, puis elle demandera à l'application électron les informations. L'extension pourra donc remplir les champs.
+L'extension sera intelligente et elle détectera les champs à remplir, puis elle demandera à l'application électron les informations. L'extension pourra donc remplir les champs du formulaire et faciliter la tache à son utilisateur.
 
 
-Enfin, notre extension sera capable de signaler à l'utilisateur s'il y a une erreur (par exemple, un champ qui ne peut pas être rempli car l'utilisateur n'a pas d'nformations).
+Enfin, notre extension sera capable de signaler à l'utilisateur s'il y a une erreur (par exemple, un champ qui ne peut pas être rempli par manque d'information ou par conflit).
 
 Notre application s'appellera AutoForm et voici son logo :
 

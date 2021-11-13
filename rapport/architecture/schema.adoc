@@ -20,9 +20,9 @@ image::../images/architecture.jpg[un autre logo pact]
 
 ===== Utilisateur
 
-L'utilisateur aura deux comportement possible  :
+L'utilisateur aura deux comportements possible  :
 
-* Remplir ces informations dans notre application (voir bloc *Application "électron"*) via l'interface graphique de l'application
+* Remplir ses informations et documents personels sur notre application (voir bloc *Application "électron"*) via l'interface graphique de celle-ci
 
 * Se balader sur un site web pour remplir un formulaire
 
@@ -44,7 +44,7 @@ Il s'agit d'un serveur web qui expose une API. Cette interface pourra lire, écr
 
 ====== Interface de l'application électron
 
-L'interface sera codé en React Native. Voir le schema de l'interface pour plus de détails.
+L'interface sera codé en React Native. Voir le story board pour plus de détails.
 
 ---
 
@@ -62,19 +62,19 @@ Le bloc Page web représente une page web sur lequel l'utilisateur se balade et 
 
 ====== Extension
 
-L'extension sera présente sur le navigateur web. Elle analysera les pages web et si elle détecte un formulaire, elle préviendra l'utilisateur pour faire un remplissage. SI l'utilisateur accepte, l'extension enverra des requetes a notre serveur web pour récupérer des données.
+L'extension sera présente sur le navigateur web. Elle analysera les pages web et si elle détecte un formulaire, elle préviendra l'utilisateur pour faire un remplissage. Si l'utilisateur accepte, l'extension enverra des requetes à notre serveur web pour récupérer des données.
 
 ---
 
 ===== Stockage local
 
-Le bloc de stokage local représente seulement le systeme de fichier de l'odinateur. Notre application stockera les informations dans un "gros" fichier chiffré. Ce fichier sera sur l'ordinateur de l'utilisateur
+Le bloc de stokage local représente seulement le systeme de fichier de l'odinateur. Notre application stockera les informations dans un "gros" fichier chiffré. Ce fichier sera sur l'ordinateur de l'utilisateur.
 
 ---
 
-===== Explication général
+===== Explication générale
 
-* Flèches vertes : ces flèches montrent le remplissage des informations par l'utilisateur via l'interface graphique.
+* Flèches vertes : montrent le remplissage des informations par l'utilisateur via l'interface graphique
 
-* Flèches oranges : Ces flèches montrent comment l'extension web récupère les informations, elle fera des requetes au serveur web et le serveur web ira déchiffrer le fichier puis renvoyer les données.
+* Flèches oranges : montrent comment l'extension web récupère les informations, fait des requêtes au serveur web et le serveur web ira déchiffrer le fichier puis renvoyer les données
 
