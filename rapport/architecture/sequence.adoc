@@ -10,10 +10,10 @@ diagramme de séquence spécifique pour ce dialogue.
 
 ////
 
-Voici un exemple de scénario simple : la saisit de donnée par l'utilisateur :
+Voici un exemple de scénario simple : la saisie de données par l'utilisateur :
 
 * L'utilisateur rentre les infomations dans l'application via l'interface graphique.
 * L'application envoie les données au serveur web de l'application qui les récupère
-* Le serveur web chiffré les données et les insère dans le fichier chiffré
+* Le serveur web chiffre les données et les insère dans le fichier chiffré
 
 image::../images/sequence.png[Explication saisie]
