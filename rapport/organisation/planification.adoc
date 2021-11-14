@@ -8,14 +8,14 @@
 
 [cols=",^,^,,",options="header",]
 |====
-|Tâche                                         |Qui              |Quand |Fait |Remarques
-|sujet                                         | Nans et Titouan |      |     |
-|sujet en anglais                              | Titouan         |      |     |
-|scenario                                      | Maria           |      |     |
-|architecture (schéma et documentation)        | Nans et Titouan |      |     |
-|story board                                   | Maria           |      |     |
-|découpage en modules                          | Maria           |      |     |
-|planning temporel (ce document, personnalisé) | Maria           |      |     |
+|Tâche                                         |Qui              |Quand   |Fait |Remarques
+|sujet                                         | Nans et Titouan |01.10.21|   x |
+|sujet en anglais                              | Titouan         |08.11.21|   x |
+|scenario                                      | Maria           |01.10.21|   x |
+|architecture (schéma et documentation)        | Nans et Titouan |18.10.21|   x | à été refait plusieurs fois
+|story board                                   | Maria           |27.10.21|   x |
+|découpage en modules                          | Maria           |04.10.21|   x |
+|planning temporel (ce document, personnalisé) | Maria           |12.11.21|   x |
 |====
 
 * présentation 15mn
@@ -23,9 +23,9 @@
 [cols=",^,^,,",options="header",]
 |====
 |Tâche                    |Qui    |Quand     |Fait  |Remarques
-|préparation du document  | Nans  |          |      |
-|répartition de la parole |       |          |      |
-|répétition               |       |          |      |
+|préparation du document  |Nans   |13.11.21  |  X   |
+|répartition de la parole |Tous   |13.11.21  |  X   |
+|répétition               |Tous   |15.11.21  |      |
 |====
 
 

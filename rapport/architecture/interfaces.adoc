@@ -21,8 +21,8 @@ image::../images/architecture.jpg[Schema Architecture]
 
 ==== Interface Blocs 1-3
 
-L'interface sera comme une API REST, l'extension pourra demander des données aux formats textes ou directement des fichiers.
+L'interface sera comme une API REST, l'extension pourra demander des données en format texte ou directement des fichiers.
 
 ==== Interface Blocs 3-7
 
-Cette interface sera réalisé par le serveur web qui sera en NodeJS. Cette interface sera uniquement des lectures et écritures du fichiers. Les flèches oranges (et leur numérotation) expliquent les interactions entre les blocs.
+Cette interface sera réalisée par le serveur web qui sera en NodeJS. Elle ne servira qu'à des lectures et écritures du fichiers. Les flèches oranges (et leur numérotation) expliquent le sens des interactions entre les blocs.

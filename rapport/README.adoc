@@ -43,7 +43,7 @@ Voici le but de notre application : remplir automatiquement les formulaires. Not
 
 == English Summary (PAN1)
 
-_Are you tired of filling out the same forms over and over again on the internet? What if we offered you a web extension that would fill them in automatically? This is our concept: put your personal information (identity card, proof of address, etc.) in a single application then let the web extension fill in all your forms!_
+_Aren't you tired to fill out the same forms over and over again on the internet? What if we offered you a web extension that would fill them in automatically? This is our project: place your personal information (identity card, proof of address, etc.) in a single application then let the web extension fill in all your forms!_
 
 This is the purpose of our application: automatically fill out forms. Our idea starts from a statement : more and more procedures must be carried out online. In order to help with these steps, we plan on creating a tool which encompasses all your information in one (encrypted) file. It will then be used to automatically fill in the forms through a web extension!
 

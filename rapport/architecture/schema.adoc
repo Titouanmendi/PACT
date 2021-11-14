@@ -20,11 +20,11 @@ image::../images/architecture.jpg[un autre logo pact]
 
 ===== Utilisateur
 
-L'utilisateur aura deux comportements possible  :
+L'utilisateur aura deux comportements possibles :
 
-* Remplir ses informations et documents personels sur notre application (voir bloc *Application "électron"*) via l'interface graphique de celle-ci
+* Remplir ses informations et documents personels sur notre application (voir bloc *Application "électron"*) via l'interface graphique de celle-ci.
 
-* Se balader sur un site web pour remplir un formulaire
+* Utiliser un site web pour remplir un formulaire.
 
 ---
 
@@ -32,9 +32,9 @@ L'utilisateur aura deux comportements possible  :
 
 Ce bloc est le centre de notre projet. Il sera lui même séparé en deux parties : 
 
-* Le serveur web (voir bloc *Serveur Web*)
+* Le serveur web (voir bloc *Serveur Web*).
 
-* L'interface de l'application
+* L'interface de l'application.
 
 En savoir plus sur électron : <<Electron>>
 
@@ -50,31 +50,31 @@ L'interface sera codé en React Native. Voir le story board pour plus de détail
 
 ===== Navigateur
 
-Le bloc Navigateur représente deux sous bloc :
+La partie Navigateur se divise en deux sous-blocs :
 
-* la navigation sur une page web faite par l'utilisateur
+* la navigation sur une page web faite par l'utilisateur.
 
-* l'extension web qui sera sur le navigateur
+* l'extension web qui sera sur le navigateur.
 
 ====== Page web
 
-Le bloc Page web représente une page web sur lequel l'utilisateur se balade et rencontre un forumlaire.
+Le bloc Page web représente une page web sur lequel l'utilisateur se déplace et rencontre un formulaire.
 
 ====== Extension
 
-L'extension sera présente sur le navigateur web. Elle analysera les pages web et si elle détecte un formulaire, elle préviendra l'utilisateur pour faire un remplissage. Si l'utilisateur accepte, l'extension enverra des requetes à notre serveur web pour récupérer des données.
+L'extension sera présente sur le navigateur web. Elle analysera les pages web et si elle détecte un formulaire, elle préviendra l'utilisateur pour faire un remplissage. Si celui-ci accepte, elle enverra des requêtes à notre serveur web pour récupérer des données.
 
 ---
 
 ===== Stockage local
 
-Le bloc de stokage local représente seulement le systeme de fichier de l'odinateur. Notre application stockera les informations dans un "gros" fichier chiffré. Ce fichier sera sur l'ordinateur de l'utilisateur.
+Le bloc de stokage local représente seulement le systeme de fichier de l'ordinateur. Notre application stockera les informations dans un "gros" fichier chiffré qui sera sur l'ordinateur de l'utilisateur.
 
 ---
 
 ===== Explication générale
 
-* Flèches vertes : montrent le remplissage des informations par l'utilisateur via l'interface graphique
+* Flèches vertes : montrent le remplissage des informations par l'utilisateur via l'interface graphique.
 
-* Flèches oranges : montrent comment l'extension web récupère les informations, fait des requêtes au serveur web et le serveur web ira déchiffrer le fichier puis renvoyer les données
+* Flèches oranges : montrent comment l'extension web récupère les informations, fait des requêtes au serveur web. Il déchiffrera le fichier puis renverra les données.
 
