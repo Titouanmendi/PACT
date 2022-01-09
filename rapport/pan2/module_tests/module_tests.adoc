@@ -1,0 +1,22 @@
+# Moduel Tests et Intégrations
+
+Equipe :
+- Titouan MENDIHARAT
+- Nans WEBERT
+
+
+## But de ce module
+
+Le but de ce module est de réalisé des tests sur le projets.
+
+Il comporte différents type de tests :
+- Tests d'API
+- Tests d'application
+- Tests End-to-End
+
+
+### Tests d'API
+
+
+### Tests d'application
+
