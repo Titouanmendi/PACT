@@ -34,7 +34,7 @@ L'extension devra pouvoir faire les choses suivantes:
 
 Etant donné que notre application est une application `electron`. Ce qui sera affiché à l'application sera une page web (exactement ce qu'on trouve sur internet). C'est à dire que notre application utilisera les mêmes composants que des pages web.
 
-Ainsi, notre application comportera des entrées d'utilisateurs sous forme d'`input`. Il s'agit là des `<input>` du langage `HTML`. Pour cité les termes exact, nous utiliserons donc des inputs de type : `text`, `file`, `number`...
+Ainsi, notre application comportera des entrées d'utilisateurs sous forme d'`input`. Il s'agit là des `<input>` du langage `HTML`. Pour citer les termes exacts, nous utiliserons donc des inputs de type : `text`, `file`, `number`...
 
 Dans un document HTML, cela ressemble à cela :
 
