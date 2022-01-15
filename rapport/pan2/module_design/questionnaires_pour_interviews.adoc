@@ -1,0 +1,63 @@
+== Questionnaire pour les interview:
+
+Personnes interviewées: les personnes âgées, les sceptiques administratifs (i.e les personnes qui ont des phobies administratives), les jeunes et les étrangers.
+
+Questions et déroulé général des interviews:
+
+== Début: 
+
+Prénom, nom 
+Genre
+Profession 
+Lieu de vie
+
+
+== Partie 1: les ressentis par rapport aux questionnaires & forms administratifs 
+
+Quelle est votre dernière expérience avec des formulaires en ligne? 
+Pire expérience personnelle 
+Que pourrait-on améliorer ?
+Faites vous vos démarches en présentiel, en ligne ou par téléphone (appel ou internet)?
+Préférez-vous faire vos démarches administratives petit à petit ? Faites-vous tout au dernier moment ?
+Si quelqu’un avait pour but d’aider dans les démarches administratives, il devrait être…. (Adj)
+
+
+== Partie 2: les couleurs et formes 
+
+Vous m’avez donné ces adjectifs (cf question d’avant), pouvez vous associer à chaque adjectif une couleur parmi celles-ci Attention : pas la palette de couleur avec les adj
+Quels sites trouvez-vous beaux? Pourquoi? Sont-ils en harmonie avec les adjectifs que vous avez énoncé? 
+Quel site *ceux que l’on montre* correspond aux adjectifs que vous avez énoncé ?
+Puis les laisser commenter les sites qu’on a choisis. Structure ? Couleur ? Vous voyez quoi en 1er ? 2ème ? Cheminement du regard ? émotions ? Clarté ? 
+(Cf questionnaire type du ux), peut y avoir des choix disruptifs (=avis contraire avec ce qu’on peut penser d'habitude)
+Vous préférez voir un site strict (forme carré,…) vu qu’il est en rapport avec les démarches administratives ? Forme plutôt ronde ? Épuré ? … (disruption éventuelle argumentée)
+Quel est votre réseau social / Application préférée en vue de l’interface ? Regardez dans votre téléphone -> question ouverte d’abord puis exemple et les faire dessus
+Pour chaque appli de téléphone dont il parle donnez des adj, sentiment vis à vis de cette interface. 
+
+
+
+== Partie 3: les menus déroulants 
+
+Quel menu est le plus clair pour vous? 
+Lequel vous donne le plus de confiance? 
+Lequel pensez-vous qui pourrait nous convenir le plus pour notre application? 
+
+
+== Partie 4: Ordre des menus déroulants
+
+Quels documents vous sont le plus demandés ?
+Quelles sont les démarches les plus fréquentes ? 
+Selon vous, quels documents sont indispensables pour les démarches fréquentes? 
+
+
+== Partie 5 : Sécurité 
+
+Avez vous peur de mettre vos documents personnels sur un site ? Si oui pourquoi ? Quels documents ?
+Avez-vous déjà eu des litiges vis-à-vis de certains documents administratifs ? (Documents médicaux par exemple)
+Connaissez-vous des sites avec beaucoup d’informations sur la sécurité de vos actions? Aimeriez-vous en avoir ?
+
+== Partie 6: autres
+que pensez vous des chat box? 
+avez vous des a priori ?
+Êtes vous plutôt réticent à les utiliser parce qu’il ne s’agit pas d’un contact humain ? Vous a-t-il déjà aidé une fois ?
+
+== Anexes: 
