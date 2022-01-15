@@ -1,0 +1,31 @@
+Pour rappel, notre projet est contitué d'une application et d'une extension qui communiquent entre elles en se transmmetant des données. 
+Le but est que l'extension puisse remplir des formulaires en ligne en utilisant les fichiers que l'utilisateur renseigne sur l'application.
+Ce module a pour but de créer l'application. Pour le design de l'application, un autre module nous accompagne (le module design). Ici nous nous concentrons plus sur la construction de l'applicaiton. 
+
+== Description textuelle de l'application
+
+L'application devra avoir les choses suivantes: 
+- un menu déroulant qui contiendra des sous-menus.
+- chaque élément des sous-menus devra nous amener à une page liée où l'utilisateur rencontrera des champs qu'il devra remplir (ou qu'il aura déjà rempli).Ces champs seront des champs textes, des endroits pour déposer les fichiers ou des photos. 
+
+L'application devra pouvoir faire les choses suivantes: 
+- enregistrer les fichiers et dates de péremption qui sont associées.
+- prévenir l'utilisateur lorsque les fichiers sont obsolètes.
+- communiquer avec l'extension (module communication client serveur)
+
+== Description textuelle de l'extension
+
+L'extension devra avoir les choses suivantes: 
+- un logo qui s'affiche sur l'écran lorsque l'extension peut être utilisée pour remplir un fichier. Si l'utilisateur clique sur ce logo l'extension démarre. 
+- des pop-up qui apparaissent lors de plusieurs situations: 
+    - pour donner la liste des champs qu'elle peut remplir 
+    - pour donner le choix de remplir tous les possibles ou demander un par un
+    - pour dire quels champs ne sont pas remplis car il y a un conflit entre plusieurs données et proposer le choix entre les données et le remplir sans l'aide de l'extension.
+    - pour dire quels champs ne sont pas rempis
+    - pour afficher le message "merci d'avoir utilisé AutoForm, n'oubliez pas de vérifier que tous les champs sont correctement remplis"
+
+L'extension devra pouvoir faire les choses suivantes: 
+- lire les pages web et détécter quand il y a un formulaire à remplir.
+- afficher les éléments cités précédemment.
+- remplir les questionnaires grâce aux données que l'utilisateur aura renseignées sur l'application (ceci sera fait par les modules analyse sémantique et communication client serveur).
+- détecter quels champs sont remplis et les quels ne le sont pas.
