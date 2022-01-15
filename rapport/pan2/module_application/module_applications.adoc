@@ -29,3 +29,21 @@ L'extension devra pouvoir faire les choses suivantes:
 - afficher les éléments cités précédemment.
 - remplir les questionnaires grâce aux données que l'utilisateur aura renseignées sur l'application (ceci sera fait par les modules analyse sémantique et communication client serveur).
 - détecter quels champs sont remplis et les quels ne le sont pas.
+
+== Description technique de l'IHM -Interface Homme Machine)
+
+Etant donné que notre application est une application `electron`. Ce qui sera affiché à l'application sera une page web (exactement ce qu'on trouve sur internet). C'est à dire que notre application utilisera les mêmes composants que des pages web.
+
+Ainsi, notre application comportera des entrées d'utilisateurs sous forme d'`input`. Il s'agit là des `<input>` du langage `HTML`. Pour cité les termes exact, nous utiliserons donc des inputs de type : `text`, `file`, `number`...
+
+Dans un document HTML, cela ressemble à cela :
+
+```html
+<input type="number" />
+
+<input type="file" />
+
+<input type="text" />
+```
+
+On peut noter que les tag `<input>` sont des tags auto-fermant. Pour pouvoir utiliser réellement les inputs, ils seront `binder` (ce terme signifie *lier*) avec du javascript. Le javascript pourra donc accéder au contenus des `input`.
