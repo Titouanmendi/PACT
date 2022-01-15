@@ -107,6 +107,10 @@ include::organisation/plan-tests.adoc[Plans de test (PAN2+)]
 
 <<<
 
+== Design
+
+include::pan2/module_design/objectifs.adoc[Scénarios d’usage]
+
 [bibliography]
 == Bibliographie (PAN1+)
 
