@@ -1,22 +1,54 @@
-# Moduel Tests et Intégrations
+# Module Tests et Intégrations
 
-Equipe :
+Équipe :
 - Titouan MENDIHARAT
 - Nans WEBERT
 
+## Schéma d'architecture
+
+Voici notre nouveau schema d'architecture :
+
+image::../diagramme.png[Schema Architecture]
 
 ## But de ce module
 
 Le but de ce module est de réalisé des tests sur le projets.
 
 Il comporte différents type de tests :
-- Tests d'API
-- Tests d'application
+- Tests d'intégration
 - Tests End-to-End
 
+Notre avantage dans ce module est que Nans à deja mit en place des tests lors de son alternance en 2 ème année de son DUT. Nous allons donc utiliser son expérience pour ce projet.
 
-### Tests d'API
+### Tests d'intégration
+
+Les tests d'intégration permettent de tester chaque fonction séparément pour vérifier si elle marche bien. Pour ces tests, nous allons faire des tests sur l'API du serveur car c'est elle le point très important de notre application : c'est la liaison entre electron et l'extension.
+
+Pour ces tests, nous allons utiliser le framework [Mocha](https://mochajs.org/) car c'est un framework simple a mettre en place et très efficace. De plus il serait facile a mettre un CI/cd (Continuous Integration / Continuous Deployment) à l'aide d'un `cron`. Le `cron` serait mis en place sur la machine Ubuntu que M. Dufourd nous a donnée.
+
+### End-to-End
+
+Les tests End to End permettent de tester globalement l'application et de voir si tout fonctionne. Pour les faire, nous allons utiliser deux frameworks différents qui permettent de répliquer les mouvements de l'utilisateur (cela simule les clics de l'utilisateur).
+
+#### Tests End-to-End - Extension Web
 
 
-### Tests d'application
+Les tests d'applications seront des tests pour l'interface de l'extension. Nous utiliserons [Cypress](https://www.cypress.io/).
 
+Voici un exemple de code Cypress
+
+```js
+describe("First simple page", () => { // description du test
+  it("Should have a title", () => { // description de l'action
+    cy.visit("/"); // se connecte au site
+    cy.get("h1")
+      .should("have.text", "Ma première utilisation de Cypress"); // le test
+  });
+});
+```
+
+
+#### Tests End-to-End - Application Electron
+
+
+Les tests d'applications seront des tests pour l'interface de l'extension. Nous utiliserons [ChaiJS](https://www.chaijs.com/)
