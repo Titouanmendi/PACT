@@ -47,22 +47,6 @@ _Aren't you tired to fill out the same forms over and over again on the internet
 
 This is the purpose of our application: automatically fill out forms. Our idea starts from a statement : more and more procedures must be carried out online. In order to help with these steps, we plan on creating a tool which encompasses all your information in one (encrypted) file. It will then be used to automatically fill in the forms through a web extension!
 
-// *Notes concenant le rapport*
-
-// Les différentes pages du document sont rédigées en utilisant le langage
-// AsciiDoc. Le squelette de rapport contient des exemples avec entre autres:
-
-// * des images,
-// * des liens,
-// * des équations.
-
-// La structure du rapport (parties, sections et la relation avec les
-// différents fichiers) se trouve dans le fichier courant.
-
-// **Prenez le temps** de supprimer le texte de remplissage et les sections non
-// utilisées pour l'instant. Vous pouvez par exemple commenter ces parties non
-// utilisées pour qu'elles n'apparaissent pas dans le document final. En Asciidoc,
-// il suffit de les précéder de deux slashs (`//`).
 
 // en PDF on ne peut pas controler la position de la toc
 // Macros non supportées
@@ -77,46 +61,60 @@ endif::[]
 
 == Étude d’antériorité et justification de la proposition (PAN1)
 
-include::proposition/proposition.adoc[Description de la proposition]
+include::pan1/proposition/proposition.adoc[Description de la proposition]
 
-include::proposition/etat-de-l-art.adoc[Description de l’état de l’art]
+include::pan1/proposition/etat-de-l-art.adoc[Description de l’état de l’art]
 
 == Scénarios d’usage (PAN1)
 
-include::scenario/scenario.adoc[Scénarios d’usage]
+include::pan1/scenario/scenario.adoc[Scénarios d’usage]
 
 <<<
 
 == Architecture du projet (PAN1)
 
-include::architecture/schema.adoc[Schéma d’architecture]
+include::pan1/architecture/schema.adoc[Schéma d’architecture]
 
-include::architecture/interfaces.adoc[Description des interfaces]
+include::pan1/architecture/interfaces.adoc[Description des interfaces]
 
-include::architecture/sequence.adoc[Diagramme de séquence]
+include::pan1/architecture/sequence.adoc[Diagramme de séquence]
 
-include::architecture/ihm.adoc[Interface utilisateur graphique]
+include::pan1/architecture/ihm.adoc[Interface utilisateur graphique]
 
 <<<
 
 == Organisation du projet (PAN1)
 
-include::organisation/planification.adoc[Diagramme de planification temporel des tâches]
+include::pan1/organisation/planification.adoc[Diagramme de planification temporel des tâches]
 
-include::organisation/plan-tests.adoc[Plans de test (PAN2+)]
+include::pan1/organisation/plan-tests.adoc[Plans de test (PAN2+)]
 
 <<<
 
-== Design
+== PAN2
 
-include::pan2/module_design/objectifs.adoc[Scénarios d’usage]
+Lorsque le PAN1 s'est terminé, le PAN2 a logiquement commencé. Durant ce PAN2, nous avons pu commencer à travailler sur auto-form.
+Chaque personne était en binômes pour suivre, 2 ou 3 modules (la liste des modules est disponible aux chapitres du PAN1).
+
+include::pan2/module_design/objectifs.adoc[Module Design]
+
+<<<
+ 
+include::pan2/module_application/module_applications.adoc[Module Application]
+
+<<<
+
+include::pan2/module_tests/module_tests.adoc[Module Tests & Intégration]
+
+<<<
 
 [bibliography]
-== Bibliographie (PAN1+)
+== Bibliographie
 
 include::References.adoc[Bibliographie]
 
 <<<
+////
 
 == Annexes
 
@@ -127,3 +125,5 @@ include::annexes/avancement.adoc[Avancement des modules]
 include::annexes/moduleX.adoc[Avancement module X]
 
 include::annexes/moduleY.adoc[Avancement module Y]
+
+////

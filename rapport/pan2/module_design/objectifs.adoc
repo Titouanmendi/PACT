@@ -1,3 +1,10 @@
+=== Module Design
+
+Équipe :
+
+* Maria BOHORQUEZ CARO
+* Victor DARRE
+
 Ce module à pour but de nous aider à définir les couleurs, les formes, la distribution et les menus déroulants qui seront dans l'application. 
 
 Plusieurs Objectifs :

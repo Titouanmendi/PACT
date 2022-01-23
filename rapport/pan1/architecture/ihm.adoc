@@ -8,7 +8,7 @@ selon le nombre d’appareils en jeu.
 ////
 Voici une représentation de l'extension : 
 
-image::../images/extension.jpg[Schema Architecture]
+image::../images/pan1/extension.jpg[Schema Architecture]
 
 ////
 En lien avec un diagramme de séquence, une description simple de chaque

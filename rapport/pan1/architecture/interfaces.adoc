@@ -16,7 +16,7 @@
 
 Rappel du schema
 
-image::../images/architecture.jpg[Schema Architecture]
+image::../images/pan1/architecture.jpg[Schema Architecture]
 
 
 ==== Interface Blocs 1-3

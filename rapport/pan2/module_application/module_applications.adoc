@@ -1,8 +1,21 @@
+=== Module Application
+
+Équipe :
+
+* Maria BOHORQUEZ CARO
+* Nans WEBERT
+
 Pour rappel, notre projet est constitué d'une application et d'une extension qui communiquent entre elles en se transmettant des données. 
 Le but est que l'extension puisse remplir des formulaires en ligne en utilisant les fichiers que l'utilisateur renseigne sur l'application.
 Ce module a pour but de créer l'application. Pour le design de l'application, un autre module nous accompagne (le module design). Ici nous nous concentrons plus sur la construction de l'application. 
 
-== Description textuelle de l'application
+==== Nouveau Logo
+
+Nous avons fait un nouveau logo, cette fois en SVG !
+
+image::../images/pan2/auto_form.svg[Logo d'auto form,300,300,align="center"]
+
+==== Description textuelle de l'application
 
 L'application devra avoir les choses suivantes: 
 - un menu déroulant qui contiendra des sous-menus.
@@ -13,28 +26,30 @@ L'application devra pouvoir faire les choses suivantes:
 - prévenir l'utilisateur lorsque les fichiers sont obsolètes.
 - communiquer avec l'extension (module communication client serveur)
 
-== Description textuelle de l'extension
+==== Description textuelle de l'extension
 
-L'extension devra avoir les choses suivantes: 
-- un logo qui s'affiche sur l'écran lorsque l'extension peut être utilisée pour remplir un fichier. Si l'utilisateur clique sur ce logo l'extension démarre. 
-- des pop-up qui apparaissent lors de plusieurs situations: 
-    - pour donner la liste des champs qu'elle peut remplir 
-    - pour donner le choix de remplir tous les possibles ou demander un par un
-    - pour dire quels champs ne sont pas remplis car il y a un conflit entre plusieurs données et proposer le choix entre les données et le remplir sans l'aide de l'extension.
-    - pour dire quels champs ne sont pas remplis
-    - pour afficher le message "merci d'avoir utilisé AutoForm, n'oubliez pas de vérifier que tous les champs sont correctement remplis"
+L'extension devra avoir les choses suivantes:
 
-L'extension devra pouvoir faire les choses suivantes: 
-- lire les pages web et détecter quand il y a un formulaire à remplir.
-- afficher les éléments cités précédemment.
-- remplir les questionnaires grâce aux données que l'utilisateur aura renseignées sur l'application (ceci sera fait par les modules analyse sémantique et communication client serveur).
-- détecter quels champs sont remplis et les quels ne le sont pas.
+* un logo qui s'affiche sur l'écran lorsque l'extension peut être utilisée pour remplir un fichier. Si l'utilisateur clique sur ce logo l'extension démarre. 
+* des pop-up qui apparaissent lors de plusieurs situations: 
+** pour donner la liste des champs qu'elle peut remplir 
+** pour donner le choix de remplir tous les possibles ou demander un par un
+** pour dire quels champs ne sont pas remplis car il y a un conflit entre plusieurs données et proposer le choix entre les données et le remplir sans l'aide de l'extension.
+** pour dire quels champs ne sont pas remplis
+** pour afficher le message "merci d'avoir utilisé AutoForm, n'oubliez pas de vérifier que tous les champs sont correctement remplis"
 
-== Description technique de l'IHM -Interface Homme Machine)
+L'extension devra pouvoir faire les choses suivantes:
+
+* lire les pages web et détecter quand il y a un formulaire à remplir.
+* afficher les éléments cités précédemment.
+* remplir les questionnaires grâce aux données que l'utilisateur aura renseignées sur l'application (ceci sera fait par les modules analyse sémantique et communication client serveur).
+* détecter quels champs sont remplis et les quels ne le sont pas.
+
+==== Description technique de l'IHM - (Interface Homme Machine)
 
 Étant donné que notre application est une application `electron`. Ce qui sera affiché à l'application sera une page web (exactement ce qu'on trouve sur internet). C'est à dire que notre application utilisera les mêmes composants que des pages web.
 
-Ainsi, notre application comportera des entrées d'utilisateurs sous forme d'`input`. Il s'agit là des `<input>` du langage `HTML`. Pour citer les termes exacts, nous utiliserons donc des inputs de type : `text`, `file`, `number`...
+Ainsi, notre application comportera des entrées d'utilisateurs sous forme d' `input`. Il s'agit là des `<input>` du langage `HTML`. Pour citer les termes exacts, nous utiliserons donc des inputs de type : `text`, `file`, `number`...
 
 Dans un document HTML, cela ressemble à cela :
 
@@ -55,8 +70,8 @@ L'application Desktop aura donc une API deux endpoints majeurs :
 * Récupération de json, avec un `content-type: application/json`
 * Récupération de fichier soit avec `content-type: application/octet-stream` ou alors pour les PDF : `application/pdf`
 
-On peut trouver ici les content-type https://developer.mozilla.org/fr/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+On peut trouver les `content-type` ici : <<Mime-type>>
 
 Cette API sera créer par le serveur web présent sur l'application Desktop.
-Lors du PAN1 nous avions décidé de faire le serveur web soit en "natif" NodeJS soit en  `ExpressJS` (https://expressjs.com/fr/), un package assez lourd qui permet de faire des sites web (il est actuellement utilisé en production pas plusieurs entreprise qui possède un site web).
-Après plusieurs recherche, nous avons découvert le package `polka` (https://github.com/lukeed/polka) car comme l'indique la description, cela correspond totalement à nos besoin : "Polka is an extremely minimal, highly performant Express.js alternative."
+Lors du PAN1 nous avions décidé de faire le serveur web soit en "natif" NodeJS soit en  <<ExpressJS>>, un package assez lourd qui permet de faire des sites web (il est actuellement utilisé en production pas plusieurs entreprise qui possède un site web).
+Après plusieurs recherche, nous avons découvert le package <<Polka>> car comme l'indique la description, cela correspond totalement à nos besoin : "_Polka is an extremely minimal, highly performant Express.js alternative_"

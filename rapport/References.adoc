@@ -18,3 +18,11 @@
 * [[EdgeNative]]EdgeNative : https://support.microsoft.com/fr-fr/microsoft-edge/remplir-automatiquement-des-informations-dans-microsoft-edge-81da697c-9910-d9b8-d50a-1712d96f3db8
 
 * [[Electron]]Electron : https://www.electronjs.org/
+
+* [[Mime-type]]Mime-type : https://developer.mozilla.org/fr/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+* [[ExpressJS]]ExpressJS : https://expressjs.com/fr/
+* [[Polka]]Polka : https://github.com/lukeed/polka
+
+* [[Mocha]]Mocha : https://mochajs.org/
+* [[Cypress]]Cypress : https://www.cypress.io/
+* [[ChaiJS]]ChaiJS : https://www.chaijs.com/

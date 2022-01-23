@@ -16,4 +16,4 @@ Voici un exemple de scénario simple : la saisie de données par l'utilisateur :
 * L'application envoie les données au serveur web de l'application qui les récupère.
 * Le serveur web chiffre les données et les insère dans le fichier chiffré.
 
-image::../images/sequence.png[Explication saisie]
+image::../images/pan1/sequence.png[Explication saisie]

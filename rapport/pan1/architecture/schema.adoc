@@ -5,7 +5,7 @@
 // schémas hiérarchiques, c'est-à-dire avec un bloc d’un schéma général
 // raffiné dans un second schéma ; ou des schémas en plusieurs parties.
 
-image::../images/architecture.jpg[un autre logo pact]
+image::../images/pan1/architecture.jpg[un autre logo pact]
 
 ==== Description des blocs
 

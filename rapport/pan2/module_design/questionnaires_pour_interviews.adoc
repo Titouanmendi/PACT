@@ -1,10 +1,10 @@
-== Questionnaire pour les interview:
+=== Questionnaire pour les interview:
 
 Personnes interviewées: les personnes âgées, les sceptiques administratifs (i.e les personnes qui ont des phobies administratives), les jeunes et les étrangers.
 
 Questions et déroulé général des interviews:
 
-== Début: 
+==== Début: 
 
 Prénom, nom 
 Genre
@@ -12,7 +12,7 @@ Profession
 Lieu de vie
 
 
-== Partie 1: les ressentis par rapport aux questionnaires & forms administratifs 
+==== Partie 1: les ressentis par rapport aux questionnaires & forms administratifs 
 
 Quelle est votre dernière expérience avec des formulaires en ligne? 
 Pire expérience personnelle 
@@ -22,7 +22,7 @@ Préférez-vous faire vos démarches administratives petit à petit ? Faites-vou
 Si quelqu’un avait pour but d’aider dans les démarches administratives, il devrait être…. (Adj)
 
 
-== Partie 2: les couleurs et formes 
+==== Partie 2: les couleurs et formes 
 
 Vous m’avez donné ces adjectifs (cf question d’avant), pouvez vous associer à chaque adjectif une couleur parmi celles-ci Attention : pas la palette de couleur avec les adj
 Quels sites trouvez-vous beaux? Pourquoi? Sont-ils en harmonie avec les adjectifs que vous avez énoncé? 
@@ -35,29 +35,29 @@ Pour chaque appli de téléphone dont il parle donnez des adj, sentiment vis à 
 
 
 
-== Partie 3: les menus déroulants 
+==== Partie 3: les menus déroulants 
 
 Quel menu est le plus clair pour vous? 
 Lequel vous donne le plus de confiance? 
 Lequel pensez-vous qui pourrait nous convenir le plus pour notre application? 
 
 
-== Partie 4: Ordre des menus déroulants
+==== Partie 4: Ordre des menus déroulants
 
 Quels documents vous sont le plus demandés ?
 Quelles sont les démarches les plus fréquentes ? 
 Selon vous, quels documents sont indispensables pour les démarches fréquentes? 
 
 
-== Partie 5 : Sécurité 
+==== Partie 5 : Sécurité 
 
 Avez vous peur de mettre vos documents personnels sur un site ? Si oui pourquoi ? Quels documents ?
 Avez-vous déjà eu des litiges vis-à-vis de certains documents administratifs ? (Documents médicaux par exemple)
 Connaissez-vous des sites avec beaucoup d’informations sur la sécurité de vos actions? Aimeriez-vous en avoir ?
 
-== Partie 6: autres
+===== Partie 6: autres
 que pensez vous des chat box? 
 avez vous des a priori ?
 Êtes vous plutôt réticent à les utiliser parce qu’il ne s’agit pas d’un contact humain ? Vous a-t-il déjà aidé une fois ?
 
-== Anexes: 
+==== Anexes: 
