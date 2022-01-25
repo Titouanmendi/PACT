@@ -18,10 +18,12 @@ image::../images/pan2/auto_form.svg[Logo d'auto form,300,300,align="center"]
 ==== Description textuelle de l'application
 
 L'application devra avoir les choses suivantes: 
+
 - un menu déroulant qui contiendra des sous-menus.
 - chaque élément des sous-menus devra nous amener à une page liée où l'utilisateur rencontrera des champs qu'il devra remplir (ou qu'il aura déjà rempli).Ces champs seront des champs textes, des endroits pour déposer les fichiers ou des photos. 
 
 L'application devra pouvoir faire les choses suivantes: 
+
 - enregistrer les fichiers et dates de péremption qui sont associées.
 - prévenir l'utilisateur lorsque les fichiers sont obsolètes.
 - communiquer avec l'extension (module communication client serveur)
