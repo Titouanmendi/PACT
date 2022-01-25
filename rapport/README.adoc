@@ -93,8 +93,8 @@ include::pan1/organisation/plan-tests.adoc[Plans de test (PAN2+)]
 
 == PAN2
 
-Lorsque le PAN1 s'est terminé, le PAN2 a logiquement commencé. Durant ce PAN2, nous avons pu commencer à travailler sur auto-form.
-Chaque personne était en binômes pour suivre, 2 ou 3 modules (la liste des modules est disponible aux chapitres du PAN1).
+A la suite du PAN1, nous avons commencé à travailler en vue du PAN2. Nous avons alors pu commencer à travailler plus concrètement sur Auto-Form.
+Nous nous sommes divisés en binôme ou trinôme, chacun d'entre nous ayant 2 ou 3 modules (la liste des modules est disponible aux chapitres du PAN1).
 
 include::pan2/module_design/objectifs.adoc[Module Design]
 
