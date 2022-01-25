@@ -30,6 +30,13 @@ Les tests d'intégration permettent de tester chaque fonction séparément pour 
 
 Pour ces tests, nous allons utiliser le framework <<Mocha>> car c'est un framework simple a mettre en place et très efficace. De plus il serait facile a mettre un CI/CD (Continuous Integration / Continuous Deployment) à l'aide d'un `cron`. Le `cron` serait mis en place sur la machine Ubuntu que M. Dufourd nous a donné.
 
+
+==== Planning des tests
+
+
+A propos du planning des tests, cela va dépendre de l'avancement des modules. Nous ferons nos tests dès que l'application et l'extension seront faites selon le procédé décrit ci-dessus.
+
+
 ===== End-to-End
 
 Les tests End to End permettent de tester globalement l'application et de voir si tout fonctionne. Pour les faire, nous allons utiliser deux frameworks différents qui permettent de répliquer les mouvements de l'utilisateur (cela simule les clics de l'utilisateur).
