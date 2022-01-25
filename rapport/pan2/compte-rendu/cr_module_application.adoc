@@ -1,3 +1,10 @@
 ==== Compte Rendu PAN2 - Application
 
-Après notre 
+Pendant notre rendez vous avec l'encadrent Leonardo Linguaglosa, il nous a proposé plusieurs nouvelles fonctionnalités: 
+* donner des labels aux documents (pour que par exemple le permis de conduire puisse être dans les documents liés à l'identité et ceux liés aux transports ).
+* mettre un mot de passe pour qu'il y ait un système de sécuritté plus fort. 
+
+Nos objectifs pour le PAN3 sont les suivants:
+* avoir une API fonctionnelle.
+* un menu clair.
+* interface graphique pour l'interface et pour l'extension. 
