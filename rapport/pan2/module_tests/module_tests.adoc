@@ -21,7 +21,7 @@ Notre avantage dans ce module est que Nans à deja mit en place des tests lors d
 
 Voici notre nouveau schema d'architecture :
 
-image::../images/pan2/diagramme.png[Schema Architecture]
+image::../images/pan2/diagramme_v2.jpg[Schema Architecture]
 
 
 ==== Tests d'intégration
