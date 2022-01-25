@@ -61,9 +61,9 @@ Dans un document HTML, cela ressemble à cela :
 <input type="text" />
 ```
 
-On peut noter que les tag `<input>` sont des tags auto-fermant. Pour pouvoir utiliser réellement les inputs, ils seront `binder` (ce terme signifie *lier*) avec du javascript. Le javascript pourra donc accéder au contenus des `input`.
+On peut noter que les tag `<input>` sont des tags auto-fermant. Pour pouvoir utiliser réellement les inputs, ils seront `binder` (ce terme signifie *liés*) avec du javascript. Le javascript pourra donc accéder au contenus des `input`.
 
-Les données seront donc ensuite collecter par le javascript et envoyer à notre application Desktop en passant par l'API de l'application Desktop.
+Les données seront donc ensuite collectées par le javascript et envoyées à notre application Desktop en passant par l'API de l'application Desktop.
 
 L'application Desktop aura donc une API deux endpoints majeurs :
 
@@ -72,6 +72,6 @@ L'application Desktop aura donc une API deux endpoints majeurs :
 
 On peut trouver les `content-type` ici : <<Mime-type>>
 
-Cette API sera créer par le serveur web présent sur l'application Desktop.
+Cette API sera créée par le serveur web présent sur l'application Desktop.
 Lors du PAN1 nous avions décidé de faire le serveur web soit en "natif" NodeJS soit en  <<ExpressJS>>, un package assez lourd qui permet de faire des sites web (il est actuellement utilisé en production pas plusieurs entreprise qui possède un site web).
-Après plusieurs recherche, nous avons découvert le package <<Polka>> car comme l'indique la description, cela correspond totalement à nos besoin : "_Polka is an extremely minimal, highly performant Express.js alternative_"
+Après plusieurs recherches, nous avons découvert le package <<Polka>> car comme l'indique la description, cela correspond totalement à nos besoin : "_Polka is an extremely minimal, highly performant Express.js alternative_"

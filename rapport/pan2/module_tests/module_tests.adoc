@@ -7,14 +7,14 @@
 
 ==== But de ce module
 
-Le but de ce module est de réalisé des tests sur le projets. Le but est également de refaire le  schéma d'architecture.
+Le but de ce module est de réaliser des tests sur le projet ainsi que de refaire le  schéma d'architecture.
 
 Il comporte différents type de tests :
 
 * Tests d'intégration
 * Tests End-to-End
 
-Notre avantage dans ce module est que Nans à deja mit en place des tests lors de son alternance en 2 ème année de son DUT. Nous allons donc utiliser son expérience pour ce projet.
+Notre avantage dans ce module vient du fait que Nans à fait ce genre de tests lors de son alternance en 2 ème année de son DUT. Nous allons donc utiliser son expérience pour ce projet.
 
 
 ==== Schéma d'architecture
@@ -26,9 +26,16 @@ image::../images/pan2/diagramme_v2.jpg[Schema Architecture]
 
 ==== Tests d'intégration
 
-Les tests d'intégration permettent de tester chaque fonction séparément pour vérifier si elle marche bien. Pour ces tests, nous allons faire des tests sur l'API du serveur car c'est elle le point très important de notre application : c'est la liaison entre electron et l'extension.
+Les tests d'intégration permettent de tester chaque fonction séparément pour vérifier si elle marche bien. Pour ce faire, nous allons réaliser des tests sur l'API du serveur, le point crucial de notre application : elle gère la liaison entre electron et l'extension.
 
-Pour ces tests, nous allons utiliser le framework <<Mocha>> car c'est un framework simple a mettre en place et très efficace. De plus il serait facile a mettre un CI/CD (Continuous Integration / Continuous Deployment) à l'aide d'un `cron`. Le `cron` serait mis en place sur la machine Ubuntu que M. Dufourd nous a donnée.
+Pour ces tests, nous allons utiliser le framework <<Mocha>> car c'est un framework simple a mettre en place et très efficace. De plus il serait facile a mettre un CI/CD (Continuous Integration / Continuous Deployment) à l'aide d'un `cron`. Le `cron` serait mis en place sur la machine Ubuntu que M. Dufourd nous a donné.
+
+
+==== Planning des tests
+
+
+A propos du planning des tests, cela va dépendre de l'avancement des modules. Nous ferons nos tests dès que l'application et l'extension seront faites selon le procédé décrit ci-dessus.
+
 
 ===== End-to-End
 
@@ -37,7 +44,7 @@ Les tests End to End permettent de tester globalement l'application et de voir s
 ===== Tests End-to-End - Extension Web
 
 
-Les tests d'applications seront des tests pour l'interface de l'extension. Nous utiliserons <<Cypress>>.
+Concernant l'extension, les tests s'appuieront sur son interface afin de s'assurer que l'utilisateur puisse l'utiliser sans encombre. Nous utiliserons <<Cypress>>.
 
 Voici un exemple de code Cypress
 
@@ -55,4 +62,4 @@ describe("First simple page", () => { // description du test
 ===== Tests End-to-End - Application Electron
 
 
-Les tests d'applications seront des tests pour l'interface de l'extension. Nous utiliserons <<ChaiJS>>
+Pour l'application desktop, les tests se porteront aussi sur son interface pour assurer sont bon fonctionnement. Nous utiliserons <<ChaiJS>>
