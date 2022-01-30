@@ -1,0 +1,23 @@
+= Rapport module Client/Serveur
+
+Equipe :
+
+* Victor Darré
+* Mohammed Khair
+* Titouan Mendiharat
+
+== Objectif du module
+
+Le but de ce module est dans une premier temps d'établir puis de sécuriser la connexion entre le serveur et le client.
+Nous commencerons par créer un serveur puis nous ferons en sorte qu'il soit capable de communiquer avec l'application qui contient les données des usagers.
+
+== Schéma d'architecture
+
+Voici notre diagramme d'architecture retravaillé : 
+
+image::../images/pan2/diagramme_v2.jpg[Schema Architecture]
+
+== Serveur
+
+Pour héberger le serveur sur une machine, nous utiliserons WAMP 5 qui contient notamment le logiciel apache qui permet de créer un serveur en local.
+Nous coderons par la suite ce serveur en nodejs pour gérer la communication avec le client.
