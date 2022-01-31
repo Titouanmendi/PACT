@@ -15,9 +15,9 @@ Nous commencerons par créer un serveur puis nous ferons en sorte qu'il soit cap
 
 Voici notre diagramme d'architecture retravaillé : 
 
-image::../images/pan2/diagramme_v2.jpg[Schema Architecture]
+image::../../images/pan2/diagramme_v2.jpg[Schema Architecture]
 
 == Serveur
 
-Pour héberger le serveur sur une machine, nous utiliserons WAMP 5 qui contient notamment le logiciel apache qui permet de créer un serveur en local.
-Nous coderons par la suite ce serveur en nodejs pour gérer la communication avec le client.
+Pour héberger le serveur sur une machine, nous utiliserons WampServer qui contient notamment le logiciel apache qui permet de créer un serveur en local.
+Nous coderons par la suite ce serveur en nodejs ou en PHP pour gérer la communication avec le client.
