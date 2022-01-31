@@ -17,7 +17,12 @@ Voici notre diagramme d'architecture retravaillé :
 
 image::../../images/pan2/diagramme_v2.jpg[Schema Architecture]
 
+== Protocole
+
+A propos du protocole de communication entre le client et le serveur, nous avons avons choisi Node.JS car cela est plus adapté au travail fourni par les autres modules.
+
 == Serveur
 
-Pour héberger le serveur sur une machine, nous utiliserons WampServer qui contient notamment le logiciel apache qui permet de créer un serveur en local.
-Nous coderons par la suite ce serveur en nodejs ou en PHP pour gérer la communication avec le client.
+Dans le but de commencer à nous familiariser avec les serveurs, nous avons essayé d'en héberger sur une machine, grâce à WampServer qui contient notamment le logiciel apache qui permet de créer un serveur en local.
+Par la suite, nous avons codé ce serveur en  PHP pour gérer la communication avec le client.
+Cependant, nous souhaitons changer vers un protocole Node.JS afin de nous affranchir du logiciel apache.
