@@ -1,0 +1,37 @@
+{
+  "name": "auto-form",
+  "version": "1.0.0",
+  "description": "automated online forms",
+  "productName": "Auto-form app",
+  "main": "main.js",
+  "scripts": {
+    "test": "mocha && standard",
+    "start": "electron .",
+    "dev": "electron . --debug"
+  },
+  "keywords": [
+    "form"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Its-Just-Nans/auto-form-app.git"
+  },
+  "author": "pact52",
+  "license": "MIT",
+  "dependencies": {
+    "@polka/send-type": "^0.5.2",
+    "body-parser": "^1.19.2",
+    "devtron": "^1.4.0",
+    "electron": "^16.0.7",
+    "electron-log": "^4.4.4",
+    "glob": "^7.2.0",
+    "polka": "^0.5.2",
+    "update-electron-app": "^2.0.1"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^9.2.0",
+    "spectron": "^15.0.0"
+  }
+}
