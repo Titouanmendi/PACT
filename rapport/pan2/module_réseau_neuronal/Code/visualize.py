@@ -1,9 +1,16 @@
 import matplotlib.pyplot as plt
 import torch
 from model import NeuralNetwork
-from torchtext import datasets
-
+from torchvision import datasets
 from test import test
+from torchvision.transforms import ToTensor
+
+training_data = datasets.FashionMNIST(
+    root="data",
+    train=True,
+    download=True,
+    transform=ToTensor()
+)
 
 labels_map = {
     0: "T-Shirt",
