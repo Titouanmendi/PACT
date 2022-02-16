@@ -1,0 +1,1 @@
+<p>Vous avez écrit <?php echo $_POST['entree']; ?> </p>

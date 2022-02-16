@@ -15,7 +15,7 @@ Nous commencerons par créer un serveur puis nous ferons en sorte qu'il soit cap
 
 Voici notre diagramme d'architecture retravaillé : 
 
-image::../images/pan2/diagramme_v2.jpg[Schema Architecture]
+image::../../images/pan2/diagramme_v2.jpg[Schema Architecture]
 
 == Protocole
 
