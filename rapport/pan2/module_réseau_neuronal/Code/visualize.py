@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
 import torch
-from model import NeuralNetwork
 from torchvision import datasets
-from test import test
 from torchvision.transforms import ToTensor
 
 training_data = datasets.FashionMNIST(

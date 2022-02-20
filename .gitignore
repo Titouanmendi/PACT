@@ -16,3 +16,7 @@ _book
 
 *.log
 .*.swp
+
+# Python
+model
+__pycache__
