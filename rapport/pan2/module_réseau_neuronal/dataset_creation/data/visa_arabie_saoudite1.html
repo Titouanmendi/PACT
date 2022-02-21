@@ -1,0 +1,211 @@
+<form action="/Registration/Verify" class="muban-form" id="formVerifyEmail" method="post" novalidate="novalidate"><input
+        name="__RequestVerificationToken" type="hidden"
+        value="jpvgf4epmuRgxBB1rS6eJsrnR7Smbd9-N_m9m2OSsP6Er92keSx4FTOgwuciFvDIFCNMWuGkzzQWnMTKZ-ou3Kv9-gk1">
+    <div class="form-fields">
+        <div class="w-100">
+            <div class="information-wrapper">
+
+                <!-- partial: component/general/icon/icon.hbs -->
+                <!-- / component/general/icon/icon.hbs -->
+
+                <div class="content">
+                    <h3 class="heading-03">
+                        Create eVisa account
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="select passport-type" data-component="select-input">
+            <label class="copy-02"><label class="copy-02" for="PassportType">Passport Type</label>*</label>
+
+            <select class="copy-01" data-val="true" data-val-number="The field Passport Type must be a number."
+                data-val-required="This field is required" id="PassportType" name="PassportType">
+                <option value="">Select</option>
+                <option value="2">Diplomatic Passport</option>
+                <option value="1">Regular Passport</option>
+                <option value="3">Special Passport</option>
+            </select>
+            <span class="icon passport-type" data-component="icon" data-icon="arrow-down"><svg
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7.4">
+                    <path d="M1.4 0L6 4.6 10.6 0 12 1.4l-6 6-6-6z"></path>
+                </svg></span>
+            <div class="info">
+                <span class="error-message"><span class="field-validation-valid" data-valmsg-for="PassportType"
+                        data-valmsg-replace="true"></span></span>
+            </div>
+        </div>
+        <div class="select nationality" data-component="select-input">
+            <label class="copy-02"><label class="copy-02" for="Nationality">Country of Nationality</label>*</label>
+            <div class="custom-select"><a id="aid" href="#"><span>Select</span></a><select class="copy-01 custom-select"
+                    data-val="true" data-val-number="The field Country of Nationality must be a number."
+                    data-val-required="This field is required" id="Nationality" name="Nationality">
+                    <option value="">Select</option>
+                    <option value="6">Andorra</option>
+                    <option value="15">Australia</option>
+                    <option value="14">Austria</option>
+                    <option value="18">Belgium</option>
+                    <option value="32">Brunei</option>
+                    <option value="22">Bulgaria</option>
+                    <option value="36">Canada</option>
+                    <option value="90">Croatia</option>
+                    <option value="52">Cyprus</option>
+                    <option value="53">Czech Republic</option>
+                    <option value="57">Denmark</option>
+                    <option value="63">Estonia</option>
+                    <option value="65">Finland</option>
+                    <option value="68">France</option>
+                    <option value="54">Germany</option>
+                    <option value="80">Greece</option>
+                    <option value="92">Hungary</option>
+                    <option value="98">Iceland</option>
+                    <option value="95">Ireland</option>
+                    <option value="99">Italy</option>
+                    <option value="102">Japan</option>
+                    <option value="103">Kazakhstan</option>
+                    <option value="109">Korea , South</option>
+                    <option value="121">Latvia</option>
+                    <option value="116">Liechtenstein</option>
+                    <option value="119">Lithuania</option>
+                    <option value="120">Luxembourg</option>
+                    <option value="141">Malaysia</option>
+                    <option value="131">Malta</option>
+                    <option value="124">Monaco</option>
+                    <option value="243">Montenegro</option>
+                    <option value="150">Netherlands</option>
+                    <option value="154">New Zealand</option>
+                    <option value="151">Norway</option>
+                    <option value="162">Poland</option>
+                    <option value="165">Portugal</option>
+                    <option value="170">Romania</option>
+                    <option value="171">Russian Federation</option>
+                    <option value="182">San Marino</option>
+                    <option value="176">Singapore</option>
+                    <option value="187">Slovak Republic</option>
+                    <option value="188">Slovenia</option>
+                    <option value="62">Spain</option>
+                    <option value="189">Sweden</option>
+                    <option value="38">Switzerland</option>
+                    <option value="208">Ukraine</option>
+                    <option value="71">United Kingdom</option>
+                    <option value="210">United States</option>
+                </select>
+                <div><input type="input">
+                    <div style="overflow-y: scroll;">
+                        <ul>
+                            <li class="active option-hover" data-value="">Select</li>
+                            <li class="active" data-value="6">Andorra</li>
+                            <li class="active" data-value="15">Australia</li>
+                            <li class="active" data-value="14">Austria</li>
+                            <li class="active" data-value="18">Belgium</li>
+                            <li class="active" data-value="32">Brunei</li>
+                            <li class="active" data-value="22">Bulgaria</li>
+                            <li class="active" data-value="36">Canada</li>
+                            <li class="active" data-value="90">Croatia</li>
+                            <li class="active" data-value="52">Cyprus</li>
+                            <li class="active" data-value="53">Czech Republic</li>
+                            <li class="active" data-value="57">Denmark</li>
+                            <li class="active" data-value="63">Estonia</li>
+                            <li class="active" data-value="65">Finland</li>
+                            <li class="active" data-value="68">France</li>
+                            <li class="active" data-value="54">Germany</li>
+                            <li class="active" data-value="80">Greece</li>
+                            <li class="active" data-value="92">Hungary</li>
+                            <li class="active" data-value="98">Iceland</li>
+                            <li class="active" data-value="95">Ireland</li>
+                            <li class="active" data-value="99">Italy</li>
+                            <li class="active" data-value="102">Japan</li>
+                            <li class="active" data-value="103">Kazakhstan</li>
+                            <li class="active" data-value="109">Korea , South</li>
+                            <li class="active" data-value="121">Latvia</li>
+                            <li class="active" data-value="116">Liechtenstein</li>
+                            <li class="active" data-value="119">Lithuania</li>
+                            <li class="active" data-value="120">Luxembourg</li>
+                            <li class="active" data-value="141">Malaysia</li>
+                            <li class="active" data-value="131">Malta</li>
+                            <li class="active" data-value="124">Monaco</li>
+                            <li class="active" data-value="243">Montenegro</li>
+                            <li class="active" data-value="150">Netherlands</li>
+                            <li class="active" data-value="154">New Zealand</li>
+                            <li class="active" data-value="151">Norway</li>
+                            <li class="active" data-value="162">Poland</li>
+                            <li class="active" data-value="165">Portugal</li>
+                            <li class="active" data-value="170">Romania</li>
+                            <li class="active" data-value="171">Russian Federation</li>
+                            <li class="active" data-value="182">San Marino</li>
+                            <li class="active" data-value="176">Singapore</li>
+                            <li class="active" data-value="187">Slovak Republic</li>
+                            <li class="active" data-value="188">Slovenia</li>
+                            <li class="active" data-value="62">Spain</li>
+                            <li class="active" data-value="189">Sweden</li>
+                            <li class="active" data-value="38">Switzerland</li>
+                            <li class="active" data-value="208">Ukraine</li>
+                            <li class="active" data-value="71">United Kingdom</li>
+                            <li class="active" data-value="210">United States</li>
+                            <li class="no-results"> </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <span class="icon nationality" data-component="icon" data-icon="arrow-down"><svg
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7.4">
+                    <path d="M1.4 0L6 4.6 10.6 0 12 1.4l-6 6-6-6z"></path>
+                </svg></span>
+            <div class="info">
+                <span class="error-message">
+                    <span class="field-validation-valid" data-valmsg-for="Nationality"
+                        data-valmsg-replace="true"></span>
+                </span>
+                <span class="error-message" id="spnNationalityAuthorizedMsg" style="display: none;">
+                    Sorry, you cannot apply for an online visa at this moment. Please contact with the nearest embassy
+                    of Saudi Arabia.
+                </span>
+            </div>
+        </div>
+        <p class="label">
+            In case your nationality country is not eligible for eVisa, please <a href="https://www.mofa.gov.sa/"
+                target="_blank">contact the nearest embassy of Saudi Arabia</a>
+        </p>
+        <div class="input nationality" data-component="select-input">
+            <img alt="Captcha" id="imgCaptcha" src="/Home/CaptchaNumberImage">
+            <img src="https://cdn-visa.visitsaudi.com/visa/EV/Content/image/Refresh.png" class="copy-01"
+                onclick="refreshCaptcha();" alt="Refresh">
+            <input autocomplete="off" class="copy-01 inputnumber" data-val="true"
+                data-val-required="This field is required" id="CaptchaCode" maxlength="5" name="CaptchaCode"
+                placeholder="*****" type="text" value="">
+
+            <div class="info">
+                <span class="field-validation-valid error-message" data-valmsg-for="CaptchaCode"
+                    data-valmsg-replace="true"></span>
+                <span class="error-message" id="spnCaptchaCode" style="display: none;">The input code is incorrect,
+                    please try again</span>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="bottom-wrapper">
+        <div class="cta-wrapper justify-content-between">
+            <div class="primary-button" data-component="primary-button">
+                <button type="button" id="btnVerify">
+                    <label class="title">Next</label>
+                    <span class="icon " data-component="icon" data-icon="arrow-right"><svg
+                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6.3 8.8">
+                            <path d="M1.3 8.8L0 7.3l3.3-2.9L0 1.5 1.3 0l5 4.4-5 4.4z"></path>
+                        </svg></span>
+                </button>
+            </div>
+            <a href="/Login" class="cta">Sign in to your existing account</a>
+
+        </div>
+        <div class="helper-wrapper">
+            <p class="copy-02">
+                Activation link not received?
+            </p>
+            <a href="/Registration/ResendActivationLink" class="cta">
+            </a><a class="cta" href="/Registration/ResendActivationLink">Resend Activation</a>
+
+        </div>
+    </div>
+</form>

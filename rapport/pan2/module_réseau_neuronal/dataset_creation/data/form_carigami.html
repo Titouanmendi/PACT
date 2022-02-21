@@ -1,0 +1,359 @@
+<form id="search" action="https://reservation.carigami.fr/cars/bm/search_cars.php" method="get"
+    class="searchform--default" data-hill-layout="clear">
+    <div class="search-form">
+        <div><input type="hidden" id="submitEnabled" name="submitEnabled" value="1"><input type="hidden" id="htoken"
+                name="htoken" value=""><input type="hidden" id="depAirport" name="depAirport" value=""><input
+                type="hidden" id="destAirport" name="destAirport" value=""><input type="hidden" id="depStates"
+                name="depStates" value=""><input type="hidden" id="destStates" name="destStates" value=""><input
+                type="hidden" id="depCountry" name="depCountry" value=""><input type="hidden" id="destCountry"
+                name="destCountry" value=""><input type="hidden" id="jsAvailable" name="jsAvailable" value="1"><input
+                type="hidden" id="pageType" name="pageType" value="stage"><input id="securityToken" type="hidden"
+                name="securityToken" value="b915eb58abeb9b7b9f66066de56b5472"></div>
+        <div id="depInput" class="validated">
+            <div data-hill-layout="space-bottom" class="box input--with-icon not-empty">
+                <div id="algoliaActive" class="input-wrapper "><label class="input-floating-label"
+                        for="dep">Ville</label>
+                    <div role="combobox" aria-haspopup="listbox" aria-owns="react-autowhatever-dep"
+                        aria-expanded="false" class="react-autosuggest__container"><input type="text" value=""
+                            autocomplete="off" aria-autocomplete="list" aria-controls="react-autowhatever-dep"
+                            class="react-autosuggest__input" id="dep" label="Ville" name="dep"
+                            placeholder="Ville, aéroport ou gare">
+                        <div id="react-autowhatever-dep" role="listbox"
+                            class="react-autosuggest__suggestions-container"></div>
+                    </div>
+                </div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="input-svg">
+                    <path fill-rule="evenodd"
+                        d="M10.423 1.786a6.115 6.115 0 0 0-8.637 0 6.116 6.116 0 0 0 0 8.637c2.12 2.12 5.422 2.347 7.802.692.05.237.164.463.349.647l3.467 3.467a1.29 1.29 0 1 0 1.824-1.824l-3.467-3.468a1.29 1.29 0 0 0-.647-.348c1.657-2.38 1.43-5.682-.691-7.803zM9.328 9.329a4.564 4.564 0 0 1-6.447 0 4.566 4.566 0 0 1 0-6.448 4.565 4.565 0 0 1 6.447 0 4.564 4.564 0 0 1 0 6.448z">
+                    </path>
+                </svg>
+            </div>
+        </div>
+        <div>
+            <div id="backCity" class="validated" data-hill-layout="box-0">
+                <div class="box input--with-icon not-empty" data-hill-layout="space-bottom">
+                    <div id="algoliaActive" class="input-wrapper "><label class="input-floating-label"
+                            for="dest">Retour</label>
+                        <div role="combobox" aria-haspopup="listbox" aria-owns="react-autowhatever-dest"
+                            aria-expanded="false" class="react-autosuggest__container"><input type="text" value=""
+                                autocomplete="off" aria-autocomplete="list" aria-controls="react-autowhatever-dest"
+                                class="react-autosuggest__input" id="dest" label="Retour" name="dest"
+                                placeholder="Retour">
+                            <div id="react-autowhatever-dest" role="listbox"
+                                class="react-autosuggest__suggestions-container"></div>
+                        </div>
+                    </div>
+                    <div class="clickable-input-svg"><svg style="width:1.6rem;height:1.6rem;stroke:inherit"
+                            viewBox="0 0 25 25">
+                            <path
+                                d="M12.55 2C18.376 2 23.1 6.724 23.1 12.55c0 5.825-4.725 10.55-10.55 10.55C6.724 23.1 2 18.376 2 12.55 2 6.724 6.724 2 12.55 2zm0 1.918a8.632 8.632 0 100 17.264 8.632 8.632 0 000-17.264zm4.246 4.303c.455.455.394 1.257-.138 1.788l-2.457 2.457 2.457 2.458c.532.531.594 1.333.138 1.789-.455.455-1.257.394-1.789-.138l-2.457-2.458-2.457 2.458c-.533.533-1.334.593-1.789.138-.456-.456-.395-1.257.138-1.79l2.457-2.457-2.457-2.457c-.533-.532-.593-1.333-.138-1.788.456-.456 1.256-.395 1.789.137l2.457 2.457 2.457-2.457c.532-.532 1.333-.593 1.789-.137z">
+                            </path>
+                        </svg></div>
+                </div>
+            </div>
+            <div id="destinationToggle" data-hill-layout="false">
+                <div data-hill-layout="clear space-bottom" class="box not-empty">
+                    <div class="checkbox search-form-destination-checkbox"><label class="checkbox-label-container"
+                            for="destSelect"><input type="checkbox" id="destSelect" class="checkbox-input"
+                                name="destSelect" value="false"><span class="checkbox-check"></span><span
+                                class="checkbox-label">Retour dans une autre ville?</span></label></div>
+                </div>
+            </div>
+        </div>
+        <div id="datePickerWrapper">
+            <div data-hill-layout="space-bottom" class="box input--with-icon not-empty"><button type="button"
+                    class="datePicker--output dep-date" aria-label="date">Lu, 28/02/2022 - Lu, 07/03/2022</button><span
+                    class="input-svg"><svg style="width:1.6rem;height:1.6rem;stroke:inherit" viewBox="0 0 512 512">
+                        <path
+                            d="M457 0H55C25 0 0 25 0 55v402c0 30 25 55 55 55h402c30 0 55-25 55-55V55c0-30-25-55-55-55zM168 38h176v46H168zm296 421H48V127h416zM90 278h55v55H90zm0 87h55v55H90zm92-174h55v55h-55zm0 87h55v55h-55zm0 87h55v55h-55zm92-174h55v55h-55zm0 87h55v55h-55zm0 87h55v55h-55zm92-174h55v55h-55zm0 87h55v55h-55z">
+                        </path>
+                    </svg></span><input type="hidden" name="depDate" value="lu, 28/02/2022"><input type="hidden"
+                    name="destDate" id="destDate" value="lu, 07/03/2022"></div>
+        </div>
+        <div data-hill-layout="space-bottom" class="time-input-wrapper">
+            <div class="input-wrapper filled"><label class="input-floating-label" for="depTime">Prise en charge
+                    :</label>
+                <div>
+                    <div class="dropdown-container"><select id="depTime" name="depTime" class="time-select">
+                            <option value="00:15">00:15</option>
+                            <option value="00:30">00:30</option>
+                            <option value="00:45">00:45</option>
+                            <option value="01:00">01:00</option>
+                            <option value="01:15">01:15</option>
+                            <option value="01:30">01:30</option>
+                            <option value="01:45">01:45</option>
+                            <option value="02:00">02:00</option>
+                            <option value="02:15">02:15</option>
+                            <option value="02:30">02:30</option>
+                            <option value="02:45">02:45</option>
+                            <option value="03:00">03:00</option>
+                            <option value="03:15">03:15</option>
+                            <option value="03:30">03:30</option>
+                            <option value="03:45">03:45</option>
+                            <option value="04:00">04:00</option>
+                            <option value="04:15">04:15</option>
+                            <option value="04:30">04:30</option>
+                            <option value="04:45">04:45</option>
+                            <option value="05:00">05:00</option>
+                            <option value="05:15">05:15</option>
+                            <option value="05:30">05:30</option>
+                            <option value="05:45">05:45</option>
+                            <option value="06:00">06:00</option>
+                            <option value="06:15">06:15</option>
+                            <option value="06:30">06:30</option>
+                            <option value="06:45">06:45</option>
+                            <option value="07:00">07:00</option>
+                            <option value="07:15">07:15</option>
+                            <option value="07:30">07:30</option>
+                            <option value="07:45">07:45</option>
+                            <option value="08:00">08:00</option>
+                            <option value="08:15">08:15</option>
+                            <option value="08:30">08:30</option>
+                            <option value="08:45">08:45</option>
+                            <option value="09:00">09:00</option>
+                            <option value="09:15">09:15</option>
+                            <option value="09:30">09:30</option>
+                            <option value="09:45">09:45</option>
+                            <option value="10:00">10:00</option>
+                            <option value="10:15">10:15</option>
+                            <option value="10:30">10:30</option>
+                            <option value="10:45">10:45</option>
+                            <option value="11:00">11:00</option>
+                            <option value="11:15">11:15</option>
+                            <option value="11:30">11:30</option>
+                            <option value="11:45">11:45</option>
+                            <option selected="" value="12:00">12:00</option>
+                            <option value="12:15">12:15</option>
+                            <option value="12:30">12:30</option>
+                            <option value="12:45">12:45</option>
+                            <option value="13:00">13:00</option>
+                            <option value="13:15">13:15</option>
+                            <option value="13:30">13:30</option>
+                            <option value="13:45">13:45</option>
+                            <option value="14:00">14:00</option>
+                            <option value="14:15">14:15</option>
+                            <option value="14:30">14:30</option>
+                            <option value="14:45">14:45</option>
+                            <option value="15:00">15:00</option>
+                            <option value="15:15">15:15</option>
+                            <option value="15:30">15:30</option>
+                            <option value="15:45">15:45</option>
+                            <option value="16:00">16:00</option>
+                            <option value="16:15">16:15</option>
+                            <option value="16:30">16:30</option>
+                            <option value="16:45">16:45</option>
+                            <option value="17:00">17:00</option>
+                            <option value="17:15">17:15</option>
+                            <option value="17:30">17:30</option>
+                            <option value="17:45">17:45</option>
+                            <option value="18:00">18:00</option>
+                            <option value="18:15">18:15</option>
+                            <option value="18:30">18:30</option>
+                            <option value="18:45">18:45</option>
+                            <option value="19:00">19:00</option>
+                            <option value="19:15">19:15</option>
+                            <option value="19:30">19:30</option>
+                            <option value="19:45">19:45</option>
+                            <option value="20:00">20:00</option>
+                            <option value="20:15">20:15</option>
+                            <option value="20:30">20:30</option>
+                            <option value="20:45">20:45</option>
+                            <option value="21:00">21:00</option>
+                            <option value="21:15">21:15</option>
+                            <option value="21:30">21:30</option>
+                            <option value="21:45">21:45</option>
+                            <option value="22:00">22:00</option>
+                            <option value="22:15">22:15</option>
+                            <option value="22:30">22:30</option>
+                            <option value="22:45">22:45</option>
+                            <option value="23:00">23:00</option>
+                            <option value="23:15">23:15</option>
+                            <option value="23:30">23:30</option>
+                            <option value="23:45">23:45</option>
+                        </select><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 10">
+                            <path fill-rule="evenodd" d="M16 1.933L14.133.067 8 6.2 1.867.067 0 1.933l8 8 8-8z"></path>
+                        </svg></div>
+                </div>
+            </div>
+            <div class="input-wrapper filled"><label class="input-floating-label" for="destTime">Restitution :</label>
+                <div>
+                    <div class="dropdown-container"><select id="destTime" name="destTime" class="time-select">
+                            <option value="00:15">00:15</option>
+                            <option value="00:30">00:30</option>
+                            <option value="00:45">00:45</option>
+                            <option value="01:00">01:00</option>
+                            <option value="01:15">01:15</option>
+                            <option value="01:30">01:30</option>
+                            <option value="01:45">01:45</option>
+                            <option value="02:00">02:00</option>
+                            <option value="02:15">02:15</option>
+                            <option value="02:30">02:30</option>
+                            <option value="02:45">02:45</option>
+                            <option value="03:00">03:00</option>
+                            <option value="03:15">03:15</option>
+                            <option value="03:30">03:30</option>
+                            <option value="03:45">03:45</option>
+                            <option value="04:00">04:00</option>
+                            <option value="04:15">04:15</option>
+                            <option value="04:30">04:30</option>
+                            <option value="04:45">04:45</option>
+                            <option value="05:00">05:00</option>
+                            <option value="05:15">05:15</option>
+                            <option value="05:30">05:30</option>
+                            <option value="05:45">05:45</option>
+                            <option value="06:00">06:00</option>
+                            <option value="06:15">06:15</option>
+                            <option value="06:30">06:30</option>
+                            <option value="06:45">06:45</option>
+                            <option value="07:00">07:00</option>
+                            <option value="07:15">07:15</option>
+                            <option value="07:30">07:30</option>
+                            <option value="07:45">07:45</option>
+                            <option value="08:00">08:00</option>
+                            <option value="08:15">08:15</option>
+                            <option value="08:30">08:30</option>
+                            <option value="08:45">08:45</option>
+                            <option selected="" value="09:00">09:00</option>
+                            <option value="09:15">09:15</option>
+                            <option value="09:30">09:30</option>
+                            <option value="09:45">09:45</option>
+                            <option value="10:00">10:00</option>
+                            <option value="10:15">10:15</option>
+                            <option value="10:30">10:30</option>
+                            <option value="10:45">10:45</option>
+                            <option value="11:00">11:00</option>
+                            <option value="11:15">11:15</option>
+                            <option value="11:30">11:30</option>
+                            <option value="11:45">11:45</option>
+                            <option value="12:00">12:00</option>
+                            <option value="12:15">12:15</option>
+                            <option value="12:30">12:30</option>
+                            <option value="12:45">12:45</option>
+                            <option value="13:00">13:00</option>
+                            <option value="13:15">13:15</option>
+                            <option value="13:30">13:30</option>
+                            <option value="13:45">13:45</option>
+                            <option value="14:00">14:00</option>
+                            <option value="14:15">14:15</option>
+                            <option value="14:30">14:30</option>
+                            <option value="14:45">14:45</option>
+                            <option value="15:00">15:00</option>
+                            <option value="15:15">15:15</option>
+                            <option value="15:30">15:30</option>
+                            <option value="15:45">15:45</option>
+                            <option value="16:00">16:00</option>
+                            <option value="16:15">16:15</option>
+                            <option value="16:30">16:30</option>
+                            <option value="16:45">16:45</option>
+                            <option value="17:00">17:00</option>
+                            <option value="17:15">17:15</option>
+                            <option value="17:30">17:30</option>
+                            <option value="17:45">17:45</option>
+                            <option value="18:00">18:00</option>
+                            <option value="18:15">18:15</option>
+                            <option value="18:30">18:30</option>
+                            <option value="18:45">18:45</option>
+                            <option value="19:00">19:00</option>
+                            <option value="19:15">19:15</option>
+                            <option value="19:30">19:30</option>
+                            <option value="19:45">19:45</option>
+                            <option value="20:00">20:00</option>
+                            <option value="20:15">20:15</option>
+                            <option value="20:30">20:30</option>
+                            <option value="20:45">20:45</option>
+                            <option value="21:00">21:00</option>
+                            <option value="21:15">21:15</option>
+                            <option value="21:30">21:30</option>
+                            <option value="21:45">21:45</option>
+                            <option value="22:00">22:00</option>
+                            <option value="22:15">22:15</option>
+                            <option value="22:30">22:30</option>
+                            <option value="22:45">22:45</option>
+                            <option value="23:00">23:00</option>
+                            <option value="23:15">23:15</option>
+                            <option value="23:30">23:30</option>
+                            <option value="23:45">23:45</option>
+                        </select><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 10">
+                            <path fill-rule="evenodd" d="M16 1.933L14.133.067 8 6.2 1.867.067 0 1.933l8 8 8-8z"></path>
+                        </svg></div>
+                </div>
+            </div>
+        </div>
+        <div class="box agecheckforyoungdrivers not-empty" data-hill-layout="space-bottom-2x">
+            <div class="checkbox search-form-young-driver-checkbox" data-hill-layout="float-left"><label
+                    class="checkbox-label-container" for="driverIsAdult"><input type="checkbox" id="driverIsAdult"
+                        class="checkbox-input" name="driverIsAdult" value="false" checked=""><span
+                        class="checkbox-check checked"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 13">
+                            <path fill-rule="evenodd"
+                                d="M15.842 1.942L14.058.158a.54.54 0 0 0-.764 0L5.865 7.587l-3.16-3.16a.54.54 0 0 0-.763 0L.158 6.212a.54.54 0 0 0 0 .764L5.483 12.3a.539.539 0 0 0 .765 0l9.594-9.594a.54.54 0 0 0 0-.764z">
+                            </path>
+                        </svg></span><span class="checkbox-label">Conducteur âgé entre 26 et 65 ans</span></label></div>
+            <span class="info-icon"><svg style="width:1.6rem;height:1.6rem;stroke:inherit" viewBox="0 0 25 25">
+                    <path
+                        d="M1.5 12.5c0-6.075 4.925-11 11-11 6.074 0 11 4.925 11 11 0 6.074-4.926 11-11 11-6.075 0-11-4.926-11-11zm2 0a9 9 0 0 0 18 0 9 9 0 0 0-18 0zm10.217 4.754c0 .785-.546 1.42-1.217 1.42-.672 0-1.217-.635-1.217-1.42v-5.682c0-.784.545-1.42 1.217-1.42.67 0 1.217.636 1.217 1.42v5.682zM12.5 9.3a1.4 1.4 0 1 1 .001-2.801A1.4 1.4 0 0 1 12.5 9.3z">
+                    </path>
+                </svg></span>
+        </div>
+        <div data-hill-layout="space-bottom" class="box search-button-wrapper not-empty"><button id="find"
+                class="button--submit search-button" type="submit">Rechercher</button></div>
+        <div class="searchform-bottom-row">
+            <div class="search-options-overlay-trigger"><span class="button--plain">plus d'options</span></div>
+            <div class="box-row corona-information" data-hill-layout="row"><svg
+                    style="width:1.6rem;height:1.6rem;stroke:inherit" viewBox="0 0 25 25">
+                    <path
+                        d="M1.5 12.5c0-6.075 4.925-11 11-11 6.074 0 11 4.925 11 11 0 6.074-4.926 11-11 11-6.075 0-11-4.926-11-11zm2 0a9 9 0 0 0 18 0 9 9 0 0 0-18 0zm10.217 4.754c0 .785-.546 1.42-1.217 1.42-.672 0-1.217-.635-1.217-1.42v-5.682c0-.784.545-1.42 1.217-1.42.67 0 1.217.636 1.217 1.42v5.682zM12.5 9.3a1.4 1.4 0 1 1 .001-2.801A1.4 1.4 0 0 1 12.5 9.3z">
+                    </path>
+                </svg><a target="_blank" rel="noopener noreferrer"
+                    href="https://www.carigami.fr/magazine/louer-une-voiture/location-voiture-coronavirus.html">Situation
+                    actuelle : Covid-19<svg style="width:0.75rem;height:0.75rem;stroke:inherit" viewBox="0 0 512 512">
+                        <path d="M156 0L96 60l196 196L96 452l60 60 256-256z"></path>
+                    </svg></a></div>
+        </div>
+    </div>
+    <div class="search-options" data-hill-layout="box-0"><label data-hill-layout="space-bottom"
+            class="text--labelGroup">Assurances</label>
+        <div class="checkbox" data-hill-layout="space-bottom-2x"><label class="checkbox-label-container"
+                for="insfull"><input type="checkbox" id="insfull" class="checkbox-input" name="insurance_coverage"
+                    value="full"><span class="checkbox-check"></span><span class="checkbox-label">Sans
+                    franchise</span></label></div><label data-hill-layout="space-bottom"
+            class="text--labelGroup">Catégories</label>
+        <div class="box-row" data-hill-layout="row space-bottom-2x">
+            <div data-hill-layout="box-1/2" class="box not-empty">
+                <div class="checkbox" data-hill-layout="space-bottom"><label class="checkbox-label-container"
+                        for="fib_ab"><input type="checkbox" id="fib_ab" class="checkbox-input"
+                            name="acrissDescriptions[]" value="M|N|E|H:::"><span class="checkbox-check"></span><span
+                            class="checkbox-label">Citadine</span></label></div>
+                <div class="checkbox"><label class="checkbox-label-container" for="fib_ad"><input type="checkbox"
+                            id="fib_ad" class="checkbox-input" name="acrissDescriptions[]" value="C|D:-V|-M::"><span
+                            class="checkbox-check"></span><span class="checkbox-label">Compacte</span></label></div>
+                <div class="checkbox" data-hill-layout="space-top"><label class="checkbox-label-container"
+                        for="fib_af"><input type="checkbox" id="fib_af" class="checkbox-input"
+                            name="acrissDescriptions[]" value="I|J|S|F|R|G|X|P|U|L|W:::"><span
+                            class="checkbox-check"></span><span class="checkbox-label">Intermédiaire</span></label>
+                </div>
+            </div>
+            <div data-hill-layout="box-1/2" class="box not-empty">
+                <div class="checkbox" data-hill-layout="space-bottom"><label class="checkbox-label-container"
+                        for="fib_al"><input type="checkbox" id="fib_al" class="checkbox-input"
+                            name="acrissDescriptions[]" value="S|F|R|G|X|P|U|L|W:::"><span
+                            class="checkbox-check"></span><span class="checkbox-label">Routire</span></label></div>
+                <div class="checkbox"><label class="checkbox-label-container" for="fib_ae"><input type="checkbox"
+                            id="fib_ae" class="checkbox-input" name="acrissDescriptions[]" value=":W|Y::"><span
+                            class="checkbox-check"></span><span class="checkbox-label">Break</span></label></div>
+            </div>
+        </div><label data-hill-layout="space-bottom" class="text--labelGroup">Inclus</label>
+        <div class="box-row filter-box-row" data-hill-layout="row">
+            <div data-hill-layout="box-1/2" class="box not-empty">
+                <div class="checkbox" data-hill-layout="space-bottom"><label class="checkbox-label-container"
+                        for="fib_ed"><input type="checkbox" id="fib_ed" class="checkbox-input" name="extras[]"
+                            value="a[K*]"><span class="checkbox-check"></span><span class="checkbox-label">KM
+                            illimité</span></label></div>
+            </div>
+            <div data-hill-layout="box-1/2" class="box not-empty">
+                <div class="checkbox" data-hill-layout="space-bottom"><label class="checkbox-label-container"
+                        for="fib_ee"><input type="checkbox" id="fib_ee" class="checkbox-input" name="fuel_policy[]"
+                            value="full-full"><span class="checkbox-check"></span><span class="checkbox-label">Prise et
+                            retour avec le plein</span></label></div>
+            </div>
+        </div>
+    </div>
+</form>
