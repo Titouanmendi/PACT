@@ -10,20 +10,20 @@ Members :
 - Nans WEBERT
 
 
-Our project is simple to understand : we want to accelerate administrative process (like renewal of identify card, school registration, etc..).
+Our project is simple to understand : we want to accelerate administrative processes (like ID's renewal, school registration, etc..).
 
-To do this, we created a concept : to have an browser extension which can fill forms. But there is a security problem with an extension, the browser storage isn't very safe.
+To do this, we came up with a concept : a browser extension which can automatically fill forms. But there is a security problem with an extension, the browser storage isn't very safe.
 
-To secure the installation, we decided to add an other part in the project : a desktop application where the user can fill his informations.
+To secure the installation, we decided to add an other part in the project : a desktop application where the user can fill in his informations.
 
 With the application and the browser extension, the user will :
 
-- fill his informations in the desktop app
+- fill in his informations in the desktop app
 - the desktop app will save data in an encrypted file on the computer
-- went a user goes on a webpage where there is a form, it detect it
-- the extension call the desktop app with his API (the desktop app will create a local server with an API)
-- the desktop app decrypt the file and send back correct informations
-- the extension fill the form with the data
+- when a user goes on a webpage where there is a form, it detects it
+- the extension calls the desktop app thanks to his API (the desktop app will create a local server with an API)
+- the desktop app decrypts the file and sends back correct informations
+- the extension fills the form with the data
 
 The module IA is here to do the step **detection of the form**. To achieve the detection, Titouan though about an AI.
 
@@ -32,14 +32,14 @@ The module IA is here to do the step **detection of the form**. To achieve the d
 
 **PyTorch**
 
-As none of us know AI, we decided to take the course of PyTorch.
+As none of us knew about AI, we decided to take the course of PyTorch.
 
 The first course was about building an AI to do image detection.
-This is what the program do :
+This is what the program does :
 
 - it loads a dataset from the fashionMIST dataset
 - it trains an AI with the dataset
-- the program creates a model (and save it to a file).
+- the program creates a model (and saves it to a file).
 - the model is used with an image
 
 **TensorFlow**
@@ -48,14 +48,14 @@ After that Pytorch tutorial (which was long), we also tried to use tensorflow (w
 
 **PyTorch Text**
 
-The result was concluant. But not perfect because tutorials where on image data, and we want to work on text data. So we looked for a pyTorch tutorial for text (it was text classification).
+The result was concluant. But not perfect because tutorials where on image data, and we wanted to work on text data. So we looked for a PyTorch tutorial for text since it works a bit differently (it was text classification).
 
 **Dataset**
 
-Then we figured that we needed to found or create a dataset for our project.
+Then we figured out that we needed to find or create a dataset for our project.
 https://towardsdatascience.com/how-to-use-datasets-and-dataloader-in-pytorch-for-custom-text-data-270eed7f7c00[How to create a dataset]
 
-Unfortunately, there is not dataset for HTML form. So we need to creates it.
+Unfortunately, there was no dataset for HTML forms. So we decided to create it.
 
 The process of dataset creation :
 
@@ -66,13 +66,13 @@ The process of dataset creation :
 - create a `DataLoader` with the initialized class
 - use the dataloader to train
 
-We saw that in the pyTorch text, we used a tokenizer to split data and then transform the data in vector. As we work with HTML, we need our own tokenizer (see part **`Code`**)
+We saw that in the PyTorch text, we used a tokenizer to split data and then transform the data in vector. As we work with HTML, we need our own tokenizer (see part **`Code`**)
 
 == Results and discussion
 
 After the course we had a working AI !
 
-The main problem is the dataset we need to create : we need to create a new dataset which is complicated but we started to do that. To create the dataset, we are going to scroll the web in search of form.
+The main problem is the dataset we need to create : we need to create a new dataset which is complicated, since we have to find as much online forms as possible, but we started to do that. To create the dataset, we are going to scroll the web in search of as many forms as possible.
 
 Our Tech Stack in the project is full JavaScript, so a problem may appear during the integration of the module in the app.
 
@@ -83,13 +83,13 @@ Fortunately, we searched on the web and found different programs to transfer a m
 - https://www.tensorflow.org/js/tutorials?hl=fr[https://www.tensorflow.org/js/tutorials] tensorflow in javascript
 - https://ml5js.org/[https://ml5js.org/] a wrapper for tensorflow.js
 
-We though about different designs 
+We though about different designs :
 
-- The extension sends a part of a page to the Desktop app and the detection is made in the Desktop app but running python program (like in a `shell`)
-- The extension sends a part of a page to the Desktop app and the detection is made in the Desktop app with a AI model converted in JS
-- The extension analyse the page (without sending it to the Desktop app) is made with an AI model converted in JS
+- The extension sends a part of a page to the Desktop app and the detection is made in the Desktop app but running python program (like in a `shell`).
+- The extension sends a part of a page to the Desktop app and the detection is made in the Desktop app with an AI model converted in JS.
+- The extension analyzes the page (without sending it to the Desktop app) and the detection is done through an AI model converted in JS.
 
-We though that the last one is the best option
+We though that the last one probably is the best option.
 
 == Code and Vocabulary
 
