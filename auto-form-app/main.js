@@ -40,7 +40,7 @@ function initialize() {
     }
 
     mainWindow = new BrowserWindow(windowOptions)
-    const finalPath = path.join('file://', __dirname, 'pages', '/index.html');
+    const finalPath = path.join('file://', __dirname, 'public', '/index.html');
     console.log(finalPath)
     console.log(finalPath)
     console.log(finalPath)

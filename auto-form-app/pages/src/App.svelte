@@ -1,26 +1,35 @@
 <script>
+    import { fade } from "svelte/transition";
     import sections from "./sections/index";
-    import Navigation from "./navigation.svelte";
+    import Navigation from "./Navigation/Navigation.svelte";
     console.log(window);
-    let actualPage = sections.About;
+    let actualPage = null;
     const changeNav = (newComponent) => {
-        const [firstFolder, secondElement] = newComponent.split("-");
-        if (sections[firstFolder][secondElement]) {
-            actualPage = sections[firstFolder][secondElement];
-            setTimeout(() => {
-                const el = document.getElementsByClassName("section");
-                if (el.length > 0) {
-                    el[0].classList.add("is-shown");
-                }
-            }, 200);
-        } else {
-            actualPage = sections.About;
-        }
+        visible = false;
+        actualPage = newComponent;
+        timer();
     };
+    let visible = false;
+    const timer = () => {
+        setTimeout(() => {
+            visible = true;
+        }, 200);
+    };
+    changeNav(sections.About);
 </script>
 
 <Navigation {changeNav} />
 
-<main class="content js-content is-shown">
-    <svelte:component this={actualPage} />
-</main>
+{#if visible}
+    <main transition:fade class="content">
+        <svelte:component this={actualPage} />
+    </main>
+{/if}
+
+<style>
+    .content {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+    }
+</style>

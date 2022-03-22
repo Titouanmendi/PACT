@@ -213,12 +213,5 @@
         </div>
       </div>
     </div>
-
-    <script type="text/javascript">
-      require("./renderer-process/windows/create-window");
-      require("./renderer-process/windows/manage-window");
-      require("./renderer-process/windows/using-window-events");
-      require("./renderer-process/windows/frameless-window");
-    </script>
   </section>
 </template>

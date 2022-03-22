@@ -1,40 +1,15 @@
 <script>
     export let changeNav = null;
-    const menus = [
-        {
-            icon: "../assets/img/icons.svg",
-            title: "Papier",
-            links: [
-                {
-                    title: "Create and manage <em>windows</em>",
-                    link: "windows-windows",
-                },
-                {
-                    title: "Handling window <em>crashes and hangs</em>",
-                    link: "windows-crashHang",
-                },
-            ],
-        },
-        {
-            icon: "../assets/img/icons.svg",
-            title: "Papier 2",
-            links: [
-                {
-                    title: "Create and manage <em>windows</em>",
-                    link: "windows-windows",
-                },
-                {
-                    title: "Handling window <em>crashes and hangs</em>",
-                    link: "windows-crashHang",
-                },
-            ],
-        },
-    ];
+    import { defaultMenus } from "./defaultMenus";
+
+    const othersMenus = [];
+
+    const menus = [...defaultMenus, ...othersMenus];
+
     const changeNavClick = (indexMenu, indexLink) => {
-        const string = menus[indexMenu].links[indexLink].link;
-        changeNav(string);
+        const component = menus[indexMenu].links[indexLink].component;
+        changeNav(component);
     };
-    console.log(menus);
     let value = "";
     const test = () => {
         fetch("http://localhost:3000/api/method/openFileFolder", {
@@ -58,8 +33,8 @@
             alt="logo"
         />
     </header>
-    {#if menus.length > 0}
-        {#each menus as oneMenu, indexMenu}
+    {#if defaultMenus.length > 0}
+        {#each defaultMenus as oneMenu, indexMenu}
             <div class="nav-item u-category-windows">
                 <h5 class="nav-category">
                     <svg class="nav-icon">
@@ -83,7 +58,13 @@
     {/if}
 
     <footer class="nav-footer">
-        <button type="button" class="nav-footer-button">About</button>
+        <button
+            type="button"
+            class="nav-footer-button"
+            on:click={() => {
+                changeNav();
+            }}>About</button
+        >
         <button
             type="button"
             on:click={() => {

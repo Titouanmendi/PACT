@@ -2,6 +2,10 @@ const polka = require("polka");
 const { json } = require('body-parser');
 const methods = require("./methods");
 
+const { join } = require('path');
+const dir = join(__dirname, '..', 'public');
+const serve = require('serve-static')(dir);
+
 const server = polka({
     onNoMatch: () => {
         console.log("404");
@@ -16,6 +20,7 @@ function authFunction(req, res, next) {
 
 server.use(authFunction);
 server.use(json());
+server.use('/', serve);
 
 
 server.post("/api/method/:methodName", async (req, res, next) => {

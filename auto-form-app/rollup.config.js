@@ -7,12 +7,12 @@ import css from "rollup-plugin-css-only";
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
-    input: "./src/main.js",
+    input: "./pages/src/main.js",
     output: {
         sourcemap: true,
         format: "iife",
         name: "app",
-        file: "./bundle.js",
+        file: "./public/bundle.js",
     },
     plugins: [
         svelte({

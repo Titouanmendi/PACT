@@ -2,6 +2,7 @@ var app = (function () {
     'use strict';
 
     function noop() { }
+    const identity = x => x;
     function add_location(element, file, line, column, char) {
         element.__svelte_meta = {
             loc: { file, line, column, char }
@@ -33,8 +34,60 @@ var app = (function () {
     function is_empty(obj) {
         return Object.keys(obj).length === 0;
     }
+
+    const is_client = typeof window !== 'undefined';
+    let now = is_client
+        ? () => window.performance.now()
+        : () => Date.now();
+    let raf = is_client ? cb => requestAnimationFrame(cb) : noop;
+
+    const tasks = new Set();
+    function run_tasks(now) {
+        tasks.forEach(task => {
+            if (!task.c(now)) {
+                tasks.delete(task);
+                task.f();
+            }
+        });
+        if (tasks.size !== 0)
+            raf(run_tasks);
+    }
+    /**
+     * Creates a new task that runs on each raf frame
+     * until it returns a falsy value or is aborted
+     */
+    function loop(callback) {
+        let task;
+        if (tasks.size === 0)
+            raf(run_tasks);
+        return {
+            promise: new Promise(fulfill => {
+                tasks.add(task = { c: callback, f: fulfill });
+            }),
+            abort() {
+                tasks.delete(task);
+            }
+        };
+    }
     function append(target, node) {
         target.appendChild(node);
+    }
+    function get_root_for_style(node) {
+        if (!node)
+            return document;
+        const root = node.getRootNode ? node.getRootNode() : node.ownerDocument;
+        if (root && root.host) {
+            return root;
+        }
+        return node.ownerDocument;
+    }
+    function append_empty_stylesheet(node) {
+        const style_element = element('style');
+        append_stylesheet(get_root_for_style(node), style_element);
+        return style_element.sheet;
+    }
+    function append_stylesheet(node, style) {
+        append(node.head || node, style);
     }
     function insert(target, node, anchor) {
         target.insertBefore(node, anchor || null);
@@ -76,13 +129,85 @@ var app = (function () {
     function xlink_attr(node, attribute, value) {
         node.setAttributeNS('http://www.w3.org/1999/xlink', attribute, value);
     }
+    function to_number(value) {
+        return value === '' ? null : +value;
+    }
     function children(element) {
         return Array.from(element.childNodes);
+    }
+    function set_input_value(input, value) {
+        input.value = value == null ? '' : value;
     }
     function custom_event(type, detail, bubbles = false) {
         const e = document.createEvent('CustomEvent');
         e.initCustomEvent(type, bubbles, false, detail);
         return e;
+    }
+
+    // we need to store the information for multiple documents because a Svelte application could also contain iframes
+    // https://github.com/sveltejs/svelte/issues/3624
+    const managed_styles = new Map();
+    let active = 0;
+    // https://github.com/darkskyapp/string-hash/blob/master/index.js
+    function hash(str) {
+        let hash = 5381;
+        let i = str.length;
+        while (i--)
+            hash = ((hash << 5) - hash) ^ str.charCodeAt(i);
+        return hash >>> 0;
+    }
+    function create_style_information(doc, node) {
+        const info = { stylesheet: append_empty_stylesheet(node), rules: {} };
+        managed_styles.set(doc, info);
+        return info;
+    }
+    function create_rule(node, a, b, duration, delay, ease, fn, uid = 0) {
+        const step = 16.666 / duration;
+        let keyframes = '{\n';
+        for (let p = 0; p <= 1; p += step) {
+            const t = a + (b - a) * ease(p);
+            keyframes += p * 100 + `%{${fn(t, 1 - t)}}\n`;
+        }
+        const rule = keyframes + `100% {${fn(b, 1 - b)}}\n}`;
+        const name = `__svelte_${hash(rule)}_${uid}`;
+        const doc = get_root_for_style(node);
+        const { stylesheet, rules } = managed_styles.get(doc) || create_style_information(doc, node);
+        if (!rules[name]) {
+            rules[name] = true;
+            stylesheet.insertRule(`@keyframes ${name} ${rule}`, stylesheet.cssRules.length);
+        }
+        const animation = node.style.animation || '';
+        node.style.animation = `${animation ? `${animation}, ` : ''}${name} ${duration}ms linear ${delay}ms 1 both`;
+        active += 1;
+        return name;
+    }
+    function delete_rule(node, name) {
+        const previous = (node.style.animation || '').split(', ');
+        const next = previous.filter(name
+            ? anim => anim.indexOf(name) < 0 // remove specific animation
+            : anim => anim.indexOf('__svelte') === -1 // remove all Svelte animations
+        );
+        const deleted = previous.length - next.length;
+        if (deleted) {
+            node.style.animation = next.join(', ');
+            active -= deleted;
+            if (!active)
+                clear_rules();
+        }
+    }
+    function clear_rules() {
+        raf(() => {
+            if (active)
+                return;
+            managed_styles.forEach(info => {
+                const { stylesheet } = info;
+                let i = stylesheet.cssRules.length;
+                while (i--)
+                    stylesheet.deleteRule(i);
+                info.rules = {};
+            });
+            managed_styles.clear();
+        });
     }
 
     let current_component;
@@ -171,6 +296,20 @@ var app = (function () {
             $$.after_update.forEach(add_render_callback);
         }
     }
+
+    let promise;
+    function wait() {
+        if (!promise) {
+            promise = Promise.resolve();
+            promise.then(() => {
+                promise = null;
+            });
+        }
+        return promise;
+    }
+    function dispatch(node, direction, kind) {
+        node.dispatchEvent(custom_event(`${direction ? 'intro' : 'outro'}${kind}`));
+    }
     const outroing = new Set();
     let outros;
     function group_outros() {
@@ -207,6 +346,112 @@ var app = (function () {
             });
             block.o(local);
         }
+    }
+    const null_transition = { duration: 0 };
+    function create_bidirectional_transition(node, fn, params, intro) {
+        let config = fn(node, params);
+        let t = intro ? 0 : 1;
+        let running_program = null;
+        let pending_program = null;
+        let animation_name = null;
+        function clear_animation() {
+            if (animation_name)
+                delete_rule(node, animation_name);
+        }
+        function init(program, duration) {
+            const d = (program.b - t);
+            duration *= Math.abs(d);
+            return {
+                a: t,
+                b: program.b,
+                d,
+                duration,
+                start: program.start,
+                end: program.start + duration,
+                group: program.group
+            };
+        }
+        function go(b) {
+            const { delay = 0, duration = 300, easing = identity, tick = noop, css } = config || null_transition;
+            const program = {
+                start: now() + delay,
+                b
+            };
+            if (!b) {
+                // @ts-ignore todo: improve typings
+                program.group = outros;
+                outros.r += 1;
+            }
+            if (running_program || pending_program) {
+                pending_program = program;
+            }
+            else {
+                // if this is an intro, and there's a delay, we need to do
+                // an initial tick and/or apply CSS animation immediately
+                if (css) {
+                    clear_animation();
+                    animation_name = create_rule(node, t, b, duration, delay, easing, css);
+                }
+                if (b)
+                    tick(0, 1);
+                running_program = init(program, duration);
+                add_render_callback(() => dispatch(node, b, 'start'));
+                loop(now => {
+                    if (pending_program && now > pending_program.start) {
+                        running_program = init(pending_program, duration);
+                        pending_program = null;
+                        dispatch(node, running_program.b, 'start');
+                        if (css) {
+                            clear_animation();
+                            animation_name = create_rule(node, t, running_program.b, running_program.duration, 0, easing, config.css);
+                        }
+                    }
+                    if (running_program) {
+                        if (now >= running_program.end) {
+                            tick(t = running_program.b, 1 - t);
+                            dispatch(node, running_program.b, 'end');
+                            if (!pending_program) {
+                                // we're done
+                                if (running_program.b) {
+                                    // intro — we can tidy up immediately
+                                    clear_animation();
+                                }
+                                else {
+                                    // outro — needs to be coordinated
+                                    if (!--running_program.group.r)
+                                        run_all(running_program.group.c);
+                                }
+                            }
+                            running_program = null;
+                        }
+                        else if (now >= running_program.start) {
+                            const p = now - running_program.start;
+                            t = running_program.a + running_program.d * easing(p / running_program.duration);
+                            tick(t, 1 - t);
+                        }
+                    }
+                    return !!(running_program || pending_program);
+                });
+            }
+        }
+        return {
+            run(b) {
+                if (is_function(config)) {
+                    wait().then(() => {
+                        // @ts-ignore
+                        config = config();
+                        go(b);
+                    });
+                }
+                else {
+                    go(b);
+                }
+            },
+            end() {
+                clear_animation();
+                running_program = pending_program = null;
+            }
+        };
     }
 
     const globals = (typeof window !== 'undefined'
@@ -344,7 +589,7 @@ var app = (function () {
     }
 
     function dispatch_dev(type, detail) {
-        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.46.2' }, detail), true));
+        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.46.4' }, detail), true));
     }
     function append_dev(target, node) {
         dispatch_dev('SvelteDOMInsert', { target, node });
@@ -421,9 +666,19 @@ var app = (function () {
         $inject_state() { }
     }
 
-    /* src/sections/windows/manage-modal.svelte generated by Svelte v3.46.2 */
+    function fade(node, { delay = 0, duration = 400, easing = identity } = {}) {
+        const o = +getComputedStyle(node).opacity;
+        return {
+            delay,
+            duration,
+            easing,
+            css: t => `opacity: ${t * o}`
+        };
+    }
 
-    const file$9 = "src/sections/windows/manage-modal.svelte";
+    /* pages/src/sections/windows/manage-modal.svelte generated by Svelte v3.46.4 */
+
+    const file$9 = "pages/src/sections/windows/manage-modal.svelte";
 
     function create_fragment$9(ctx) {
     	let p;
@@ -498,9 +753,9 @@ var app = (function () {
     	}
     }
 
-    /* src/sections/windows/crash-hang.svelte generated by Svelte v3.46.2 */
+    /* pages/src/sections/windows/crash-hang.svelte generated by Svelte v3.46.4 */
 
-    const file$8 = "src/sections/windows/crash-hang.svelte";
+    const file$8 = "pages/src/sections/windows/crash-hang.svelte";
 
     function create_fragment$8(ctx) {
     	let section;
@@ -913,9 +1168,9 @@ var app = (function () {
     	}
     }
 
-    /* src/sections/windows/modal-toggle-visibility.svelte generated by Svelte v3.46.2 */
+    /* pages/src/sections/windows/modal-toggle-visibility.svelte generated by Svelte v3.46.4 */
 
-    const file$7 = "src/sections/windows/modal-toggle-visibility.svelte";
+    const file$7 = "pages/src/sections/windows/modal-toggle-visibility.svelte";
 
     function create_fragment$7(ctx) {
     	let p;
@@ -990,9 +1245,9 @@ var app = (function () {
     	}
     }
 
-    /* src/sections/windows/modal.svelte generated by Svelte v3.46.2 */
+    /* pages/src/sections/windows/modal.svelte generated by Svelte v3.46.4 */
 
-    const file$6 = "src/sections/windows/modal.svelte";
+    const file$6 = "pages/src/sections/windows/modal.svelte";
 
     function create_fragment$6(ctx) {
     	let h2;
@@ -1068,43 +1323,30 @@ var app = (function () {
     	}
     }
 
-    /* src/sections/windows/process-crash.svelte generated by Svelte v3.46.2 */
+    /* pages/src/sections/windows/process-crash.svelte generated by Svelte v3.46.4 */
 
-    const file$5 = "src/sections/windows/process-crash.svelte";
+    const file$5 = "pages/src/sections/windows/process-crash.svelte";
 
     function create_fragment$5(ctx) {
-    	let p;
-    	let t1;
-    	let a;
+    	let div;
 
     	const block = {
     		c: function create() {
-    			p = element("p");
-    			p.textContent = "Click the text below to crash and then reload this process.";
-    			t1 = space();
-    			a = element("a");
-    			a.textContent = "Crash this process";
-    			add_location(p, file$5, 22, 0, 468);
-    			attr_dev(a, "id", "crash");
-    			attr_dev(a, "href", "javascript:process.crash()");
-    			attr_dev(a, "class", "svelte-19gp7rf");
-    			add_location(a, file$5, 23, 0, 535);
+    			div = element("div");
+    			div.textContent = "Process crash";
+    			add_location(div, file$5, 3, 0, 20);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, p, anchor);
-    			insert_dev(target, t1, anchor);
-    			insert_dev(target, a, anchor);
+    			insert_dev(target, div, anchor);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(p);
-    			if (detaching) detach_dev(t1);
-    			if (detaching) detach_dev(a);
+    			if (detaching) detach_dev(div);
     		}
     	};
 
@@ -1145,9 +1387,9 @@ var app = (function () {
     	}
     }
 
-    /* src/sections/windows/process-hang.svelte generated by Svelte v3.46.2 */
+    /* pages/src/sections/windows/process-hang.svelte generated by Svelte v3.46.4 */
 
-    const file$4 = "src/sections/windows/process-hang.svelte";
+    const file$4 = "pages/src/sections/windows/process-hang.svelte";
 
     function create_fragment$4(ctx) {
     	let p;
@@ -1233,9 +1475,9 @@ var app = (function () {
     	}
     }
 
-    /* src/sections/windows/windows.svelte generated by Svelte v3.46.2 */
+    /* pages/src/sections/windows/windows.svelte generated by Svelte v3.46.4 */
 
-    const file$3 = "src/sections/windows/windows.svelte";
+    const file$3 = "pages/src/sections/windows/windows.svelte";
 
     function create_fragment$3(ctx) {
     	let section;
@@ -1305,112 +1547,112 @@ var app = (function () {
     	let t42;
     	let t43;
     	let pre1;
+    	let t44;
     	let code6;
-    	let t45;
+    	let t46;
     	let div11;
     	let div10;
     	let button2;
-    	let t46;
-    	let div7;
     	let t47;
+    	let div7;
+    	let t48;
     	let span3;
-    	let t49;
     	let t50;
+    	let t51;
     	let div9;
     	let div8;
     	let button3;
-    	let t52;
-    	let span4;
     	let t53;
-    	let p5;
+    	let span4;
     	let t54;
+    	let p5;
+    	let t55;
     	let code7;
-    	let t56;
+    	let t57;
     	let code8;
-    	let t58;
     	let t59;
-    	let p6;
     	let t60;
-    	let a2;
+    	let p6;
     	let t61;
+    	let a2;
+    	let t62;
     	let span5;
-    	let t63;
     	let t64;
+    	let t65;
     	let h51;
-    	let t66;
+    	let t67;
     	let pre2;
     	let code9;
-    	let t67;
+    	let t68;
     	let div16;
     	let div15;
     	let button4;
-    	let t68;
-    	let div12;
     	let t69;
+    	let div12;
+    	let t70;
     	let span6;
-    	let t71;
     	let t72;
+    	let t73;
     	let div14;
     	let div13;
     	let button5;
-    	let t74;
+    	let t75;
     	let button6;
-    	let t76;
-    	let p7;
     	let t77;
+    	let p7;
+    	let t78;
     	let code10;
-    	let t79;
+    	let t80;
     	let i;
-    	let t81;
     	let t82;
+    	let t83;
     	let h52;
-    	let t84;
+    	let t85;
     	let pre3;
     	let code11;
-    	let t85;
+    	let t86;
     	let div21;
     	let div20;
     	let button7;
-    	let t86;
-    	let div17;
     	let t87;
+    	let div17;
+    	let t88;
     	let span7;
-    	let t89;
     	let t90;
+    	let t91;
     	let div19;
     	let div18;
     	let button8;
-    	let t92;
-    	let p8;
     	let t93;
+    	let p8;
+    	let t94;
     	let a3;
-    	let t95;
+    	let t96;
     	let code12;
-    	let t97;
+    	let t98;
     	let code13;
-    	let t99;
     	let t100;
+    	let t101;
     	let h53;
-    	let t102;
+    	let t103;
     	let pre4;
     	let code14;
-    	let t103;
-    	let p9;
     	let t104;
+    	let p9;
+    	let t105;
     	let code15;
-    	let t106;
+    	let t107;
     	let code16;
-    	let t108;
     	let t109;
+    	let t110;
     	let pre5;
-    	let code17;
     	let t111;
+    	let code17;
+    	let t113;
     	let p10;
-    	let t112;
-    	let a4;
     	let t114;
-    	let t115;
-    	let script;
+    	let a4;
+    	let t116;
 
     	const block = {
     		c: function create() {
@@ -1494,136 +1736,135 @@ var app = (function () {
     			t42 = text(" when defining the new window.");
     			t43 = space();
     			pre1 = element("pre");
+    			t44 = text("\n");
     			code6 = element("code");
     			code6.textContent = "var win = new BrowserWindow(\n  width: 400, height: 225, show: false\n)";
-    			t45 = space();
+    			t46 = space();
     			div11 = element("div");
     			div10 = element("div");
     			button2 = element("button");
-    			t46 = text("Manage window state\n          ");
+    			t47 = text("Manage window state\n          ");
     			div7 = element("div");
-    			t47 = text("Supports: Win, macOS, Linux ");
+    			t48 = text("Supports: Win, macOS, Linux ");
     			span3 = element("span");
     			span3.textContent = "|";
-    			t49 = text("\n            Process: Main");
-    			t50 = space();
+    			t50 = text("\n            Process: Main");
+    			t51 = space();
     			div9 = element("div");
     			div8 = element("div");
     			button3 = element("button");
     			button3.textContent = "View Demo";
-    			t52 = space();
-    			span4 = element("span");
     			t53 = space();
+    			span4 = element("span");
+    			t54 = space();
     			p5 = element("p");
-    			t54 = text("In this demo we create a new window and listen for ");
+    			t55 = text("In this demo we create a new window and listen for ");
     			code7 = element("code");
     			code7.textContent = "move";
-    			t56 = text("\n            and ");
+    			t57 = text("\n            and ");
     			code8 = element("code");
     			code8.textContent = "resize";
-    			t58 = text(" events on it. Click the demo button, change the\n            new window and see the dimensions and position update here, above.");
-    			t59 = space();
+    			t59 = text(" events on it. Click the demo button, change the\n            new window and see the dimensions and position update here, above.");
+    			t60 = space();
     			p6 = element("p");
-    			t60 = text("There are a lot of methods for controlling the state of the window\n            such as the size, location, and focus status as well as events to\n            listen to for window changes. Visit the ");
+    			t61 = text("There are a lot of methods for controlling the state of the window\n            such as the size, location, and focus status as well as events to\n            listen to for window changes. Visit the ");
     			a2 = element("a");
-    			t61 = text("documentation");
+    			t62 = text("documentation");
     			span5 = element("span");
     			span5.textContent = "(opens in new window)";
-    			t63 = text(" for the full list.");
-    			t64 = space();
+    			t64 = text(" for the full list.");
+    			t65 = space();
     			h51 = element("h5");
     			h51.textContent = "Renderer Process";
-    			t66 = space();
+    			t67 = space();
     			pre2 = element("pre");
     			code9 = element("code");
-    			t67 = space();
+    			t68 = space();
     			div16 = element("div");
     			div15 = element("div");
     			button4 = element("button");
-    			t68 = text("Window events: blur and focus\n          ");
+    			t69 = text("Window events: blur and focus\n          ");
     			div12 = element("div");
-    			t69 = text("Supports: Win, macOS, Linux ");
+    			t70 = text("Supports: Win, macOS, Linux ");
     			span6 = element("span");
     			span6.textContent = "|";
-    			t71 = text("\n            Process: Main");
-    			t72 = space();
+    			t72 = text("\n            Process: Main");
+    			t73 = space();
     			div14 = element("div");
     			div13 = element("div");
     			button5 = element("button");
     			button5.textContent = "View Demo";
-    			t74 = space();
+    			t75 = space();
     			button6 = element("button");
     			button6.textContent = "Focus on Demo";
-    			t76 = space();
+    			t77 = space();
     			p7 = element("p");
-    			t77 = text("In this demo, we create a new window and listen for ");
+    			t78 = text("In this demo, we create a new window and listen for ");
     			code10 = element("code");
     			code10.textContent = "blur";
-    			t79 = text("\n            event on it. Click the demo button to create a new modal window, and\n            switch focus back to the parent window by clicking on it. You can click\n            the\n            ");
+    			t80 = text("\n            event on it. Click the demo button to create a new modal window, and\n            switch focus back to the parent window by clicking on it. You can click\n            the\n            ");
     			i = element("i");
     			i.textContent = "Focus on Demo";
-    			t81 = text(" button to switch focus to the modal window again.");
-    			t82 = space();
+    			t82 = text(" button to switch focus to the modal window again.");
+    			t83 = space();
     			h52 = element("h5");
     			h52.textContent = "Renderer Process";
-    			t84 = space();
+    			t85 = space();
     			pre3 = element("pre");
     			code11 = element("code");
-    			t85 = space();
+    			t86 = space();
     			div21 = element("div");
     			div20 = element("div");
     			button7 = element("button");
-    			t86 = text("Create a frameless window\n          ");
+    			t87 = text("Create a frameless window\n          ");
     			div17 = element("div");
-    			t87 = text("Supports: Win, macOS, Linux ");
+    			t88 = text("Supports: Win, macOS, Linux ");
     			span7 = element("span");
     			span7.textContent = "|";
-    			t89 = text("\n            Process: Main");
-    			t90 = space();
+    			t90 = text("\n            Process: Main");
+    			t91 = space();
     			div19 = element("div");
     			div18 = element("div");
     			button8 = element("button");
     			button8.textContent = "View Demo";
-    			t92 = space();
+    			t93 = space();
     			p8 = element("p");
-    			t93 = text("A frameless window is a window that has no ");
+    			t94 = text("A frameless window is a window that has no ");
     			a3 = element("a");
     			a3.textContent = "\"chrome\"";
-    			t95 = text(", such as toolbars, title bars, status bars, borders, etc. You can\n            make a browser window frameless by setting\n            ");
+    			t96 = text(", such as toolbars, title bars, status bars, borders, etc. You can\n            make a browser window frameless by setting\n            ");
     			code12 = element("code");
     			code12.textContent = "frame";
-    			t97 = text(" to ");
+    			t98 = text(" to ");
     			code13 = element("code");
     			code13.textContent = "false";
-    			t99 = text(" when creating the window.");
-    			t100 = space();
+    			t100 = text(" when creating the window.");
+    			t101 = space();
     			h53 = element("h5");
     			h53.textContent = "Renderer Process";
-    			t102 = space();
+    			t103 = space();
     			pre4 = element("pre");
     			code14 = element("code");
-    			t103 = space();
+    			t104 = space();
     			p9 = element("p");
-    			t104 = text("Windows can have a transparent background, too. By setting the ");
+    			t105 = text("Windows can have a transparent background, too. By setting the ");
     			code15 = element("code");
     			code15.textContent = "transparent";
-    			t106 = text("\n            option to\n            ");
+    			t107 = text("\n            option to\n            ");
     			code16 = element("code");
     			code16.textContent = "true";
-    			t108 = text(", you can also make your frameless window\n            transparent:");
-    			t109 = space();
+    			t109 = text(", you can also make your frameless window\n            transparent:");
+    			t110 = space();
     			pre5 = element("pre");
+    			t111 = text("\n");
     			code17 = element("code");
     			code17.textContent = "var win = new BrowserWindow(\n  transparent: true,\n  frame: false\n)";
-    			t111 = space();
+    			t113 = space();
     			p10 = element("p");
-    			t112 = text("For more details, see the ");
+    			t114 = text("For more details, see the ");
     			a4 = element("a");
     			a4.textContent = "Frameless Window";
-    			t114 = text("\n            documentation.");
-    			t115 = space();
-    			script = element("script");
-    			script.textContent = "require(\"./renderer-process/windows/create-window\");\n      require(\"./renderer-process/windows/manage-window\");\n      require(\"./renderer-process/windows/using-window-events\");\n      require(\"./renderer-process/windows/frameless-window\");";
+    			t116 = text("\n            documentation.");
     			xlink_attr(use, "xlink:href", "../assets/img/icons.svg#icon-windows");
     			add_location(use, file$3, 6, 12, 214);
     			attr_dev(svg, "class", "section-icon");
@@ -1777,8 +2018,6 @@ var app = (function () {
     			add_location(div20, file$3, 163, 6, 6093);
     			attr_dev(div21, "class", "demo");
     			add_location(div21, file$3, 162, 4, 6068);
-    			attr_dev(script, "type", "text/javascript");
-    			add_location(script, file$3, 216, 4, 7823);
     			attr_dev(section, "id", "windows-section");
     			attr_dev(section, "class", "section js-section u-category-windows");
     			add_location(section, file$3, 1, 2, 3);
@@ -1854,112 +2093,112 @@ var app = (function () {
     			append_dev(p4, t42);
     			append_dev(div3, t43);
     			append_dev(div3, pre1);
+    			append_dev(pre1, t44);
     			append_dev(pre1, code6);
-    			append_dev(section, t45);
+    			append_dev(section, t46);
     			append_dev(section, div11);
     			append_dev(div11, div10);
     			append_dev(div10, button2);
-    			append_dev(button2, t46);
+    			append_dev(button2, t47);
     			append_dev(button2, div7);
-    			append_dev(div7, t47);
+    			append_dev(div7, t48);
     			append_dev(div7, span3);
-    			append_dev(div7, t49);
-    			append_dev(div10, t50);
+    			append_dev(div7, t50);
+    			append_dev(div10, t51);
     			append_dev(div10, div9);
     			append_dev(div9, div8);
     			append_dev(div8, button3);
-    			append_dev(div8, t52);
+    			append_dev(div8, t53);
     			append_dev(div8, span4);
-    			append_dev(div9, t53);
+    			append_dev(div9, t54);
     			append_dev(div9, p5);
-    			append_dev(p5, t54);
+    			append_dev(p5, t55);
     			append_dev(p5, code7);
-    			append_dev(p5, t56);
+    			append_dev(p5, t57);
     			append_dev(p5, code8);
-    			append_dev(p5, t58);
-    			append_dev(div9, t59);
+    			append_dev(p5, t59);
+    			append_dev(div9, t60);
     			append_dev(div9, p6);
-    			append_dev(p6, t60);
+    			append_dev(p6, t61);
     			append_dev(p6, a2);
-    			append_dev(a2, t61);
+    			append_dev(a2, t62);
     			append_dev(a2, span5);
-    			append_dev(p6, t63);
-    			append_dev(div9, t64);
+    			append_dev(p6, t64);
+    			append_dev(div9, t65);
     			append_dev(div9, h51);
-    			append_dev(div9, t66);
+    			append_dev(div9, t67);
     			append_dev(div9, pre2);
     			append_dev(pre2, code9);
-    			append_dev(section, t67);
+    			append_dev(section, t68);
     			append_dev(section, div16);
     			append_dev(div16, div15);
     			append_dev(div15, button4);
-    			append_dev(button4, t68);
+    			append_dev(button4, t69);
     			append_dev(button4, div12);
-    			append_dev(div12, t69);
+    			append_dev(div12, t70);
     			append_dev(div12, span6);
-    			append_dev(div12, t71);
-    			append_dev(div15, t72);
+    			append_dev(div12, t72);
+    			append_dev(div15, t73);
     			append_dev(div15, div14);
     			append_dev(div14, div13);
     			append_dev(div13, button5);
-    			append_dev(div13, t74);
+    			append_dev(div13, t75);
     			append_dev(div13, button6);
-    			append_dev(div14, t76);
+    			append_dev(div14, t77);
     			append_dev(div14, p7);
-    			append_dev(p7, t77);
+    			append_dev(p7, t78);
     			append_dev(p7, code10);
-    			append_dev(p7, t79);
+    			append_dev(p7, t80);
     			append_dev(p7, i);
-    			append_dev(p7, t81);
-    			append_dev(div14, t82);
+    			append_dev(p7, t82);
+    			append_dev(div14, t83);
     			append_dev(div14, h52);
-    			append_dev(div14, t84);
+    			append_dev(div14, t85);
     			append_dev(div14, pre3);
     			append_dev(pre3, code11);
-    			append_dev(section, t85);
+    			append_dev(section, t86);
     			append_dev(section, div21);
     			append_dev(div21, div20);
     			append_dev(div20, button7);
-    			append_dev(button7, t86);
+    			append_dev(button7, t87);
     			append_dev(button7, div17);
-    			append_dev(div17, t87);
+    			append_dev(div17, t88);
     			append_dev(div17, span7);
-    			append_dev(div17, t89);
-    			append_dev(div20, t90);
+    			append_dev(div17, t90);
+    			append_dev(div20, t91);
     			append_dev(div20, div19);
     			append_dev(div19, div18);
     			append_dev(div18, button8);
-    			append_dev(div19, t92);
+    			append_dev(div19, t93);
     			append_dev(div19, p8);
-    			append_dev(p8, t93);
+    			append_dev(p8, t94);
     			append_dev(p8, a3);
-    			append_dev(p8, t95);
+    			append_dev(p8, t96);
     			append_dev(p8, code12);
-    			append_dev(p8, t97);
+    			append_dev(p8, t98);
     			append_dev(p8, code13);
-    			append_dev(p8, t99);
-    			append_dev(div19, t100);
+    			append_dev(p8, t100);
+    			append_dev(div19, t101);
     			append_dev(div19, h53);
-    			append_dev(div19, t102);
+    			append_dev(div19, t103);
     			append_dev(div19, pre4);
     			append_dev(pre4, code14);
-    			append_dev(div19, t103);
+    			append_dev(div19, t104);
     			append_dev(div19, p9);
-    			append_dev(p9, t104);
+    			append_dev(p9, t105);
     			append_dev(p9, code15);
-    			append_dev(p9, t106);
+    			append_dev(p9, t107);
     			append_dev(p9, code16);
-    			append_dev(p9, t108);
-    			append_dev(div19, t109);
+    			append_dev(p9, t109);
+    			append_dev(div19, t110);
     			append_dev(div19, pre5);
+    			append_dev(pre5, t111);
     			append_dev(pre5, code17);
-    			append_dev(div19, t111);
+    			append_dev(div19, t113);
     			append_dev(div19, p10);
-    			append_dev(p10, t112);
-    			append_dev(p10, a4);
     			append_dev(p10, t114);
-    			append_dev(section, t115);
-    			append_dev(section, script);
+    			append_dev(p10, a4);
+    			append_dev(p10, t116);
     		},
     		p: noop,
     		i: noop,
@@ -2016,284 +2255,44 @@ var app = (function () {
         windows: Windows
     };
 
-    /* src/sections/About.svelte generated by Svelte v3.46.2 */
+    /* pages/src/sections/About.svelte generated by Svelte v3.46.4 */
 
-    const file$2 = "src/sections/About.svelte";
+    const file$2 = "pages/src/sections/About.svelte";
 
     function create_fragment$2(ctx) {
-    	let div2;
-    	let div1;
-    	let header;
-    	let p0;
-    	let t1;
-    	let main;
-    	let section0;
-    	let h20;
-    	let t3;
-    	let p1;
-    	let t4;
-    	let a0;
-    	let t5;
-    	let span0;
-    	let t7;
-    	let a1;
-    	let t8;
-    	let span1;
-    	let t10;
-    	let a2;
-    	let t11;
-    	let span2;
-    	let t13;
-    	let t14;
-    	let pre;
-    	let code0;
-    	let t16;
-    	let section1;
-    	let h21;
-    	let t18;
-    	let p2;
-    	let t19;
-    	let a3;
-    	let t20;
-    	let span3;
-    	let t22;
-    	let t23;
-    	let p3;
-    	let t24;
-    	let a4;
-    	let t25;
-    	let span4;
-    	let t27;
-    	let em;
-    	let t29;
-    	let a5;
-    	let t30;
-    	let span5;
-    	let t32;
-    	let t33;
-    	let p4;
-    	let t34;
-    	let code1;
-    	let t36;
-    	let code2;
-    	let t38;
-    	let code3;
-    	let t42;
-    	let t43;
-    	let footer;
-    	let div0;
-    	let button;
+    	let input;
+    	let mounted;
+    	let dispose;
 
     	const block = {
     		c: function create() {
-    			div2 = element("div");
-    			div1 = element("div");
-    			header = element("header");
-    			p0 = element("p");
-    			p0.textContent = "Hello";
-    			t1 = space();
-    			main = element("main");
-    			section0 = element("section");
-    			h20 = element("h2");
-    			h20.textContent = "Play Along";
-    			t3 = space();
-    			p1 = element("p");
-    			t4 = text("Use the demo snippets in an Electron app of your own.\n                        The ");
-    			a0 = element("a");
-    			t5 = text("Electron Quick Start");
-    			span0 = element("span");
-    			span0.textContent = "(opens in new window)";
-    			t7 = text("\n                        app is a bare-bones setup that pairs with these demos. Follow\n                        the instructions here to get it going. You'll need\n                        ");
-    			a1 = element("a");
-    			t8 = text("Git");
-    			span1 = element("span");
-    			span1.textContent = "(opens in new window)";
-    			t10 = text("\n                        and\n                        ");
-    			a2 = element("a");
-    			t11 = text("Node.js");
-    			span2 = element("span");
-    			span2.textContent = "(opens in new window)";
-    			t13 = text(" on your computer to do this.");
-    			t14 = space();
-    			pre = element("pre");
-    			code0 = element("code");
-    			code0.textContent = "$ git clone https://github.com/electron/electron-quick-start\n  $ cd electron-quick-start\n  $ npm install && npm start";
-    			t16 = space();
-    			section1 = element("section");
-    			h21 = element("h2");
-    			h21.textContent = "About the Code";
-    			t18 = space();
-    			p2 = element("p");
-    			t19 = text("The ");
-    			a3 = element("a");
-    			t20 = text("source code of this app");
-    			span3 = element("span");
-    			span3.textContent = "(opens in new window)";
-    			t22 = text(" has been organized with ease of navigation in mind.");
-    			t23 = space();
-    			p3 = element("p");
-    			t24 = text("Nearly all (over 90%) of ");
-    			a4 = element("a");
-    			t25 = text("ES2015");
-    			span4 = element("span");
-    			span4.textContent = "(opens in new window)";
-    			t27 = text("\n                        is available to use in Electron\n                        ");
-    			em = element("em");
-    			em.textContent = "without the use of pre-processors";
-    			t29 = text("\n                        because it's a part of\n                        ");
-    			a5 = element("a");
-    			t30 = text("V8");
-    			span5 = element("span");
-    			span5.textContent = "(opens in new window)";
-    			t32 = text(" which is built into Electron.");
-    			t33 = space();
-    			p4 = element("p");
-    			t34 = text("To illustrate this we've made use of ");
-    			code1 = element("code");
-    			code1.textContent = "const";
-    			t36 = text(",\n                        for unchanging declarations; ");
-    			code2 = element("code");
-    			code2.textContent = "let";
-    			t38 = text(" for scoped\n                        declarations; and template strings like:\n                        ");
-    			code3 = element("code");
-    			code3.textContent = `\`Result is \$${/*output*/ ctx[0]}\``;
-    			t42 = text(" in the demo snippets.");
-    			t43 = space();
-    			footer = element("footer");
-    			div0 = element("div");
-    			button = element("button");
-    			button.textContent = "Get Started";
-    			add_location(p0, file$2, 8, 16, 195);
-    			attr_dev(header, "class", "about-header");
-    			add_location(header, file$2, 7, 12, 149);
-    			add_location(h20, file$2, 12, 20, 351);
-    			attr_dev(span0, "class", "u-visible-to-screen-reader");
-    			add_location(span0, file$2, 17, 49, 637);
-    			attr_dev(a0, "href", "https://github.com/electron/electron-quick-start");
-    			add_location(a0, file$2, 15, 28, 501);
-    			attr_dev(span1, "class", "u-visible-to-screen-reader");
-    			add_location(span1, file$2, 25, 32, 1085);
-    			attr_dev(a1, "href", "https://desktop.github.com/");
-    			add_location(a1, file$2, 24, 24, 1015);
-    			attr_dev(span2, "class", "u-visible-to-screen-reader");
-    			add_location(span2, file$2, 31, 36, 1364);
-    			attr_dev(a2, "href", "https://nodejs.org/");
-    			add_location(a2, file$2, 30, 24, 1298);
-    			add_location(p1, file$2, 13, 20, 391);
-    			attr_dev(code0, "class", "language-bash");
-    			add_location(code0, file$2, 36, 25, 1604);
-    			add_location(pre, file$2, 36, 20, 1599);
-    			attr_dev(section0, "class", "about-section play-along");
-    			add_location(section0, file$2, 11, 16, 288);
-    			add_location(h21, file$2, 43, 20, 1909);
-    			attr_dev(span3, "class", "u-visible-to-screen-reader");
-    			add_location(span3, file$2, 47, 52, 2122);
-    			attr_dev(a3, "href", "https://github.com/electron/electron-api-demos");
-    			add_location(a3, file$2, 45, 28, 1985);
-    			add_location(p2, file$2, 44, 20, 1953);
-    			attr_dev(span4, "class", "u-visible-to-screen-reader");
-    			add_location(span4, file$2, 57, 35, 2576);
-    			attr_dev(a4, "href", "http://babeljs.io/docs/learn-es2015/");
-    			add_location(a4, file$2, 55, 49, 2466);
-    			add_location(em, file$2, 62, 24, 2817);
-    			attr_dev(span5, "class", "u-visible-to-screen-reader");
-    			add_location(span5, file$2, 65, 31, 3006);
-    			attr_dev(a5, "href", "https://developers.google.com/v8/");
-    			add_location(a5, file$2, 64, 24, 2931);
-    			add_location(p3, file$2, 54, 20, 2413);
-    			add_location(code1, file$2, 72, 61, 3308);
-    			add_location(code2, file$2, 73, 53, 3381);
-    			add_location(code3, file$2, 75, 24, 3498);
-    			add_location(p4, file$2, 71, 20, 3243);
-    			attr_dev(section1, "class", "about-section about-code");
-    			add_location(section1, file$2, 42, 16, 1846);
-    			attr_dev(button, "id", "get-started");
-    			attr_dev(button, "class", "about-button modal-hide");
-    			add_location(button, file$2, 80, 24, 3742);
-    			attr_dev(div0, "class", "rainbow-button-wrapper");
-    			add_location(div0, file$2, 79, 20, 3681);
-    			attr_dev(footer, "class", "about-section footer");
-    			add_location(footer, file$2, 78, 16, 3623);
-    			attr_dev(main, "class", "about-sections");
-    			add_location(main, file$2, 10, 12, 242);
-    			attr_dev(div1, "class", "about-wrapper");
-    			add_location(div1, file$2, 6, 8, 109);
-    			attr_dev(div2, "id", "about-modal");
-    			attr_dev(div2, "class", "about modal is-shown");
-    			add_location(div2, file$2, 5, 4, 49);
+    			input = element("input");
+    			attr_dev(input, "type", "number");
+    			add_location(input, file$2, 4, 0, 44);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div2, anchor);
-    			append_dev(div2, div1);
-    			append_dev(div1, header);
-    			append_dev(header, p0);
-    			append_dev(div1, t1);
-    			append_dev(div1, main);
-    			append_dev(main, section0);
-    			append_dev(section0, h20);
-    			append_dev(section0, t3);
-    			append_dev(section0, p1);
-    			append_dev(p1, t4);
-    			append_dev(p1, a0);
-    			append_dev(a0, t5);
-    			append_dev(a0, span0);
-    			append_dev(p1, t7);
-    			append_dev(p1, a1);
-    			append_dev(a1, t8);
-    			append_dev(a1, span1);
-    			append_dev(p1, t10);
-    			append_dev(p1, a2);
-    			append_dev(a2, t11);
-    			append_dev(a2, span2);
-    			append_dev(p1, t13);
-    			append_dev(section0, t14);
-    			append_dev(section0, pre);
-    			append_dev(pre, code0);
-    			append_dev(main, t16);
-    			append_dev(main, section1);
-    			append_dev(section1, h21);
-    			append_dev(section1, t18);
-    			append_dev(section1, p2);
-    			append_dev(p2, t19);
-    			append_dev(p2, a3);
-    			append_dev(a3, t20);
-    			append_dev(a3, span3);
-    			append_dev(p2, t22);
-    			append_dev(section1, t23);
-    			append_dev(section1, p3);
-    			append_dev(p3, t24);
-    			append_dev(p3, a4);
-    			append_dev(a4, t25);
-    			append_dev(a4, span4);
-    			append_dev(p3, t27);
-    			append_dev(p3, em);
-    			append_dev(p3, t29);
-    			append_dev(p3, a5);
-    			append_dev(a5, t30);
-    			append_dev(a5, span5);
-    			append_dev(p3, t32);
-    			append_dev(section1, t33);
-    			append_dev(section1, p4);
-    			append_dev(p4, t34);
-    			append_dev(p4, code1);
-    			append_dev(p4, t36);
-    			append_dev(p4, code2);
-    			append_dev(p4, t38);
-    			append_dev(p4, code3);
-    			append_dev(p4, t42);
-    			append_dev(main, t43);
-    			append_dev(main, footer);
-    			append_dev(footer, div0);
-    			append_dev(div0, button);
+    			insert_dev(target, input, anchor);
+    			set_input_value(input, /*output*/ ctx[0]);
+
+    			if (!mounted) {
+    				dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[1]);
+    				mounted = true;
+    			}
     		},
-    		p: noop,
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*output*/ 1 && to_number(input.value) !== /*output*/ ctx[0]) {
+    				set_input_value(input, /*output*/ ctx[0]);
+    			}
+    		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div2);
+    			if (detaching) detach_dev(input);
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -2318,6 +2317,11 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<About> was created with unknown prop '${key}'`);
     	});
 
+    	function input_input_handler() {
+    		output = to_number(this.value);
+    		$$invalidate(0, output);
+    	}
+
     	$$self.$capture_state = () => ({ output });
 
     	$$self.$inject_state = $$props => {
@@ -2328,7 +2332,7 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [output];
+    	return [output, input_input_handler];
     }
 
     class About extends SvelteComponentDev {
@@ -2350,29 +2354,58 @@ var app = (function () {
         About
     };
 
-    /* src/navigation.svelte generated by Svelte v3.46.2 */
+    const defaultMenus = [
+        {
+            icon: "../assets/img/icons.svg",
+            title: "Papier",
+            links: [
+                {
+                    title: "Create and manage <em>windows</em>",
+                    component: Windows,
+                },
+                {
+                    title: "Handling window <em>crashes and hangs</em>",
+                    component: Process_crash,
+                },
+            ],
+        },
+        {
+            icon: "../assets/img/icons.svg",
+            title: "Papier 2",
+            links: [
+                {
+                    title: "Create and manage <em>windows</em>",
+                    link: Windows,
+                },
+                {
+                    title: "Handling window <em>crashes and hangs</em>",
+                    link: Process_crash,
+                },
+            ],
+        },
+    ];
 
-    const { console: console_1$1 } = globals;
-    const file$1 = "src/navigation.svelte";
+    /* pages/src/Navigation/Navigation.svelte generated by Svelte v3.46.4 */
+    const file$1 = "pages/src/Navigation/Navigation.svelte";
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[7] = list[i];
-    	child_ctx[9] = i;
+    	child_ctx[9] = list[i];
+    	child_ctx[11] = i;
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[10] = list[i];
-    	child_ctx[12] = i;
+    	child_ctx[12] = list[i];
+    	child_ctx[14] = i;
     	return child_ctx;
     }
 
-    // (61:4) {#if menus.length > 0}
-    function create_if_block(ctx) {
+    // (36:4) {#if defaultMenus.length > 0}
+    function create_if_block$1(ctx) {
     	let each_1_anchor;
-    	let each_value = /*menus*/ ctx[1];
+    	let each_value = defaultMenus;
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -2396,8 +2429,8 @@ var app = (function () {
     			insert_dev(target, each_1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*menus, changeNavClick*/ 6) {
-    				each_value = /*menus*/ ctx[1];
+    			if (dirty & /*defaultMenus, changeNavClick*/ 4) {
+    				each_value = defaultMenus;
     				validate_each_argument(each_value);
     				let i;
 
@@ -2428,24 +2461,24 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block.name,
+    		id: create_if_block$1.name,
     		type: "if",
-    		source: "(61:4) {#if menus.length > 0}",
+    		source: "(36:4) {#if defaultMenus.length > 0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (70:16) {#each oneMenu.links as oneLinks, indexLink}
+    // (45:16) {#each oneMenu.links as oneLinks, indexLink}
     function create_each_block_1(ctx) {
     	let button;
-    	let raw_value = /*oneLinks*/ ctx[10].title + "";
+    	let raw_value = /*oneLinks*/ ctx[12].title + "";
     	let mounted;
     	let dispose;
 
     	function click_handler() {
-    		return /*click_handler*/ ctx[5](/*indexMenu*/ ctx[9], /*indexLink*/ ctx[12]);
+    		return /*click_handler*/ ctx[4](/*indexMenu*/ ctx[11], /*indexLink*/ ctx[14]);
     	}
 
     	const block = {
@@ -2453,7 +2486,7 @@ var app = (function () {
     			button = element("button");
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "nav-button");
-    			add_location(button, file$1, 70, 20, 2194);
+    			add_location(button, file$1, 45, 20, 1431);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -2478,25 +2511,25 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(70:16) {#each oneMenu.links as oneLinks, indexLink}",
+    		source: "(45:16) {#each oneMenu.links as oneLinks, indexLink}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (62:8) {#each menus as oneMenu, indexMenu}
+    // (37:8) {#each defaultMenus as oneMenu, indexMenu}
     function create_each_block(ctx) {
     	let div;
     	let h5;
     	let svg;
     	let use;
     	let t0;
-    	let t1_value = /*oneMenu*/ ctx[7].title + "";
+    	let t1_value = /*oneMenu*/ ctx[9].title + "";
     	let t1;
     	let t2;
     	let t3;
-    	let each_value_1 = /*oneMenu*/ ctx[7].links;
+    	let each_value_1 = /*oneMenu*/ ctx[9].links;
     	validate_each_argument(each_value_1);
     	let each_blocks = [];
 
@@ -2519,14 +2552,14 @@ var app = (function () {
     			}
 
     			t3 = space();
-    			xlink_attr(use, "xlink:href", /*oneMenu*/ ctx[7].icon);
-    			add_location(use, file$1, 65, 24, 1994);
+    			xlink_attr(use, "xlink:href", /*oneMenu*/ ctx[9].icon);
+    			add_location(use, file$1, 40, 24, 1231);
     			attr_dev(svg, "class", "nav-icon");
-    			add_location(svg, file$1, 64, 20, 1947);
+    			add_location(svg, file$1, 39, 20, 1184);
     			attr_dev(h5, "class", "nav-category");
-    			add_location(h5, file$1, 63, 16, 1901);
+    			add_location(h5, file$1, 38, 16, 1138);
     			attr_dev(div, "class", "nav-item u-category-windows");
-    			add_location(div, file$1, 62, 12, 1843);
+    			add_location(div, file$1, 37, 12, 1080);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -2544,8 +2577,8 @@ var app = (function () {
     			append_dev(div, t3);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*changeNavClick, menus*/ 6) {
-    				each_value_1 = /*oneMenu*/ ctx[7].links;
+    			if (dirty & /*changeNavClick, defaultMenus*/ 4) {
+    				each_value_1 = /*oneMenu*/ ctx[9].links;
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -2578,7 +2611,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(62:8) {#each menus as oneMenu, indexMenu}",
+    		source: "(37:8) {#each defaultMenus as oneMenu, indexMenu}",
     		ctx
     	});
 
@@ -2603,7 +2636,7 @@ var app = (function () {
     	let t7;
     	let mounted;
     	let dispose;
-    	let if_block = /*menus*/ ctx[1].length > 0 && create_if_block(ctx);
+    	let if_block = defaultMenus.length > 0 && create_if_block$1(ctx);
 
     	const block = {
     		c: function create() {
@@ -2623,26 +2656,26 @@ var app = (function () {
     			t5 = space();
     			button1 = element("button");
     			t6 = text("val : ");
-    			t7 = text(/*value*/ ctx[0]);
-    			add_location(strong, file$1, 53, 30, 1576);
+    			t7 = text(/*value*/ ctx[1]);
+    			add_location(strong, file$1, 28, 30, 799);
     			attr_dev(h1, "class", "nav-title svelte-1vdqbk4");
-    			add_location(h1, file$1, 53, 8, 1554);
+    			add_location(h1, file$1, 28, 8, 777);
     			attr_dev(img, "class", "nav-header-icon");
     			if (!src_url_equal(img.src, img_src_value = "../assets/auto_form.svg#icon-windows")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "logo");
-    			add_location(img, file$1, 54, 8, 1616);
+    			add_location(img, file$1, 29, 8, 839);
     			attr_dev(header, "class", "nav-header");
-    			add_location(header, file$1, 52, 4, 1518);
+    			add_location(header, file$1, 27, 4, 741);
     			attr_dev(button0, "type", "button");
     			attr_dev(button0, "class", "nav-footer-button");
-    			add_location(button0, file$1, 85, 8, 2627);
+    			add_location(button0, file$1, 60, 8, 1864);
     			attr_dev(button1, "type", "button");
     			attr_dev(button1, "class", "nav-footer-button");
-    			add_location(button1, file$1, 86, 8, 2698);
+    			add_location(button1, file$1, 67, 8, 2042);
     			attr_dev(footer, "class", "nav-footer");
-    			add_location(footer, file$1, 84, 4, 2591);
+    			add_location(footer, file$1, 59, 4, 1828);
     			attr_dev(nav, "class", "nav js-nav is-shown");
-    			add_location(nav, file$1, 51, 0, 1480);
+    			add_location(nav, file$1, 26, 0, 703);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2665,13 +2698,17 @@ var app = (function () {
     			append_dev(button1, t7);
 
     			if (!mounted) {
-    				dispose = listen_dev(button1, "click", /*click_handler_1*/ ctx[6], false, false, false);
+    				dispose = [
+    					listen_dev(button0, "click", /*click_handler_1*/ ctx[5], false, false, false),
+    					listen_dev(button1, "click", /*click_handler_2*/ ctx[6], false, false, false)
+    				];
+
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (/*menus*/ ctx[1].length > 0) if_block.p(ctx, dirty);
-    			if (dirty & /*value*/ 1) set_data_dev(t7, /*value*/ ctx[0]);
+    			if (defaultMenus.length > 0) if_block.p(ctx, dirty);
+    			if (dirty & /*value*/ 2) set_data_dev(t7, /*value*/ ctx[1]);
     		},
     		i: noop,
     		o: noop,
@@ -2679,7 +2716,7 @@ var app = (function () {
     			if (detaching) detach_dev(nav);
     			if (if_block) if_block.d();
     			mounted = false;
-    			dispose();
+    			run_all(dispose);
     		}
     	};
 
@@ -2698,44 +2735,14 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Navigation', slots, []);
     	let { changeNav = null } = $$props;
-
-    	const menus = [
-    		{
-    			icon: "../assets/img/icons.svg",
-    			title: "Papier",
-    			links: [
-    				{
-    					title: "Create and manage <em>windows</em>",
-    					link: "windows-windows"
-    				},
-    				{
-    					title: "Handling window <em>crashes and hangs</em>",
-    					link: "windows-crashHang"
-    				}
-    			]
-    		},
-    		{
-    			icon: "../assets/img/icons.svg",
-    			title: "Papier 2",
-    			links: [
-    				{
-    					title: "Create and manage <em>windows</em>",
-    					link: "windows-windows"
-    				},
-    				{
-    					title: "Handling window <em>crashes and hangs</em>",
-    					link: "windows-crashHang"
-    				}
-    			]
-    		}
-    	];
+    	const othersMenus = [];
+    	const menus = [...defaultMenus, ...othersMenus];
 
     	const changeNavClick = (indexMenu, indexLink) => {
-    		const string = menus[indexMenu].links[indexLink].link;
-    		changeNav(string);
+    		const component = menus[indexMenu].links[indexLink].component;
+    		changeNav(component);
     	};
 
-    	console.log(menus);
     	let value = "";
 
     	const test = () => {
@@ -2744,14 +2751,14 @@ var app = (function () {
     			headers: { "Content-type": "application/json" },
     			body: JSON.stringify({ toto: "lol" })
     		}).then(e => {
-    			$$invalidate(0, value = "END");
+    			$$invalidate(1, value = "END");
     		});
     	};
 
     	const writable_props = ['changeNav'];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$1.warn(`<Navigation> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Navigation> was created with unknown prop '${key}'`);
     	});
 
     	const click_handler = (indexMenu, indexLink) => {
@@ -2759,15 +2766,21 @@ var app = (function () {
     	};
 
     	const click_handler_1 = () => {
+    		changeNav();
+    	};
+
+    	const click_handler_2 = () => {
     		test();
     	};
 
     	$$self.$$set = $$props => {
-    		if ('changeNav' in $$props) $$invalidate(4, changeNav = $$props.changeNav);
+    		if ('changeNav' in $$props) $$invalidate(0, changeNav = $$props.changeNav);
     	};
 
     	$$self.$capture_state = () => ({
     		changeNav,
+    		defaultMenus,
+    		othersMenus,
     		menus,
     		changeNavClick,
     		value,
@@ -2775,21 +2788,29 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('changeNav' in $$props) $$invalidate(4, changeNav = $$props.changeNav);
-    		if ('value' in $$props) $$invalidate(0, value = $$props.value);
+    		if ('changeNav' in $$props) $$invalidate(0, changeNav = $$props.changeNav);
+    		if ('value' in $$props) $$invalidate(1, value = $$props.value);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [value, menus, changeNavClick, test, changeNav, click_handler, click_handler_1];
+    	return [
+    		changeNav,
+    		value,
+    		changeNavClick,
+    		test,
+    		click_handler,
+    		click_handler_1,
+    		click_handler_2
+    	];
     }
 
     class Navigation extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { changeNav: 4 });
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { changeNav: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -2808,23 +2829,17 @@ var app = (function () {
     	}
     }
 
-    /* src/App.svelte generated by Svelte v3.46.2 */
+    /* pages/src/App.svelte generated by Svelte v3.46.4 */
 
     const { console: console_1 } = globals;
-    const file = "src/App.svelte";
+    const file = "pages/src/App.svelte";
 
-    function create_fragment(ctx) {
-    	let navigation;
-    	let t;
+    // (23:0) {#if visible}
+    function create_if_block(ctx) {
     	let main;
     	let switch_instance;
+    	let main_transition;
     	let current;
-
-    	navigation = new Navigation({
-    			props: { changeNav: /*changeNav*/ ctx[1] },
-    			$$inline: true
-    		});
-
     	var switch_value = /*actualPage*/ ctx[0];
 
     	function switch_props(ctx) {
@@ -2837,19 +2852,12 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			create_component(navigation.$$.fragment);
-    			t = space();
     			main = element("main");
     			if (switch_instance) create_component(switch_instance.$$.fragment);
-    			attr_dev(main, "class", "content js-content is-shown");
-    			add_location(main, file, 23, 0, 738);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    			attr_dev(main, "class", "content svelte-1ba1q10");
+    			add_location(main, file, 23, 4, 557);
     		},
     		m: function mount(target, anchor) {
-    			mount_component(navigation, target, anchor);
-    			insert_dev(target, t, anchor);
     			insert_dev(target, main, anchor);
 
     			if (switch_instance) {
@@ -2858,7 +2866,7 @@ var app = (function () {
 
     			current = true;
     		},
-    		p: function update(ctx, [dirty]) {
+    		p: function update(ctx, dirty) {
     			if (switch_value !== (switch_value = /*actualPage*/ ctx[0])) {
     				if (switch_instance) {
     					group_outros();
@@ -2883,20 +2891,109 @@ var app = (function () {
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(navigation.$$.fragment, local);
     			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
+
+    			add_render_callback(() => {
+    				if (!main_transition) main_transition = create_bidirectional_transition(main, fade, {}, true);
+    				main_transition.run(1);
+    			});
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
+    			if (!main_transition) main_transition = create_bidirectional_transition(main, fade, {}, false);
+    			main_transition.run(0);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(main);
+    			if (switch_instance) destroy_component(switch_instance);
+    			if (detaching && main_transition) main_transition.end();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(23:0) {#if visible}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment(ctx) {
+    	let navigation;
+    	let t;
+    	let if_block_anchor;
+    	let current;
+
+    	navigation = new Navigation({
+    			props: { changeNav: /*changeNav*/ ctx[2] },
+    			$$inline: true
+    		});
+
+    	let if_block = /*visible*/ ctx[1] && create_if_block(ctx);
+
+    	const block = {
+    		c: function create() {
+    			create_component(navigation.$$.fragment);
+    			t = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(navigation, target, anchor);
+    			insert_dev(target, t, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (/*visible*/ ctx[1]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*visible*/ 2) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(navigation.$$.fragment, local);
+    			transition_in(if_block);
     			current = true;
     		},
     		o: function outro(local) {
     			transition_out(navigation.$$.fragment, local);
-    			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
+    			transition_out(if_block);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			destroy_component(navigation, detaching);
     			if (detaching) detach_dev(t);
-    			if (detaching) detach_dev(main);
-    			if (switch_instance) destroy_component(switch_instance);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
     		}
     	};
 
@@ -2915,29 +3012,26 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
     	console.log(window);
-    	let actualPage = sections.About;
+    	let actualPage = null;
 
     	const changeNav = newComponent => {
-    		const [firstFolder, secondElement] = newComponent.split("-");
-
-    		if (sections[firstFolder][secondElement]) {
-    			$$invalidate(0, actualPage = sections[firstFolder][secondElement]);
-
-    			setTimeout(
-    				() => {
-    					const el = document.getElementsByClassName("section");
-
-    					if (el.length > 0) {
-    						el[0].classList.add("is-shown");
-    					}
-    				},
-    				200
-    			);
-    		} else {
-    			$$invalidate(0, actualPage = sections.About);
-    		}
+    		$$invalidate(1, visible = false);
+    		$$invalidate(0, actualPage = newComponent);
+    		timer();
     	};
 
+    	let visible = false;
+
+    	const timer = () => {
+    		setTimeout(
+    			() => {
+    				$$invalidate(1, visible = true);
+    			},
+    			200
+    		);
+    	};
+
+    	changeNav(sections.About);
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
@@ -2945,21 +3039,25 @@ var app = (function () {
     	});
 
     	$$self.$capture_state = () => ({
+    		fade,
     		sections,
     		Navigation,
     		actualPage,
-    		changeNav
+    		changeNav,
+    		visible,
+    		timer
     	});
 
     	$$self.$inject_state = $$props => {
     		if ('actualPage' in $$props) $$invalidate(0, actualPage = $$props.actualPage);
+    		if ('visible' in $$props) $$invalidate(1, visible = $$props.visible);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [actualPage, changeNav];
+    	return [actualPage, visible, changeNav];
     }
 
     class App extends SvelteComponentDev {
