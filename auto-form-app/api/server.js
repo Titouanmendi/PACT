@@ -7,8 +7,9 @@ const dir = join(__dirname, '..', 'public');
 const serve = require('serve-static')(dir);
 
 const server = polka({
-    onNoMatch: () => {
-        console.log("404");
+    onNoMatch: (req, res, next) => {
+        console.log("404 - " + req.originalUrl);
+        next();
     }
 });
 
@@ -18,9 +19,10 @@ function authFunction(req, res, next) {
     next();
 }
 
-server.use(authFunction);
-server.use(json());
-server.use('/', serve);
+server
+    .use('/api', authFunction)
+    .use(json())
+    .use('/', serve);
 
 
 server.post("/api/method/:methodName", async (req, res, next) => {

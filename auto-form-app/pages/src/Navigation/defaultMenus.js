@@ -1,9 +1,7 @@
-import Windows from "../sections/windows/windows.svelte"
-import ProcessCrash from "../sections/windows/process-crash.svelte"
 
 const defaultMenus = [
     {
-        icon: "../assets/img/icons.svg",
+        icon: "../public/img/icons.svg",
         title: "Papier",
         links: [
             {
@@ -17,7 +15,7 @@ const defaultMenus = [
         ],
     },
     {
-        icon: "../assets/img/icons.svg",
+        icon: "../public/img/icons.svg",
         title: "Papier 2",
         links: [
             {

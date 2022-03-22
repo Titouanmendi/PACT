@@ -27,11 +27,7 @@
 <nav class="nav js-nav is-shown">
     <header class="nav-header">
         <h1 class="nav-title"><strong>Auto-Form</strong></h1>
-        <img
-            class="nav-header-icon"
-            src="../assets/auto_form.svg#icon-windows"
-            alt="logo"
-        />
+        <img class="nav-header-icon" src="./img/auto_form.svg" alt="logo" />
     </header>
     {#if defaultMenus.length > 0}
         {#each defaultMenus as oneMenu, indexMenu}

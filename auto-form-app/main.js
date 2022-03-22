@@ -41,10 +41,6 @@ function initialize() {
 
     mainWindow = new BrowserWindow(windowOptions)
     const finalPath = path.join('file://', __dirname, 'public', '/index.html');
-    console.log(finalPath)
-    console.log(finalPath)
-    console.log(finalPath)
-    console.log(finalPath)
     mainWindow.loadURL(finalPath);
     //mainWindow.loadURL(path.join('file://', __dirname, '/index.html'))
 
