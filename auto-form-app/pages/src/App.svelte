@@ -2,11 +2,12 @@
     import { fade } from "svelte/transition";
     import sections from "./sections/index";
     import Navigation from "./Navigation/Navigation.svelte";
-    console.log(window);
     let actualPage = null;
     const changeNav = (newComponent) => {
         visible = false;
-        actualPage = newComponent;
+        if (newComponent) {
+            actualPage = newComponent;
+        }
         timer();
     };
     let visible = false;
@@ -21,7 +22,7 @@
 <Navigation {changeNav} />
 
 {#if visible}
-    <main transition:fade class="content">
+    <main in:fade class="content">
         <svelte:component this={actualPage} />
     </main>
 {/if}

@@ -129,14 +129,8 @@ var app = (function () {
     function xlink_attr(node, attribute, value) {
         node.setAttributeNS('http://www.w3.org/1999/xlink', attribute, value);
     }
-    function to_number(value) {
-        return value === '' ? null : +value;
-    }
     function children(element) {
         return Array.from(element.childNodes);
-    }
-    function set_input_value(input, value) {
-        input.value = value == null ? '' : value;
     }
     function custom_event(type, detail, bubbles = false) {
         const e = document.createEvent('CustomEvent');
@@ -348,117 +342,69 @@ var app = (function () {
         }
     }
     const null_transition = { duration: 0 };
-    function create_bidirectional_transition(node, fn, params, intro) {
+    function create_in_transition(node, fn, params) {
         let config = fn(node, params);
-        let t = intro ? 0 : 1;
-        let running_program = null;
-        let pending_program = null;
-        let animation_name = null;
-        function clear_animation() {
+        let running = false;
+        let animation_name;
+        let task;
+        let uid = 0;
+        function cleanup() {
             if (animation_name)
                 delete_rule(node, animation_name);
         }
-        function init(program, duration) {
-            const d = (program.b - t);
-            duration *= Math.abs(d);
-            return {
-                a: t,
-                b: program.b,
-                d,
-                duration,
-                start: program.start,
-                end: program.start + duration,
-                group: program.group
-            };
-        }
-        function go(b) {
+        function go() {
             const { delay = 0, duration = 300, easing = identity, tick = noop, css } = config || null_transition;
-            const program = {
-                start: now() + delay,
-                b
-            };
-            if (!b) {
-                // @ts-ignore todo: improve typings
-                program.group = outros;
-                outros.r += 1;
-            }
-            if (running_program || pending_program) {
-                pending_program = program;
-            }
-            else {
-                // if this is an intro, and there's a delay, we need to do
-                // an initial tick and/or apply CSS animation immediately
-                if (css) {
-                    clear_animation();
-                    animation_name = create_rule(node, t, b, duration, delay, easing, css);
+            if (css)
+                animation_name = create_rule(node, 0, 1, duration, delay, easing, css, uid++);
+            tick(0, 1);
+            const start_time = now() + delay;
+            const end_time = start_time + duration;
+            if (task)
+                task.abort();
+            running = true;
+            add_render_callback(() => dispatch(node, true, 'start'));
+            task = loop(now => {
+                if (running) {
+                    if (now >= end_time) {
+                        tick(1, 0);
+                        dispatch(node, true, 'end');
+                        cleanup();
+                        return running = false;
+                    }
+                    if (now >= start_time) {
+                        const t = easing((now - start_time) / duration);
+                        tick(t, 1 - t);
+                    }
                 }
-                if (b)
-                    tick(0, 1);
-                running_program = init(program, duration);
-                add_render_callback(() => dispatch(node, b, 'start'));
-                loop(now => {
-                    if (pending_program && now > pending_program.start) {
-                        running_program = init(pending_program, duration);
-                        pending_program = null;
-                        dispatch(node, running_program.b, 'start');
-                        if (css) {
-                            clear_animation();
-                            animation_name = create_rule(node, t, running_program.b, running_program.duration, 0, easing, config.css);
-                        }
-                    }
-                    if (running_program) {
-                        if (now >= running_program.end) {
-                            tick(t = running_program.b, 1 - t);
-                            dispatch(node, running_program.b, 'end');
-                            if (!pending_program) {
-                                // we're done
-                                if (running_program.b) {
-                                    // intro — we can tidy up immediately
-                                    clear_animation();
-                                }
-                                else {
-                                    // outro — needs to be coordinated
-                                    if (!--running_program.group.r)
-                                        run_all(running_program.group.c);
-                                }
-                            }
-                            running_program = null;
-                        }
-                        else if (now >= running_program.start) {
-                            const p = now - running_program.start;
-                            t = running_program.a + running_program.d * easing(p / running_program.duration);
-                            tick(t, 1 - t);
-                        }
-                    }
-                    return !!(running_program || pending_program);
-                });
-            }
+                return running;
+            });
         }
+        let started = false;
         return {
-            run(b) {
+            start() {
+                if (started)
+                    return;
+                started = true;
+                delete_rule(node);
                 if (is_function(config)) {
-                    wait().then(() => {
-                        // @ts-ignore
-                        config = config();
-                        go(b);
-                    });
+                    config = config();
+                    wait().then(go);
                 }
                 else {
-                    go(b);
+                    go();
                 }
             },
+            invalidate() {
+                started = false;
+            },
             end() {
-                clear_animation();
-                running_program = pending_program = null;
+                if (running) {
+                    cleanup();
+                    running = false;
+                }
             }
         };
     }
-
-    const globals = (typeof window !== 'undefined'
-        ? window
-        : typeof globalThis !== 'undefined'
-            ? globalThis
-            : global);
     function create_component(block) {
         block && block.c();
     }
@@ -676,44 +622,169 @@ var app = (function () {
         };
     }
 
-    /* pages/src/sections/About.svelte generated by Svelte v3.46.4 */
+    /* pages/src/sections/About/About.svelte generated by Svelte v3.46.4 */
 
-    const file$2 = "pages/src/sections/About.svelte";
+    const file$4 = "pages/src/sections/About/About.svelte";
 
-    function create_fragment$2(ctx) {
-    	let input;
-    	let mounted;
-    	let dispose;
+    function create_fragment$4(ctx) {
+    	let p;
 
     	const block = {
     		c: function create() {
-    			input = element("input");
-    			attr_dev(input, "type", "number");
-    			add_location(input, file$2, 4, 0, 44);
+    			p = element("p");
+    			p.textContent = "About page !!";
+    			add_location(p, file$4, 4, 0, 44);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, input, anchor);
-    			set_input_value(input, /*output*/ ctx[0]);
-
-    			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[1]);
-    				mounted = true;
-    			}
+    			insert_dev(target, p, anchor);
     		},
-    		p: function update(ctx, [dirty]) {
-    			if (dirty & /*output*/ 1 && to_number(input.value) !== /*output*/ ctx[0]) {
-    				set_input_value(input, /*output*/ ctx[0]);
-    			}
-    		},
+    		p: noop,
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(input);
-    			mounted = false;
-    			dispose();
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$4.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$4($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('About', slots, []);
+    	let output = "lol";
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<About> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$capture_state = () => ({ output });
+
+    	$$self.$inject_state = $$props => {
+    		if ('output' in $$props) output = $$props.output;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [];
+    }
+
+    class About extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$4, create_fragment$4, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "About",
+    			options,
+    			id: create_fragment$4.name
+    		});
+    	}
+    }
+
+    /* pages/src/sections/IdentityCard/IdentityCard.svelte generated by Svelte v3.46.4 */
+
+    const file$3 = "pages/src/sections/IdentityCard/IdentityCard.svelte";
+
+    function create_fragment$3(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			div.textContent = "Identity Card here";
+    			add_location(div, file$3, 3, 0, 20);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$3.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$3($$self, $$props) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('IdentityCard', slots, []);
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<IdentityCard> was created with unknown prop '${key}'`);
+    	});
+
+    	return [];
+    }
+
+    class IdentityCard extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$3, create_fragment$3, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "IdentityCard",
+    			options,
+    			id: create_fragment$3.name
+    		});
+    	}
+    }
+
+    /* pages/src/sections/House/House.svelte generated by Svelte v3.46.4 */
+
+    const file$2 = "pages/src/sections/House/House.svelte";
+
+    function create_fragment$2(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			div.textContent = "House here";
+    			add_location(div, file$2, 3, 0, 20);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
     		}
     	};
 
@@ -728,42 +799,26 @@ var app = (function () {
     	return block;
     }
 
-    function instance$2($$self, $$props, $$invalidate) {
+    function instance$2($$self, $$props) {
     	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots('About', slots, []);
-    	let output = "lol";
+    	validate_slots('House', slots, []);
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<About> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<House> was created with unknown prop '${key}'`);
     	});
 
-    	function input_input_handler() {
-    		output = to_number(this.value);
-    		$$invalidate(0, output);
-    	}
-
-    	$$self.$capture_state = () => ({ output });
-
-    	$$self.$inject_state = $$props => {
-    		if ('output' in $$props) $$invalidate(0, output = $$props.output);
-    	};
-
-    	if ($$props && "$$inject" in $$props) {
-    		$$self.$inject_state($$props.$$inject);
-    	}
-
-    	return [output, input_input_handler];
+    	return [];
     }
 
-    class About extends SvelteComponentDev {
+    class House extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
     		init(this, options, instance$2, create_fragment$2, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
-    			tagName: "About",
+    			tagName: "House",
     			options,
     			id: create_fragment$2.name
     		});
@@ -771,7 +826,9 @@ var app = (function () {
     }
 
     var sections = {
-        About
+        About,
+        IdentityCard,
+        House,
     };
 
     const defaultMenus = [
@@ -780,12 +837,12 @@ var app = (function () {
             title: "Papier",
             links: [
                 {
-                    title: "Create and manage <em>windows</em>",
-                    component: Windows,
+                    title: "trans:identity-card",
+                    component: sections.IdentityCard,
                 },
                 {
-                    title: "Handling window <em>crashes and hangs</em>",
-                    component: ProcessCrash,
+                    title: "trans:house",
+                    component: sections.House,
                 },
             ],
         },
@@ -795,15 +852,39 @@ var app = (function () {
             links: [
                 {
                     title: "Create and manage <em>windows</em>",
-                    link: Windows,
+                    link: sections.IdentityCard,
                 },
                 {
                     title: "Handling window <em>crashes and hangs</em>",
-                    link: ProcessCrash,
+                    link: sections.House,
                 },
             ],
         },
     ];
+
+    const fr_FR = {
+        "identity-card": "Carte d'identité",
+        "house": "maison",
+    };
+
+    const en_EN = {
+
+    };
+
+    const langs = {
+        fr_FR: fr_FR,
+        en_EN: en_EN,
+    };
+
+    const actualLang = "fr_FR";
+
+    const translate = (toTranslate = "") => {
+        const code = toTranslate.slice(6);
+        if (typeof langs[actualLang][code] !== "undefined") {
+            return langs[actualLang][code];
+        }
+        return "NOT_TRANSLATED";
+    };
 
     /* pages/src/Navigation/Navigation.svelte generated by Svelte v3.46.4 */
     const file$1 = "pages/src/Navigation/Navigation.svelte";
@@ -822,7 +903,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (32:4) {#if defaultMenus.length > 0}
+    // (33:4) {#if defaultMenus.length > 0}
     function create_if_block$1(ctx) {
     	let each_1_anchor;
     	let each_value = defaultMenus;
@@ -849,7 +930,7 @@ var app = (function () {
     			insert_dev(target, each_1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*defaultMenus, changeNavClick*/ 4) {
+    			if (dirty & /*defaultMenus, changeNavClick, translate*/ 4) {
     				each_value = defaultMenus;
     				validate_each_argument(each_value);
     				let i;
@@ -883,17 +964,18 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(32:4) {#if defaultMenus.length > 0}",
+    		source: "(33:4) {#if defaultMenus.length > 0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (41:16) {#each oneMenu.links as oneLinks, indexLink}
+    // (42:16) {#each oneMenu.links as oneLinks, indexLink}
     function create_each_block_1(ctx) {
     	let button;
-    	let raw_value = /*oneLinks*/ ctx[12].title + "";
+    	let t_value = translate(/*oneLinks*/ ctx[12].title) + "";
+    	let t;
     	let mounted;
     	let dispose;
 
@@ -904,13 +986,14 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			button = element("button");
+    			t = text(t_value);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "nav-button");
-    			add_location(button, file$1, 41, 20, 1370);
+    			add_location(button, file$1, 42, 20, 1469);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
-    			button.innerHTML = raw_value;
+    			append_dev(button, t);
 
     			if (!mounted) {
     				dispose = listen_dev(button, "click", click_handler, false, false, false);
@@ -931,21 +1014,21 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(41:16) {#each oneMenu.links as oneLinks, indexLink}",
+    		source: "(42:16) {#each oneMenu.links as oneLinks, indexLink}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (33:8) {#each defaultMenus as oneMenu, indexMenu}
+    // (34:8) {#each defaultMenus as oneMenu, indexMenu}
     function create_each_block(ctx) {
     	let div;
     	let h5;
     	let svg;
     	let use;
     	let t0;
-    	let t1_value = /*oneMenu*/ ctx[9].title + "";
+    	let t1_value = translate(/*oneMenu*/ ctx[9].title) + "";
     	let t1;
     	let t2;
     	let t3;
@@ -973,13 +1056,13 @@ var app = (function () {
 
     			t3 = space();
     			xlink_attr(use, "xlink:href", /*oneMenu*/ ctx[9].icon);
-    			add_location(use, file$1, 36, 24, 1170);
+    			add_location(use, file$1, 37, 24, 1258);
     			attr_dev(svg, "class", "nav-icon");
-    			add_location(svg, file$1, 35, 20, 1123);
+    			add_location(svg, file$1, 36, 20, 1211);
     			attr_dev(h5, "class", "nav-category");
-    			add_location(h5, file$1, 34, 16, 1077);
+    			add_location(h5, file$1, 35, 16, 1165);
     			attr_dev(div, "class", "nav-item u-category-windows");
-    			add_location(div, file$1, 33, 12, 1019);
+    			add_location(div, file$1, 34, 12, 1107);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -997,7 +1080,7 @@ var app = (function () {
     			append_dev(div, t3);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*changeNavClick, defaultMenus*/ 4) {
+    			if (dirty & /*changeNavClick, translate, defaultMenus*/ 4) {
     				each_value_1 = /*oneMenu*/ ctx[9].links;
     				validate_each_argument(each_value_1);
     				let i;
@@ -1031,7 +1114,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(33:8) {#each defaultMenus as oneMenu, indexMenu}",
+    		source: "(34:8) {#each defaultMenus as oneMenu, indexMenu}",
     		ctx
     	});
 
@@ -1077,25 +1160,25 @@ var app = (function () {
     			button1 = element("button");
     			t6 = text("val : ");
     			t7 = text(/*value*/ ctx[1]);
-    			add_location(strong, file$1, 28, 30, 799);
+    			add_location(strong, file$1, 29, 30, 887);
     			attr_dev(h1, "class", "nav-title svelte-1vdqbk4");
-    			add_location(h1, file$1, 28, 8, 777);
+    			add_location(h1, file$1, 29, 8, 865);
     			attr_dev(img, "class", "nav-header-icon");
     			if (!src_url_equal(img.src, img_src_value = "./img/auto_form.svg")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "logo");
-    			add_location(img, file$1, 29, 8, 839);
+    			add_location(img, file$1, 30, 8, 927);
     			attr_dev(header, "class", "nav-header");
-    			add_location(header, file$1, 27, 4, 741);
+    			add_location(header, file$1, 28, 4, 829);
     			attr_dev(button0, "type", "button");
     			attr_dev(button0, "class", "nav-footer-button");
-    			add_location(button0, file$1, 56, 8, 1803);
+    			add_location(button0, file$1, 57, 8, 1907);
     			attr_dev(button1, "type", "button");
     			attr_dev(button1, "class", "nav-footer-button");
-    			add_location(button1, file$1, 63, 8, 1981);
+    			add_location(button1, file$1, 64, 8, 2096);
     			attr_dev(footer, "class", "nav-footer");
-    			add_location(footer, file$1, 55, 4, 1767);
+    			add_location(footer, file$1, 56, 4, 1871);
     			attr_dev(nav, "class", "nav js-nav is-shown");
-    			add_location(nav, file$1, 26, 0, 703);
+    			add_location(nav, file$1, 27, 0, 791);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1186,7 +1269,7 @@ var app = (function () {
     	};
 
     	const click_handler_1 = () => {
-    		changeNav();
+    		changeNav(sections.About);
     	};
 
     	const click_handler_2 = () => {
@@ -1200,6 +1283,8 @@ var app = (function () {
     	$$self.$capture_state = () => ({
     		changeNav,
     		defaultMenus,
+    		translate,
+    		Pages: sections,
     		othersMenus,
     		menus,
     		changeNavClick,
@@ -1250,15 +1335,13 @@ var app = (function () {
     }
 
     /* pages/src/App.svelte generated by Svelte v3.46.4 */
-
-    const { console: console_1 } = globals;
     const file = "pages/src/App.svelte";
 
-    // (23:0) {#if visible}
+    // (24:0) {#if visible}
     function create_if_block(ctx) {
     	let main;
     	let switch_instance;
-    	let main_transition;
+    	let main_intro;
     	let current;
     	var switch_value = /*actualPage*/ ctx[0];
 
@@ -1275,7 +1358,7 @@ var app = (function () {
     			main = element("main");
     			if (switch_instance) create_component(switch_instance.$$.fragment);
     			attr_dev(main, "class", "content svelte-1ba1q10");
-    			add_location(main, file, 23, 4, 557);
+    			add_location(main, file, 24, 4, 574);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
@@ -1313,23 +1396,22 @@ var app = (function () {
     			if (current) return;
     			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
 
-    			add_render_callback(() => {
-    				if (!main_transition) main_transition = create_bidirectional_transition(main, fade, {}, true);
-    				main_transition.run(1);
-    			});
+    			if (!main_intro) {
+    				add_render_callback(() => {
+    					main_intro = create_in_transition(main, fade, {});
+    					main_intro.start();
+    				});
+    			}
 
     			current = true;
     		},
     		o: function outro(local) {
     			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
-    			if (!main_transition) main_transition = create_bidirectional_transition(main, fade, {}, false);
-    			main_transition.run(0);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
     			if (switch_instance) destroy_component(switch_instance);
-    			if (detaching && main_transition) main_transition.end();
     		}
     	};
 
@@ -1337,7 +1419,7 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(23:0) {#if visible}",
+    		source: "(24:0) {#if visible}",
     		ctx
     	});
 
@@ -1431,12 +1513,15 @@ var app = (function () {
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
-    	console.log(window);
     	let actualPage = null;
 
     	const changeNav = newComponent => {
     		$$invalidate(1, visible = false);
-    		$$invalidate(0, actualPage = newComponent);
+
+    		if (newComponent) {
+    			$$invalidate(0, actualPage = newComponent);
+    		}
+
     		timer();
     	};
 
@@ -1455,7 +1540,7 @@ var app = (function () {
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<App> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$capture_state = () => ({

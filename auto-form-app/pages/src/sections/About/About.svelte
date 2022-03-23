@@ -2,4 +2,4 @@
     let output = "lol";
 </script>
 
-<input bind:value={output} type="number" />
+<p>About page !!</p>

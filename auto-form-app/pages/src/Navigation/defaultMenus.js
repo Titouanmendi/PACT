@@ -1,16 +1,18 @@
 
+import Pages from "../sections/index"
+
 const defaultMenus = [
     {
         icon: "../public/img/icons.svg",
         title: "Papier",
         links: [
             {
-                title: "Create and manage <em>windows</em>",
-                component: Windows,
+                title: "trans:identity-card",
+                component: Pages.IdentityCard,
             },
             {
-                title: "Handling window <em>crashes and hangs</em>",
-                component: ProcessCrash,
+                title: "trans:house",
+                component: Pages.House,
             },
         ],
     },
@@ -20,11 +22,11 @@ const defaultMenus = [
         links: [
             {
                 title: "Create and manage <em>windows</em>",
-                link: Windows,
+                link: Pages.IdentityCard,
             },
             {
                 title: "Handling window <em>crashes and hangs</em>",
-                link: ProcessCrash,
+                link: Pages.House,
             },
         ],
     },

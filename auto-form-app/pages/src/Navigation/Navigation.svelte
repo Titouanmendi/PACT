@@ -1,7 +1,8 @@
 <script>
     export let changeNav = null;
     import { defaultMenus } from "./defaultMenus";
-
+    import { translate } from "../../useful";
+    import Pages from "../sections/index";
     const othersMenus = [];
 
     const menus = [...defaultMenus, ...othersMenus];
@@ -36,7 +37,7 @@
                     <svg class="nav-icon">
                         <use xlink:href={oneMenu.icon} />
                     </svg>
-                    {oneMenu.title}
+                    {translate(oneMenu.title)}
                 </h5>
                 {#each oneMenu.links as oneLinks, indexLink}
                     <button
@@ -46,7 +47,7 @@
                         }}
                         class="nav-button"
                     >
-                        {@html oneLinks.title}
+                        {translate(oneLinks.title)}
                     </button>
                 {/each}
             </div>
@@ -58,7 +59,7 @@
             type="button"
             class="nav-footer-button"
             on:click={() => {
-                changeNav();
+                changeNav(Pages.About);
             }}>About</button
         >
         <button
