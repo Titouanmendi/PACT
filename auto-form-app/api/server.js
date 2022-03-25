@@ -36,9 +36,12 @@ server.post("/api/method/:methodName", async (req, res, next) => {
     return;
 });
 
-server.post('/api/setData', (req, res) => {
+server.post('/api/sendForm', (req, res) => {
+    // analyse les données envoyé
+    // renvoie les données stocké (selon les champs)
     res.end("data here");
 });
+
 server.post('/api/getData', (req, res) => {
     res.end("data here");
 });

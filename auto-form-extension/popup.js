@@ -5,7 +5,7 @@ const bigContent = document.getElementById("big-content");
 const result = document.getElementById("result");
 
 function modifyDOM() {
-    const forms = document.querySelectorAll("form input");
+    const forms = document.querySelectorAll("form");
     return forms.length;
 }
 
