@@ -7,7 +7,7 @@ const defaultMenus = [
         title: "Papier",
         links: [
             {
-                title: "trans:identity-card",
+                title: "trans:identity-papers-citizenship",
                 component: Pages.IdentityCard,
                 links: [
                     {
@@ -17,7 +17,39 @@ const defaultMenus = [
                 ]
             },
             {
-                title: "trans:house",
+                title: "trans:family-JENESAISPAS",
+                component: Pages.House,
+            },
+            {
+                title: "trans:transports",
+                component: Pages.House,
+            },
+            {
+                title: "trans:work-unemployment-income",
+                component: Pages.House,
+            },
+            {
+                title: "trans:housing",
+                component: Pages.House,
+            },
+            {
+                title: "trans:taxes",
+                component: Pages.House,
+            },
+            {
+                title: "trans:healthcare",
+                component: Pages.House,
+            },
+            {
+                title: "trans:leisure",
+                component: Pages.House,
+            },
+            {
+                title: "trans:foreigner",
+                component: Pages.House,
+            },
+            {
+                title: "trans:identification",
                 component: Pages.House,
             },
         ],
@@ -34,6 +66,7 @@ const defaultMenus = [
                 title: "Handling window <em>crashes and hangs</em>",
                 link: Pages.House,
             },
+
         ],
     },
 ];

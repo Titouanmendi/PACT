@@ -837,7 +837,7 @@ var app = (function () {
             title: "Papier",
             links: [
                 {
-                    title: "trans:identity-card",
+                    title: "trans:identity-papers-citizenship",
                     component: sections.IdentityCard,
                     links: [
                         {
@@ -847,7 +847,39 @@ var app = (function () {
                     ]
                 },
                 {
-                    title: "trans:house",
+                    title: "trans:family-JENESAISPAS",
+                    component: sections.House,
+                },
+                {
+                    title: "trans:transports",
+                    component: sections.House,
+                },
+                {
+                    title: "trans:work-unemployment-income",
+                    component: sections.House,
+                },
+                {
+                    title: "trans:housing",
+                    component: sections.House,
+                },
+                {
+                    title: "trans:taxes",
+                    component: sections.House,
+                },
+                {
+                    title: "trans:healthcare",
+                    component: sections.House,
+                },
+                {
+                    title: "trans:leisure",
+                    component: sections.House,
+                },
+                {
+                    title: "trans:foreigner",
+                    component: sections.House,
+                },
+                {
+                    title: "trans:identification",
                     component: sections.House,
                 },
             ],
@@ -864,12 +896,22 @@ var app = (function () {
                     title: "Handling window <em>crashes and hangs</em>",
                     link: sections.House,
                 },
+
             ],
         },
     ];
 
     const fr_FR = {
-        "identity-card": "Carte d'identité",
+        "identity-papers-citizenship": "Identité-papiers-citoyenneté",
+        "family-JENESAISPAS": "famille - personnes à charge",
+        "transports": "transports",
+        "work-unemployment-income": "emploi-chômage-revenus",
+        "housing": "logement",
+        "taxes-money": "impots-argent",
+        "healthcare": "social-santé",
+        "leisure": "loisirs",
+        "foreigners": "étrangers",
+        "identification": "identification",
         "house": "maison",
     };
 
