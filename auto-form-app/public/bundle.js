@@ -839,6 +839,12 @@ var app = (function () {
                 {
                     title: "trans:identity-card",
                     component: sections.IdentityCard,
+                    links: [
+                        {
+                            title: "trans:house",
+                            component: sections.House,
+                        }
+                    ]
                 },
                 {
                     title: "trans:house",
@@ -891,22 +897,29 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[9] = list[i];
-    	child_ctx[11] = i;
+    	child_ctx[10] = list[i];
+    	child_ctx[12] = i;
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[12] = list[i];
-    	child_ctx[14] = i;
+    	child_ctx[13] = list[i];
+    	child_ctx[14] = list;
+    	child_ctx[15] = i;
     	return child_ctx;
     }
 
-    // (33:4) {#if defaultMenus.length > 0}
+    function get_each_context_2(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[16] = list[i];
+    	return child_ctx;
+    }
+
+    // (29:4) {#if defaultMenus.length > 0}
     function create_if_block$1(ctx) {
     	let each_1_anchor;
-    	let each_value = defaultMenus;
+    	let each_value = /*defaultMenus*/ ctx[1];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -930,8 +943,8 @@ var app = (function () {
     			insert_dev(target, each_1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*defaultMenus, changeNavClick, translate*/ 4) {
-    				each_value = defaultMenus;
+    			if (dirty & /*defaultMenus, changeNav, translate*/ 3) {
+    				each_value = /*defaultMenus*/ ctx[1];
     				validate_each_argument(each_value);
     				let i;
 
@@ -964,47 +977,211 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(33:4) {#if defaultMenus.length > 0}",
+    		source: "(29:4) {#if defaultMenus.length > 0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (42:16) {#each oneMenu.links as oneLinks, indexLink}
-    function create_each_block_1(ctx) {
-    	let button;
-    	let t_value = translate(/*oneLinks*/ ctx[12].title) + "";
-    	let t;
-    	let mounted;
-    	let dispose;
+    // (50:20) {#if oneLinks.links && oneLinks.visible}
+    function create_if_block_1(ctx) {
+    	let each_1_anchor;
+    	let each_value_2 = /*oneLinks*/ ctx[13].links;
+    	validate_each_argument(each_value_2);
+    	let each_blocks = [];
 
-    	function click_handler() {
-    		return /*click_handler*/ ctx[4](/*indexMenu*/ ctx[11], /*indexLink*/ ctx[14]);
+    	for (let i = 0; i < each_value_2.length; i += 1) {
+    		each_blocks[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
     	}
 
     	const block = {
     		c: function create() {
-    			button = element("button");
-    			t = text(t_value);
-    			attr_dev(button, "type", "button");
-    			attr_dev(button, "class", "nav-button");
-    			add_location(button, file$1, 42, 20, 1469);
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, button, anchor);
-    			append_dev(button, t);
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, each_1_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*changeNav, defaultMenus, translate*/ 3) {
+    				each_value_2 = /*oneLinks*/ ctx[13].links;
+    				validate_each_argument(each_value_2);
+    				let i;
+
+    				for (i = 0; i < each_value_2.length; i += 1) {
+    					const child_ctx = get_each_context_2(ctx, each_value_2, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block_2(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value_2.length;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(50:20) {#if oneLinks.links && oneLinks.visible}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (51:24) {#each oneLinks.links as oneSubLink}
+    function create_each_block_2(ctx) {
+    	let p;
+    	let t_value = translate(/*oneLinks*/ ctx[13].title) + "";
+    	let t;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler_1() {
+    		return /*click_handler_1*/ ctx[5](/*oneSubLink*/ ctx[16]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			t = text(t_value);
+    			attr_dev(p, "type", "button");
+    			attr_dev(p, "class", "nav-button subMenus svelte-g6vzxb");
+    			add_location(p, file$1, 51, 28, 1885);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, t);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", click_handler, false, false, false);
+    				dispose = listen_dev(p, "click", click_handler_1, false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
+    			if (dirty & /*defaultMenus*/ 2 && t_value !== (t_value = translate(/*oneLinks*/ ctx[13].title) + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(button);
+    			if (detaching) detach_dev(p);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_2.name,
+    		type: "each",
+    		source: "(51:24) {#each oneLinks.links as oneSubLink}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (38:16) {#each oneMenu.links as oneLinks}
+    function create_each_block_1(ctx) {
+    	let div;
+    	let p;
+    	let t0_value = translate(/*oneLinks*/ ctx[13].title) + "";
+    	let t0;
+    	let t1;
+    	let span;
+    	let t2_value = (/*oneLinks*/ ctx[13].visible ? "-" : "+") + "";
+    	let t2;
+    	let t3;
+    	let if_block_anchor;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler() {
+    		return /*click_handler*/ ctx[4](/*oneLinks*/ ctx[13], /*each_value_1*/ ctx[14], /*oneLinks_index*/ ctx[15]);
+    	}
+
+    	let if_block = /*oneLinks*/ ctx[13].links && /*oneLinks*/ ctx[13].visible && create_if_block_1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			p = element("p");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			span = element("span");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    			attr_dev(p, "type", "button");
+    			attr_dev(p, "class", "nav-button svelte-g6vzxb");
+    			add_location(p, file$1, 44, 24, 1518);
+    			attr_dev(span, "class", "svelte-g6vzxb");
+    			add_location(span, file$1, 47, 24, 1664);
+    			attr_dev(div, "class", "menu svelte-g6vzxb");
+    			add_location(div, file$1, 38, 20, 1295);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, p);
+    			append_dev(p, t0);
+    			append_dev(div, t1);
+    			append_dev(div, span);
+    			append_dev(span, t2);
+    			insert_dev(target, t3, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(div, "click", click_handler, false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*defaultMenus*/ 2 && t0_value !== (t0_value = translate(/*oneLinks*/ ctx[13].title) + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*defaultMenus*/ 2 && t2_value !== (t2_value = (/*oneLinks*/ ctx[13].visible ? "-" : "+") + "")) set_data_dev(t2, t2_value);
+
+    			if (/*oneLinks*/ ctx[13].links && /*oneLinks*/ ctx[13].visible) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_1(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(t3);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
     			mounted = false;
     			dispose();
     		}
@@ -1014,25 +1191,26 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(42:16) {#each oneMenu.links as oneLinks, indexLink}",
+    		source: "(38:16) {#each oneMenu.links as oneLinks}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (34:8) {#each defaultMenus as oneMenu, indexMenu}
+    // (30:8) {#each defaultMenus as oneMenu, indexMenu}
     function create_each_block(ctx) {
     	let div;
     	let h5;
     	let svg;
     	let use;
+    	let use_xlink_href_value;
     	let t0;
-    	let t1_value = translate(/*oneMenu*/ ctx[9].title) + "";
+    	let t1_value = translate(/*oneMenu*/ ctx[10].title) + "";
     	let t1;
     	let t2;
     	let t3;
-    	let each_value_1 = /*oneMenu*/ ctx[9].links;
+    	let each_value_1 = /*oneMenu*/ ctx[10].links;
     	validate_each_argument(each_value_1);
     	let each_blocks = [];
 
@@ -1055,14 +1233,14 @@ var app = (function () {
     			}
 
     			t3 = space();
-    			xlink_attr(use, "xlink:href", /*oneMenu*/ ctx[9].icon);
-    			add_location(use, file$1, 37, 24, 1258);
+    			xlink_attr(use, "xlink:href", use_xlink_href_value = /*oneMenu*/ ctx[10].icon);
+    			add_location(use, file$1, 33, 24, 1095);
     			attr_dev(svg, "class", "nav-icon");
-    			add_location(svg, file$1, 36, 20, 1211);
+    			add_location(svg, file$1, 32, 20, 1048);
     			attr_dev(h5, "class", "nav-category");
-    			add_location(h5, file$1, 35, 16, 1165);
+    			add_location(h5, file$1, 31, 16, 1002);
     			attr_dev(div, "class", "nav-item u-category-windows");
-    			add_location(div, file$1, 34, 12, 1107);
+    			add_location(div, file$1, 30, 12, 944);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -1080,8 +1258,14 @@ var app = (function () {
     			append_dev(div, t3);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*changeNavClick, translate, defaultMenus*/ 4) {
-    				each_value_1 = /*oneMenu*/ ctx[9].links;
+    			if (dirty & /*defaultMenus*/ 2 && use_xlink_href_value !== (use_xlink_href_value = /*oneMenu*/ ctx[10].icon)) {
+    				xlink_attr(use, "xlink:href", use_xlink_href_value);
+    			}
+
+    			if (dirty & /*defaultMenus*/ 2 && t1_value !== (t1_value = translate(/*oneMenu*/ ctx[10].title) + "")) set_data_dev(t1, t1_value);
+
+    			if (dirty & /*defaultMenus, changeNav, translate*/ 3) {
+    				each_value_1 = /*oneMenu*/ ctx[10].links;
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -1114,7 +1298,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(34:8) {#each defaultMenus as oneMenu, indexMenu}",
+    		source: "(30:8) {#each defaultMenus as oneMenu, indexMenu}",
     		ctx
     	});
 
@@ -1139,7 +1323,7 @@ var app = (function () {
     	let t7;
     	let mounted;
     	let dispose;
-    	let if_block = defaultMenus.length > 0 && create_if_block$1(ctx);
+    	let if_block = /*defaultMenus*/ ctx[1].length > 0 && create_if_block$1(ctx);
 
     	const block = {
     		c: function create() {
@@ -1159,26 +1343,26 @@ var app = (function () {
     			t5 = space();
     			button1 = element("button");
     			t6 = text("val : ");
-    			t7 = text(/*value*/ ctx[1]);
-    			add_location(strong, file$1, 29, 30, 887);
-    			attr_dev(h1, "class", "nav-title svelte-1vdqbk4");
-    			add_location(h1, file$1, 29, 8, 865);
+    			t7 = text(/*value*/ ctx[2]);
+    			add_location(strong, file$1, 25, 30, 724);
+    			attr_dev(h1, "class", "nav-title svelte-g6vzxb");
+    			add_location(h1, file$1, 25, 8, 702);
     			attr_dev(img, "class", "nav-header-icon");
     			if (!src_url_equal(img.src, img_src_value = "./img/auto_form.svg")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "logo");
-    			add_location(img, file$1, 30, 8, 927);
+    			add_location(img, file$1, 26, 8, 764);
     			attr_dev(header, "class", "nav-header");
-    			add_location(header, file$1, 28, 4, 829);
+    			add_location(header, file$1, 24, 4, 666);
     			attr_dev(button0, "type", "button");
     			attr_dev(button0, "class", "nav-footer-button");
-    			add_location(button0, file$1, 57, 8, 1907);
+    			add_location(button0, file$1, 68, 8, 2439);
     			attr_dev(button1, "type", "button");
     			attr_dev(button1, "class", "nav-footer-button");
-    			add_location(button1, file$1, 64, 8, 2096);
+    			add_location(button1, file$1, 75, 8, 2628);
     			attr_dev(footer, "class", "nav-footer");
-    			add_location(footer, file$1, 56, 4, 1871);
+    			add_location(footer, file$1, 67, 4, 2403);
     			attr_dev(nav, "class", "nav js-nav is-shown");
-    			add_location(nav, file$1, 27, 0, 791);
+    			add_location(nav, file$1, 23, 0, 628);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1202,16 +1386,28 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(button0, "click", /*click_handler_1*/ ctx[5], false, false, false),
-    					listen_dev(button1, "click", /*click_handler_2*/ ctx[6], false, false, false)
+    					listen_dev(button0, "click", /*click_handler_2*/ ctx[6], false, false, false),
+    					listen_dev(button1, "click", /*click_handler_3*/ ctx[7], false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (defaultMenus.length > 0) if_block.p(ctx, dirty);
-    			if (dirty & /*value*/ 2) set_data_dev(t7, /*value*/ ctx[1]);
+    			if (/*defaultMenus*/ ctx[1].length > 0) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$1(ctx);
+    					if_block.c();
+    					if_block.m(nav, t3);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
+    			if (dirty & /*value*/ 4) set_data_dev(t7, /*value*/ ctx[2]);
     		},
     		i: noop,
     		o: noop,
@@ -1240,12 +1436,6 @@ var app = (function () {
     	let { changeNav = null } = $$props;
     	const othersMenus = [];
     	const menus = [...defaultMenus, ...othersMenus];
-
-    	const changeNavClick = (indexMenu, indexLink) => {
-    		const component = menus[indexMenu].links[indexLink].component;
-    		changeNav(component);
-    	};
-
     	let value = "";
 
     	const test = () => {
@@ -1254,7 +1444,7 @@ var app = (function () {
     			headers: { "Content-type": "application/json" },
     			body: JSON.stringify({ toto: "lol" })
     		}).then(e => {
-    			$$invalidate(1, value = "END");
+    			$$invalidate(2, value = "END");
     		});
     	};
 
@@ -1264,15 +1454,19 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Navigation> was created with unknown prop '${key}'`);
     	});
 
-    	const click_handler = (indexMenu, indexLink) => {
-    		changeNavClick(indexMenu, indexLink);
+    	const click_handler = (oneLinks, each_value_1, oneLinks_index) => {
+    		$$invalidate(1, each_value_1[oneLinks_index].visible = !oneLinks.visible, defaultMenus);
     	};
 
-    	const click_handler_1 = () => {
-    		changeNav(sections.About);
+    	const click_handler_1 = oneSubLink => {
+    		changeNav(oneSubLink.component);
     	};
 
     	const click_handler_2 = () => {
+    		changeNav(sections.About);
+    	};
+
+    	const click_handler_3 = () => {
     		test();
     	};
 
@@ -1287,14 +1481,13 @@ var app = (function () {
     		Pages: sections,
     		othersMenus,
     		menus,
-    		changeNavClick,
     		value,
     		test
     	});
 
     	$$self.$inject_state = $$props => {
     		if ('changeNav' in $$props) $$invalidate(0, changeNav = $$props.changeNav);
-    		if ('value' in $$props) $$invalidate(1, value = $$props.value);
+    		if ('value' in $$props) $$invalidate(2, value = $$props.value);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -1303,12 +1496,13 @@ var app = (function () {
 
     	return [
     		changeNav,
+    		defaultMenus,
     		value,
-    		changeNavClick,
     		test,
     		click_handler,
     		click_handler_1,
-    		click_handler_2
+    		click_handler_2,
+    		click_handler_3
     	];
     }
 

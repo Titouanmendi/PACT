@@ -7,10 +7,6 @@
 
     const menus = [...defaultMenus, ...othersMenus];
 
-    const changeNavClick = (indexMenu, indexLink) => {
-        const component = menus[indexMenu].links[indexLink].component;
-        changeNav(component);
-    };
     let value = "";
     const test = () => {
         fetch("http://localhost:3000/api/method/openFileFolder", {
@@ -39,16 +35,31 @@
                     </svg>
                     {translate(oneMenu.title)}
                 </h5>
-                {#each oneMenu.links as oneLinks, indexLink}
-                    <button
-                        type="button"
+                {#each oneMenu.links as oneLinks}
+                    <div
+                        class="menu"
                         on:click={() => {
-                            changeNavClick(indexMenu, indexLink);
+                            oneLinks.visible = !oneLinks.visible;
                         }}
-                        class="nav-button"
                     >
-                        {translate(oneLinks.title)}
-                    </button>
+                        <p type="button" class="nav-button">
+                            {translate(oneLinks.title)}
+                        </p>
+                        <span>{oneLinks.visible ? "-" : "+"}</span>
+                    </div>
+                    {#if oneLinks.links && oneLinks.visible}
+                        {#each oneLinks.links as oneSubLink}
+                            <p
+                                type="button"
+                                on:click={() => {
+                                    changeNav(oneSubLink.component);
+                                }}
+                                class="nav-button subMenus"
+                            >
+                                {translate(oneLinks.title)}
+                            </p>
+                        {/each}
+                    {/if}
                 {/each}
             </div>
         {/each}
@@ -73,7 +84,51 @@
 </nav>
 
 <style>
+    .menu {
+        display: flex;
+        width: 100%;
+        padding: 0.3rem;
+        line-height: 2;
+    }
+    p {
+        margin: 0px;
+    }
+    .menu > span {
+        flex: 0.1;
+    }
+    .nav-button {
+        background-color: transparent;
+        padding-left: calc(2rem + 16px + 0.5rem);
+        text-align: left;
+        font: inherit;
+        font-size: 13px;
+        color: inherit;
+        border: none;
+        cursor: default;
+        outline: none;
+        flex: 0.9;
+    }
+    .menu:hover {
+        background-color: hsla(0, 0%, 0%, 0.1);
+    }
+    .subMenus:hover {
+        background-color: hsla(0, 0%, 0%, 0.1);
+    }
+    .subMenus {
+        padding: 0.3rem;
+        padding-left: calc(2rem + 4rem);
+    }
     .nav-title {
         text-align: center;
     }
+    /* .nav-button.is-selected {
+        background-color: var(--color-accent);
+    }
+    .nav-button.is-selected,
+    .nav-button.is-selected em {
+        color: #fff;
+    }
+    .nav-button.is-selected:focus {
+        opacity: 0.8;
+    } */
 </style>
