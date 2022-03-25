@@ -9,6 +9,12 @@ const defaultMenus = [
             {
                 title: "trans:identity-papers-citizenship",
                 component: Pages.IdentityCard,
+                links: [
+                    {
+                        title: "trans:house",
+                        component: Pages.House,
+                    }
+                ]
             },
             {
                 title: "trans:family-JENESAISPAS",
