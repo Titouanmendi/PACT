@@ -27,7 +27,7 @@ const defaultMenus = [
                 component: Pages.House,
             },
             {
-                title: "trans:taxes",
+                title: "trans:taxes-money",
                 component: Pages.House,
             },
             {
