@@ -140,11 +140,11 @@ const defaultMenus = [
                 title: "trans:housing",
                 links: [
                     {
-                        title: "Create and manage <em>windows</em>",
+                        title: "trans:",
                         component: Pages.IdentityCard,
                     },
                     {
-                        title: "Handling window <em>crashes and hangs</em>",
+                        title: "trans:",
                         component: Pages.House,
                     },
 
@@ -155,11 +155,11 @@ const defaultMenus = [
                 title: "trans:taxes-money",
                 links: [
                     {
-                        title: "Create and manage <em>windows</em>",
+                        title: "trans:",
                         component: Pages.IdentityCard,
                     },
                     {
-                        title: "Handling window <em>crashes and hangs</em>",
+                        title: "trans:",
                         component: Pages.House,
                     },
 
@@ -170,11 +170,11 @@ const defaultMenus = [
                 title: "trans:healthcare",
                 links: [
                     {
-                        title: "Create and manage <em>windows</em>",
+                        title: "trans:",
                         component: Pages.IdentityCard,
                     },
                     {
-                        title: "Handling window <em>crashes and hangs</em>",
+                        title: "trans:",
                         component: Pages.House,
                     },
 
@@ -185,11 +185,11 @@ const defaultMenus = [
                 title: "trans:leisure",
                 links: [
                     {
-                        title: "Create and manage <em>windows</em>",
+                        title: "trans:",
                         component: Pages.IdentityCard,
                     },
                     {
-                        title: "Handling window <em>crashes and hangs</em>",
+                        title: "trans:",
                         component: Pages.House,
                     },
                 ],
@@ -199,11 +199,11 @@ const defaultMenus = [
                 title: "trans:foreigner",
                 links: [
                     {
-                        title: "Create and manage <em>windows</em>",
+                        title: "trans:",
                         component: Pages.IdentityCard,
                     },
                     {
-                        title: "Handling window <em>crashes and hangs</em>",
+                        title: "trans:",
                         component: Pages.House,
                     },
                 ],
@@ -213,11 +213,11 @@ const defaultMenus = [
                 title: "trans:identification",
                 links: [
                     {
-                        title: "Create and manage <em>windows</em>",
+                        title: "trans:",
                         component: Pages.IdentityCard,
                     },
                     {
-                        title: "Handling window <em>crashes and hangs</em>",
+                        title: "trans:",
                         component: Pages.House,
                     },
                 ],
