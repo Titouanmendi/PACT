@@ -4,8 +4,8 @@ const actualLang = "fr_FR";
 
 export const translate = (toTranslate = "") => {
     const code = toTranslate.slice(6);
-    if (typeof langs[actualLang][code] !== "undefined") {
+    if (code !== "" && typeof langs[actualLang][code] !== "undefined") {
         return langs[actualLang][code];
     }
-    return "NOT_TRANSLATED";
+    return "NOT_TRANSLATED" + toTranslate;
 }

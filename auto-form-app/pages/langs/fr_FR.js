@@ -19,7 +19,7 @@ export const fr_FR = {
     "gender": "genre",
     "nationality": "nationalité",
     "french_Id": "carte nationale d'identité française",
-    "foreign_Id": "Carte d’identité étrangère",
+    "foreign_Id": "Carte d'identité étrangère",
     "french_passport": "passeport français",
     "foreign_passport": "passeport étranger",
     "??": "carte de séjour temporaire",
@@ -44,7 +44,7 @@ export const fr_FR = {
     "health_book": "carnet de santé",
     "family_book": "livret de famille",
     "military_book": "livret militaire",
-    "?": "actes de reconnaissance d’enfants naturels",
+    "?": "actes de reconnaissance d'enfants naturels",
     "mariage": "contrat de mariage ou pax",
     "partner": "compagnon",//ss
     "divorce_cecree": "jugement de divorce",
@@ -59,7 +59,7 @@ export const fr_FR = {
     "vehicle": "vehicule",//ss
     "vehicle_insurance": "assurance vehicule",
     "???": "contrôle technique",
-    "????": "Carte grise ou certificat d’immatriculation",
+    "????": "Carte grise ou certificat d'immatriculation",
     "public_transports": "transports en commun",//ss
     "transport_membership": "abonnement pour les transports en commun",
     "elderly_card": "carte mobilité inclusion mention stationnement",
@@ -68,14 +68,14 @@ export const fr_FR = {
     "schooling": "scolarité",//ss
     "school_certificate": "certificat de scolarité",
     "student_card": "carte étudiante",
-    "european_student_Id": "numéro d’étudiant européen",
+    "european_student_Id": "numéro d'étudiant européen",
     "degrees": "diplômes", //ss rmq il faut que chaque utilisateur puisse les rejouter 
     "professional_activity": "activité professionnelle",//ss
     "employment_certificats_and_contract": "certificats et contrats de travail",
-    "ensurance_contract": "Contrats d’assurance",
+    "ensurance_contract": "Contrats d'assurance",
     "ensurance_termination_notice": "avis de réception de résiliation des contrats",
     "unemployment_certificat": "certificat de pôle emploi",
-    "unemployment_benefits": "bulletins d’allocations chômage",
+    "unemployment_benefits": "bulletins d'allocations chômage",
     "salary_slips": "bulletins de salaires",
     "family_allowance_payment_slips": "bordereaux de versements des allocations familiales",
     "scholarship": "bourses",//ss
@@ -101,7 +101,7 @@ export const fr_FR = {
     "second home": "résidence secondaire",//ss
 
     //impots argents
-    "income_tax_receipts": "justificatifs d’impôts sur le revenus",
+    "income_tax_receipts": "justificatifs d'impôts sur le revenus",
     "television_license_fee": "redevance télévision",
     "proof_of_payment_of_social_security_contributions": "justificatifs de paiement des cotisations de sécurité sociale",
     "proof_of_payment_of_pension_contributions": "justificatifs de paiement des cotisations de retraite",
@@ -112,12 +112,12 @@ export const fr_FR = {
     "": "redevance audio-visuelle",
 
     //social santé
-    "": "justificatif d’aptitude sportive par le médecin traitant",
+    "": "justificatif d'aptitude sportive par le médecin traitant",
     "": "carte vitale",
-    "": "attestation de droit à l’assurance maladie",
+    "": "attestation de droit à l'assurance maladie",
     "": "carte mutuelle",
     "": "carte AME",
-    "": "carte européenne d’assurance maladie",
+    "": "carte européenne d'assurance maladie",
 
     //loisir
     "": "permis bateau",
@@ -125,7 +125,7 @@ export const fr_FR = {
 
     //etranger
     "": "titre de séjour",
-    "": "attestation d’accueil",
+    "": "attestation d'accueil",
     "": "regroupement familial",
     "": "autorisation provisoire de séjour",
 

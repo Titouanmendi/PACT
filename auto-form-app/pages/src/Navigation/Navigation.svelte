@@ -33,7 +33,7 @@
                     <svg class="nav-icon">
                         <use xlink:href={oneMenu.icon} />
                     </svg>
-                    {translate(oneMenu.title)}
+                    Menus
                 </h5>
                 {#each oneMenu.links as oneLinks}
                     <div
