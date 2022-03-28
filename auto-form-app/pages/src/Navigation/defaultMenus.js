@@ -2,66 +2,19 @@
 import Pages from "../sections/index"
 
 const defaultMenus = [
-    /* {
-         icon: "../public/img/icons.svg",
-         title: "Papier",
-         links: [
-             {
-                 title: "trans:identity-papers-citizenship",
-                 component: Pages.IdentityCard,
-                 links: [
-                     {
-                         title: "trans:housing",
-                         component: Pages.House,
-                     }
-                 ]
-             },
-             {
-                 title: "trans:family-dependent",
-                 component: Pages.House,
-             },
-             {
-                 title: "trans:transports",
-                 component: Pages.House,
-             },
-             {
-                 title: "trans:work-unemployment-income",
-                 component: Pages.House,
-             },
-             {
-                 title: "trans:housing",
-                 component: Pages.House,
-             },
-             {
-                 title: "trans:taxes-money",
-                 component: Pages.House,
-             },
-             {
-                 title: "trans:healthcare",
-                 component: Pages.House,
-             },
-             {
-                 title: "trans:leisure",
-                 component: Pages.House,
-             },
-             {
-                 title: "trans:foreigner",
-                 component: Pages.House,
-             },
-             {
-                 title: "trans:identification",
-                 component: Pages.House,
-             },
-         ],
-     },*/
+
     {
         icon: "../public/img/icons.svg",
         links: [
             {
-                title: "trans:general",
+                title: "trans:identity-papers-citizenship",
                 links: [
                     {
-                        title: "trans:housing",
+                        title: "trans:general",
+                        component: Pages.House,
+                    },
+                    {
+                        title: "trans:contact",
                         component: Pages.House,
                     }
                 ]
@@ -87,15 +40,6 @@ const defaultMenus = [
                     },
 
                 ],
-            },
-            {
-                title: "trans:contact",
-                links: [
-                    {
-                        title: "trans:housing",
-                        component: Pages.House,
-                    }
-                ]
             },
             {
                 icon: "../public/img/icons.svg",
@@ -140,87 +84,41 @@ const defaultMenus = [
                 title: "trans:housing",
                 links: [
                     {
-                        title: "Create and manage <em>windows</em>",
-                        component: Pages.IdentityCard,
-                    },
-                    {
-                        title: "Handling window <em>crashes and hangs</em>",
+                        title: "trans:principal_residence",
                         component: Pages.House,
                     },
-
+                    {
+                        title: "trans:secondary_residence",
+                        component: Pages.House,
+                    },
                 ],
             },
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:taxes-money",
-                links: [
-                    {
-                        title: "Create and manage <em>windows</em>",
-                        component: Pages.IdentityCard,
-                    },
-                    {
-                        title: "Handling window <em>crashes and hangs</em>",
-                        component: Pages.House,
-                    },
 
-                ],
             },
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:healthcare",
-                links: [
-                    {
-                        title: "Create and manage <em>windows</em>",
-                        component: Pages.IdentityCard,
-                    },
-                    {
-                        title: "Handling window <em>crashes and hangs</em>",
-                        component: Pages.House,
-                    },
 
-                ],
             },
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:leisure",
                 links: [
-                    {
-                        title: "Create and manage <em>windows</em>",
-                        component: Pages.IdentityCard,
-                    },
-                    {
-                        title: "Handling window <em>crashes and hangs</em>",
-                        component: Pages.House,
-                    },
+
                 ],
             },
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:foreigner",
-                links: [
-                    {
-                        title: "Create and manage <em>windows</em>",
-                        component: Pages.IdentityCard,
-                    },
-                    {
-                        title: "Handling window <em>crashes and hangs</em>",
-                        component: Pages.House,
-                    },
-                ],
+
             },
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:identification",
-                links: [
-                    {
-                        title: "Create and manage <em>windows</em>",
-                        component: Pages.IdentityCard,
-                    },
-                    {
-                        title: "Handling window <em>crashes and hangs</em>",
-                        component: Pages.House,
-                    },
-                ],
+
             },
         ],
     },
