@@ -42,9 +42,9 @@
                             oneLinks.visible = !oneLinks.visible;
                         }}
                     >
-                        <p type="button" class="nav-button">
+                        <h5 type="button" class="bigtitle nav-button">
                             {translate(oneLinks.title)}
-                        </p>
+                        </h5>
                         <span>{oneLinks.visible ? "-" : "+"}</span>
                     </div>
                     {#if oneLinks.links && oneLinks.visible}
@@ -84,11 +84,15 @@
 </nav>
 
 <style>
+    .bigtitle {
+        margin: 0px;
+        text-transform: uppercase;
+        font-size: 11px;
+        font-weight: normal;
+    }
     .nav-category {
         margin: 0.2em 0;
         padding-left: 1rem;
-        font-size: 11px;
-        font-weight: normal;
         text-transform: uppercase;
     }
     .menu {
