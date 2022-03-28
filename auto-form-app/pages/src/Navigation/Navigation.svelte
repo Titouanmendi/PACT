@@ -56,7 +56,7 @@
                                 }}
                                 class="nav-button subMenus"
                             >
-                                {translate(oneLinks.title)}
+                                {translate(oneSubLink.title)}
                             </p>
                         {/each}
                     {/if}
@@ -84,6 +84,13 @@
 </nav>
 
 <style>
+    .nav-category {
+        margin: 0.2em 0;
+        padding-left: 1rem;
+        font-size: 11px;
+        font-weight: normal;
+        text-transform: uppercase;
+    }
     .menu {
         display: flex;
         width: 100%;
@@ -98,7 +105,7 @@
     }
     .nav-button {
         background-color: transparent;
-        padding-left: calc(2rem + 16px + 0.5rem);
+        padding-left: calc(1rem + 16px + 0.5rem);
         text-align: left;
         font: inherit;
         font-size: 13px;
