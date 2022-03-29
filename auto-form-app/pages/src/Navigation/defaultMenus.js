@@ -11,11 +11,11 @@ const defaultMenus = [
                 links: [
                     {
                         title: "trans:general",
-                        component: Pages.House,
+                        component: Pages.Custom,
                     },
                     {
                         title: "trans:contact",
-                        component: Pages.House,
+                        component: Pages.Custom,
                     }
                 ]
             },
@@ -96,74 +96,27 @@ const defaultMenus = [
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:taxes-money",
-                links: [
-                    {
-                        title: "trans:",
-                        component: Pages.IdentityCard,
-                    },
-                    {
-                        title: "trans:",
-                        component: Pages.House,
-                    },
-                ],
-
+                component: Pages.TaxesMoney,
             },
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:healthcare",
-                links: [
-                    {
-                        title: "trans:",
-                        component: Pages.IdentityCard,
-                    },
-                    {
-                        title: "trans:",
-                        component: Pages.House,
-                    },
-                ],
-
+                component: Pages.Healthcare,
             },
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:leisure",
-                links: [
-                    {
-                        title: "trans:",
-                        component: Pages.IdentityCard,
-                    },
-                    {
-                        title: "trans:",
-                        component: Pages.House,
-                    },
-                ],
+                component: Pages.Leisure,
             },
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:foreigner",
-                links: [
-                    {
-                        title: "trans:",
-                        component: Pages.IdentityCard,
-                    },
-                    {
-                        title: "trans:",
-                        component: Pages.House,
-                    },
-                ],
+                component: Pages.Foreigner,
             },
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:identification",
-                links: [
-                    {
-                        title: "trans:",
-                        component: Pages.IdentityCard,
-                    },
-                    {
-                        title: "trans:",
-                        component: Pages.House,
-                    },
-                ],
+                component: Pages.Identification,
             },
         ],
     },

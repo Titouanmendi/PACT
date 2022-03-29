@@ -1,7 +1,7 @@
 <script>
     export let changeNav = null;
     import { defaultMenus } from "./defaultMenus";
-    import { translate } from "../../useful";
+    import { translate, secondPartTrans } from "../../useful";
     import Pages from "../sections/index";
     const othersMenus = [];
 
@@ -36,29 +36,48 @@
                     Menus
                 </h5>
                 {#each oneMenu.links as oneLinks}
-                    <div
-                        class="menu"
-                        on:click={() => {
-                            oneLinks.visible = !oneLinks.visible;
-                        }}
-                    >
-                        <h5 type="button" class="bigtitle nav-button">
-                            {translate(oneLinks.title)}
-                        </h5>
-                        <span>{oneLinks.visible ? "-" : "+"}</span>
-                    </div>
-                    {#if oneLinks.links && oneLinks.visible}
-                        {#each oneLinks.links as oneSubLink}
-                            <p
-                                type="button"
-                                on:click={() => {
-                                    changeNav(oneSubLink.component);
-                                }}
-                                class="nav-button subMenus"
-                            >
-                                {translate(oneSubLink.title)}
-                            </p>
-                        {/each}
+                    {#if oneLinks.links}
+                        <div
+                            class="menu"
+                            on:click={() => {
+                                oneLinks.visible = !oneLinks.visible;
+                            }}
+                        >
+                            <h5 type="button" class="bigtitle nav-button">
+                                {translate(oneLinks.title)}
+                            </h5>
+                            <span>{oneLinks.visible ? "-" : "+"}</span>
+                        </div>
+                        {#if oneLinks.visible}
+                            {#each oneLinks.links as oneSubLink}
+                                <p
+                                    type="button"
+                                    on:click={() => {
+                                        changeNav(
+                                            oneSubLink.component,
+                                            secondPartTrans(oneSubLink.title)
+                                        );
+                                    }}
+                                    class="nav-button subMenus"
+                                >
+                                    {translate(oneSubLink.title)}
+                                </p>
+                            {/each}
+                        {/if}
+                    {:else}
+                        <div
+                            class="menu"
+                            on:click={() => {
+                                changeNav(
+                                    oneLinks.component,
+                                    secondPartTrans(oneLinks.title)
+                                );
+                            }}
+                        >
+                            <h5 type="button" class="bigtitle nav-button">
+                                {translate(oneLinks.title)}
+                            </h5>
+                        </div>
                     {/if}
                 {/each}
             </div>

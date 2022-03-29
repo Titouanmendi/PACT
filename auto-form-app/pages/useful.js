@@ -9,3 +9,7 @@ export const translate = (toTranslate = "") => {
     }
     return "NOT_TRANSLATED" + toTranslate;
 }
+
+export const secondPartTrans = (toTranslate = "") => {
+    return toTranslate.slice(6);
+}

@@ -2,11 +2,18 @@
     import { fade } from "svelte/transition";
     import sections from "./sections/index";
     import Navigation from "./Navigation/Navigation.svelte";
+    import allDatas from "./data/index";
     let actualPage = null;
-    const changeNav = (newComponent) => {
+    let dataPage = null;
+    const changeNav = (newComponent, data = "") => {
         visible = false;
         if (newComponent) {
             actualPage = newComponent;
+        }
+        if (data && allDatas[data]) {
+            dataPage = allDatas[data];
+        } else {
+            dataPage = [];
         }
         timer();
     };
@@ -23,7 +30,7 @@
 
 {#if visible}
     <main in:fade class="content">
-        <svelte:component this={actualPage} />
+        <svelte:component this={actualPage} data={dataPage} />
     </main>
 {/if}
 
