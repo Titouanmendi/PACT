@@ -1,5 +1,9 @@
 export default [
     {
+        translate: "trans:kid",
+        type: "text",
+    },
+    {
         translate: "trans:lastName",
         type: "text",
     },
@@ -54,13 +58,5 @@ export default [
     {
         translate: "trans:birth_certificate",
         type: "file",
-    },/*
-    {
-        translate: "trans:",
-        type: "date",
     },
-    {
-        translate: "trans:",
-        type: "number",
-    },*/
 ]

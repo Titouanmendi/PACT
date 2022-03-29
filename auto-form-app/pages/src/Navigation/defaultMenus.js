@@ -24,19 +24,19 @@ const defaultMenus = [
                 links: [
                     {
                         title: "trans:booklet",
-                        component: Pages.IdentityCard,
+                        component: Pages.Custom,
                     },
                     {
                         title: "trans:partner",
-                        component: Pages.House,
+                        component: Pages.Custom,
                     },
                     {
                         title: "trans:kids_Id",
-                        component: Pages.IdentityCard,
+                        component: Pages.Custom,
                     },
                     {
                         title: "trans:dependent_Id",
-                        component: Pages.House,
+                        component: Pages.Custom,
                     },
 
                 ],

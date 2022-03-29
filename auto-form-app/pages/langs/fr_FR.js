@@ -44,11 +44,11 @@ export const fr_FR = {
     "health_book": "carnet de santé",
     "family_book": "livret de famille",
     "military_book": "livret militaire",
-    "?": "actes de reconnaissance d'enfants naturels",
+    "partner": "compagnon/compagne",//ss
     "mariage": "contrat de mariage ou pax",
-    "partner": "compagnon",//ss
     "divorce_cecree": "jugement de divorce",
     "kids_Id": "identité des enfants ",//ss
+    "kid": "enfant",
     "dependent_Id": "identité de personne à charge",//ss
     "??": "ordonnance de non conciliation",
 
