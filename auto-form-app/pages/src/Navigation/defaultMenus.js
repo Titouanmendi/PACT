@@ -105,6 +105,7 @@ const defaultMenus = [
                         title: "trans:",
                         component: Pages.House,
                     },
+                ],
 
             },
             {
@@ -119,6 +120,7 @@ const defaultMenus = [
                         title: "trans:",
                         component: Pages.House,
                     },
+                ],
 
             },
             {

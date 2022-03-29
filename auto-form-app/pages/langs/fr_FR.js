@@ -105,34 +105,29 @@ export const fr_FR = {
     "television_license_fee": "redevance télévision",
     "proof_of_payment_of_social_security_contributions": "justificatifs de paiement des cotisations de sécurité sociale",
     "proof_of_payment_of_pension_contributions": "justificatifs de paiement des cotisations de retraite",
-    "": "justificatifs de paiement des salaires",
-    "": "justificatifs de paiement des rentes viagères",
-    "": "justificatifs de paiement des pensions alimentaires",
-    "": "taxe foncière",
-    "": "redevance audio-visuelle",
+    "proof_of_salary_payment": "justificatifs de paiement des salaires",
+    "proof_of_payment_of_life_annuities": "justificatifs de paiement des rentes viagères",
+    "proof_of_payment_of_alimony": "justificatifs de paiement des pensions alimentaires",
+    "property_tax": "taxe foncière",
+    "audiovisual_license_fee": "redevance audio-visuelle",
 
     //social santé
-    "": "justificatif d'aptitude sportive par le médecin traitant",
-    "": "carte vitale",
-    "": "attestation de droit à l'assurance maladie",
-    "": "carte mutuelle",
-    "": "carte AME",
-    "": "carte européenne d'assurance maladie",
+    "proof_of_sports_aptitude": "justificatif d'aptitude sportive par le médecin traitant",
+    "vital_card": "carte vitale",
+    "certificate_of_entitlement_to_health_insurance": "attestation de droit à l'assurance maladie",
+    "mutual_card": "carte mutuelle",
+    "AME_card": "carte AME",
+    "european_health_insurance_card": "carte européenne d'assurance maladie",
 
     //loisir
-    "": "permis bateau",
-    "": "permis de chasse",
+    "boat_license": "permis bateau",
+    "hunting_license": "permis de chasse",
 
     //etranger
-    "": "titre de séjour",
-    "": "attestation d'accueil",
-    "": "regroupement familial",
-    "": "autorisation provisoire de séjour",
-
-
-
-
-
+    "residence_permit": "titre de séjour",
+    "accomodation_certificate": "attestation d'accueil",
+    "family_reunion": "regroupement familial",
+    "temporary_residence_permit": "autorisation provisoire de séjour",
 
 }
 
