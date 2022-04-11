@@ -28,6 +28,12 @@ const job = async () => {
     await decipherFile(key, iv, join(__dirname, "out.txt.enc"), join(__dirname, "deciphered.zip"));
     const buff = await decipherFile(key, iv, join(__dirname, "out.txt.enc"), null);
     console.log(buff.length);
+    var zip = new AdmZip(buff);
+
+    zip.getEntries().forEach(function (zipEntry) {
+        console.log(zipEntry.toString()); // outputs zip entries information
+        console.log(zipEntry.getData().toString("utf8"));
+    });
 }
 
 job();
