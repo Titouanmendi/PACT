@@ -1,4 +1,4 @@
-all: step1 step2 step3
+all: install step1 step2 step3
 
 
 step1:
