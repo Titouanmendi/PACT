@@ -47,15 +47,15 @@ const defaultMenus = [
                 links: [
                     {
                         title: "trans:drivers_license",
-                        component: Pages.IdentityCard,
+                        component: Pages.Custom,
                     },
                     {
                         title: "trans:vehicle",
-                        component: Pages.House,
+                        component: Pages.Custom,
                     },
                     {
                         title: "trans:public_transports",
-                        component: Pages.House,
+                        component: Pages.Custom,
                     },
 
                 ],
@@ -66,17 +66,20 @@ const defaultMenus = [
                 links: [
                     {
                         title: "trans:schooling",
-                        component: Pages.IdentityCard,
+                        component: Pages.Custom,
                     },
                     {
                         title: "trans:degrees",
-                        component: Pages.House,
+                        component: Pages.Custom,
                     },
                     {
                         title: "trans:scholarship",
-                        component: Pages.House,
+                        component: Pages.Custom,
                     },
-
+                    {
+                        title: "trans:professional_activity",
+                        component: Pages.Custom,
+                    },
                 ],
             },
             {
@@ -85,38 +88,38 @@ const defaultMenus = [
                 links: [
                     {
                         title: "trans:principal_residence",
-                        component: Pages.House,
+                        component: Pages.Custom,
                     },
                     {
                         title: "trans:secondary_residence",
-                        component: Pages.House,
+                        component: Pages.Custom,
                     },
                 ],
             },
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:taxes-money",
-                component: Pages.TaxesMoney,
+                component: Pages.Custom,
             },
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:healthcare",
-                component: Pages.Healthcare,
+                component: Pages.Custom,
             },
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:leisure",
-                component: Pages.Leisure,
+                component: Pages.Custom,
             },
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:foreigner",
-                component: Pages.Foreigner,
+                component: Pages.Custom,
             },
             {
                 icon: "../public/img/icons.svg",
                 title: "trans:identification",
-                component: Pages.Identification,
+                component: Pages.Custom,
             },
         ],
     },

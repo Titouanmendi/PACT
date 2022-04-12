@@ -69,7 +69,7 @@ export const fr_FR = {
     "school_certificate": "certificat de scolarité",
     "student_card": "carte étudiante",
     "european_student_Id": "numéro d'étudiant européen",
-    "degrees": "diplômes", //ss rmq il faut que chaque utilisateur puisse les rejouter 
+    "degrees": "diplômes", // rmq il faut que chaque utilisateur puisse les rejouter 
     "professional_activity": "activité professionnelle",//ss
     "employment_certificats_and_contract": "certificats et contrats de travail",
     "ensurance_contract": "Contrats d'assurance",
@@ -98,7 +98,7 @@ export const fr_FR = {
     "social_housing_application_certificate": "attestation de demande de logement social",
     "domiciliation_certificate": "attestation de domiciliation",
     "claim_reimbursement_records": "dossiers de remboursements de sinistres",
-    "second home": "résidence secondaire",//ss
+    "second_home": "résidence secondaire",//ss
 
     //impots argents
     "income_tax_receipts": "justificatifs d'impôts sur le revenus",
