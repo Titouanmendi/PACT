@@ -1,10 +1,10 @@
 # DONOT CHANGE/EDIT THIS FILE
-image: asciidoctor/docker-asciidoctor
 
 stages:
    - build
 
 build-report:
+   image: asciidoctor/docker-asciidoctor
    # You can download the artifacts in the pipeline/jobs tab in Gitlab web UI
    artifacts:
       expire_in: 7 days
@@ -21,4 +21,10 @@ build-report:
       - (cd rapport && asciidoctor-pdf -r asciidoctor-mathematical -a mathematical-format=svg -d book -b pdf README.adoc -o Rapport-$CI_PROJECT_NAME.pdf)
    only:
       - master
+
+make-test:
+   image: alpine
+   script:
+      - make api
+
 
