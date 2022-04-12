@@ -5,13 +5,15 @@
     import allDatas from "./data/index";
     let actualPage = null;
     let dataPage = null;
-    const changeNav = (newComponent, data = "") => {
+    let data_title = "";
+    const changeNav = (newComponent, dataCode = "") => {
         visible = false;
         if (newComponent) {
             actualPage = newComponent;
         }
-        if (data && allDatas[data]) {
-            dataPage = allDatas[data];
+        if (dataCode && allDatas[dataCode]) {
+            data_title = dataCode;
+            dataPage = allDatas[dataCode];
         } else {
             dataPage = [];
         }
@@ -30,7 +32,7 @@
 
 {#if visible}
     <main in:fade class="content">
-        <svelte:component this={actualPage} data={dataPage} />
+        <svelte:component this={actualPage} data={dataPage} name={data_title} />
     </main>
 {/if}
 
@@ -38,6 +40,6 @@
     .content {
         flex: 1;
         position: relative;
-        overflow: hidden;
+        overflow: auto;
     }
 </style>

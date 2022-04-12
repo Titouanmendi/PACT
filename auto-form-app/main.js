@@ -3,10 +3,10 @@
 // })
 // need an external repository
 
-const path = require('path')
-const fs = require('fs')
-const glob = require('glob')
-const { app, BrowserWindow, ipcMain } = require('electron')
+const path = require('path');
+const fs = require('fs');
+const glob = require('glob');
+const { app, BrowserWindow, ipcMain } = require('electron');
 
 const server = require("./api/server");
 
