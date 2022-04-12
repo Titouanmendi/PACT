@@ -26,6 +26,7 @@ make-test:
    stage: build
    image: alpine
    script:
+      - apk update && apk add make
       - make api
 
 
