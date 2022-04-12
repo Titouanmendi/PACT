@@ -23,6 +23,7 @@ build-report:
       - master
 
 make-test:
+   stage: build
    image: alpine
    script:
       - make api
