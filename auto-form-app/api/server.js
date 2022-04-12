@@ -1,12 +1,12 @@
 const polka = require("polka");
-const { json } = require('body-parser');
+const { json, urlencoded } = require('body-parser');
+const fileUpload = require('express-fileupload');
 const fs = require("fs");
 const { join } = require('path');
 const AdmZip = require("adm-zip");
 const methods = require("./methods");
 const { cipherFile, decipherFile } = require("../lib");
 const Store = require("./store");
-
 
 let db;
 let currentConfig = new Store();
@@ -52,7 +52,9 @@ function authFunction(req, res, next) {
 
 server
     .use('/api', authFunction)
+    .use(fileUpload())
     .use(json())
+    .use(urlencoded({ extended: true }))
     .use('/', serve);
 
 
@@ -76,9 +78,27 @@ server.post('/api/sendForm', (req, res) => {
 server.post('/api/getData', (req, res) => {
     res.end("data here");
 });
+
 server.post('/api/setData', (req, res) => {
-    const data = req.body;
+    // TODO
+    req.body;
     res.end("data here");
+});
+server.post('/api/setFile', (req, res) => {
+    let file = null;
+    if (req.files) {
+        if (req.files.uploaded && req.files.uploaded.data) {
+            file = req.files.uploaded.data;
+        }
+    }
+    if (file) {
+        db.addFile("test.txt", file, ""); // TODO save
+    }
+    if (file) {
+        res.end("file received");
+    } else {
+        res.end("file not received");
+    }
 });
 
 server.listen(3000);

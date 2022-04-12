@@ -1,9 +1,14 @@
 const path = require('path');
 const fs = require('fs');
 const { randomBytes } = require("crypto");
+const process = require("process");
 
 const fileName = "auto-form-config.json";
-const userDataPath = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share")
+let userDataPath = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share")
+if (process.env.DEVMODE) {
+    userDataPath = path.join(__dirname, "..", "..");
+}
+
 
 class Store {
     constructor() {

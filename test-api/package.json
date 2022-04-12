@@ -4,12 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles"
+    "test": "DEVMODE=true jest --detectOpenHandles"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "axios": "^0.26.1",
     "jest": "^27.5.1"
+  },
+  "dependencies": {
+    "form-data": "^4.0.0"
   }
 }
