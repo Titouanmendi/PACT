@@ -1,4 +1,4 @@
-describe('example to-do app', () => {
+describe('Interface tests', () => {
   beforeEach(() => {
     cy.visit('/');
   })
