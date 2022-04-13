@@ -24,6 +24,8 @@
                             setFile(formData);
                         }}
                     />
+                {:else}
+                    <input type={oneInput.type} />
                 {/if}
             </div>
         {/each}
