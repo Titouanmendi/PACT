@@ -1,7 +1,7 @@
 
 const fs = require("fs");
 const AdmZip = require("adm-zip");
-const { cipherFile, decipherFile } = require("../lib");
+const { cipherFile, decipherFile } = require("./lib");
 const { Store } = require("./store");
 
 const open = async () => {
