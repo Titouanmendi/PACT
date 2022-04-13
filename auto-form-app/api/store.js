@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const { randomBytes } = require("crypto");
 const process = require("process");
+const bcrypt = require("bcrypt");
 
 const fileName = "auto-form-config.json";
 let userDataPath = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share")
@@ -54,7 +55,27 @@ const parseDataFile = (filePath) => {
         data.fileName = path.join(userDataPath, "bdd.zip.enc");;
     }
     return data;
+};
+
+const getFromStore = (key, defaultValue) => {
+    let currentConfig = new Store();
+    let value = currentConfig.get(key);
+    if (!value && defaultValue) {
+        currentConfig.set(key, defaultValue);
+        value = defaultValue;
+    }
+    return value;
+}
+
+const setPassword = async (password = randomBytes(32).toString()) => {
+    let currentConfig = new Store();
+    const hash = await bcrypt.hash(password, 10);
+    currentConfig.set("hash", hash);
 }
 
 // expose the class
-module.exports = Store;
+module.exports = {
+    Store,
+    setPassword,
+    getFromStore,
+};

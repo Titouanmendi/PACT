@@ -2,13 +2,19 @@ const polka = require("polka");
 const send = require('@polka/send-type');
 const { json, urlencoded } = require('body-parser');
 const fileUpload = require('express-fileupload');
+const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
 const { join } = require('path');
+const { randomBytes } = require("crypto");
 const methods = require("./methods");
+const { getFromStore } = require("./store");
+const CODES = require("./error-codes");
 const DB = require("./db");
 const dir = join(__dirname, '..', 'public');
 const serve = require('serve-static')(dir);
 
 let db = null;
+let SECRET_KEY = getFromStore("SECRET_KEY", randomBytes(32).toString("base64"));
 
 const server = polka({
     onNoMatch: (req, res, next) => {
@@ -19,15 +25,65 @@ const server = polka({
 
 function authFunction(req, res, next) {
     // make auth here
-    console.log(req.originalUrl + " -> " + "AUTH HERE")
-    next();
+    // console.log(req.originalUrl + " -> " + "AUTH HERE")
+    let token = req.headers['authorization'];
+    if (!token) {
+        return send(res, 403); // when no token
+    }
+    if (!token.startsWith('Bearer ')) {
+        return send(res, 400, {
+            data: null,
+            infos: {
+                code: CODES.BAD_HEADER
+            }
+        });
+    }
+    token = token.slice(7, token.length);
+    try {
+        jwt.verify(token, SECRET_KEY);
+        next();
+    } catch (err) {
+        return send(res, 403);
+    }
+}
+
+const login = async (req, res, next) => {
+    let password = req.body.password;
+    if (password) {
+        const passwordHash = getFromStore("PASSWORD", await bcrypt.hash("PASSWORD", 10));
+        const match = await bcrypt.compare(password, passwordHash);
+        if (match) {
+            const token = jwt.sign({
+                auth: true
+            }, SECRET_KEY, {
+                expiresIn: 24 * 60 * 60
+            });
+            return send(res, 200, {
+                data: token,
+                infos: null
+            });
+        }
+        return send(res, 400, {
+            data: null,
+            infos: {
+                code: CODES.INCORRECT_PASSWORD
+            }
+        });
+    }
+    return send(res, 400, {
+        data: null,
+        infos: {
+            code: CODES.NO_PASSWORD
+        }
+    });
 }
 
 server
-    .use('/api', authFunction)
     .use(fileUpload())
     .use(json())
     .use(urlencoded({ extended: true }))
+    .use('/login', login)
+    .use('/api', authFunction)
     .use('/', serve);
 
 
@@ -60,7 +116,7 @@ server.post('/api/open', async (req, res) => {
         return send(res, 400, {
             data: null,
             infos: {
-                code: "DB_ALREADY_OPEN"
+                code: CODES.DB_ALREADY_OPEN
             }
         });
     }
@@ -97,7 +153,7 @@ server.post('/api/getData', (req, res) => {
     return send(res, 400, {
         data: null,
         infos: {
-            code: "EMPTY_BODY"
+            code: CODES.EMPTY_BODY
         }
     });
 });
@@ -112,7 +168,7 @@ server.post('/api/setData', (req, res) => {
     return send(res, 400, {
         data: null,
         infos: {
-            code: "EMPTY_BODY"
+            code: CODES.EMPTY_BODY
         }
     });
 });
@@ -121,7 +177,7 @@ server.post('/api/setFile', (req, res) => {
         return send(res, 400, {
             data: null,
             infos: {
-                code: "DB_NOT_OPEN"
+                code: CODES.DB_NOT_OPEN
             }
         });
     }
@@ -133,7 +189,7 @@ server.post('/api/setFile', (req, res) => {
     }
     if (file) {
         db.addFile("test.txt", file, "");
-        // TODO save
+        DB.save(db);
         return send(res, 200, {
             data: true,
             infos: null
