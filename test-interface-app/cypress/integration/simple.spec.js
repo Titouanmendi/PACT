@@ -1,6 +1,6 @@
 describe('example to-do app', () => {
   beforeEach(() => {
-    cy.visit('')
+    cy.visit('/');
   })
 
   it('Text input', () => {
