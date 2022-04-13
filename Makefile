@@ -9,14 +9,11 @@ clean:
 	rm bdd.zip.enc
 
 interface:
-	make load-api &
+	cd auto-form-app; npm install
+	cd auto-form-app; DEVMODE=true PORT=true npm run api &
 	cd test-interface-app; npm install
 	cd test-interface-app; npm test
 	-make clean
-
-load-api:
-	cd auto-form-app; npm install
-	cd auto-form-app; DEVMODE=true PORT=true npm run api
 
 solo-api:
 	cd auto-form-app; npm install
