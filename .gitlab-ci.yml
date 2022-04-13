@@ -28,5 +28,6 @@ make-test:
    script:
       - apk update && apk add make nodejs npm
       - make api
+      - make interface
 
 
