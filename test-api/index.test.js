@@ -51,9 +51,26 @@ test('Test /api/open', () => {
 test('Test /api/getData', () => {
     return fetchData({
         url: `${URL}/api/getData`,
-        method: "POST"
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            "name": "toto",
+        })
     }).then(resp => {
-        expect(resp.data).toBe('data here');
+        expect(resp.status).toBe(200);
+        expect(resp.data.data).toBe("TODO"); // TODO
+    })
+});
+
+test('Test /api/getData - without body', () => {
+    return fetchData({
+        url: `${URL}/api/getData`,
+        method: "POST",
+    }).catch(resp => {
+        expect(resp.response.status).toBe(400);
+        expect(resp.response.data.infos.code).toBe("EMPTY_BODY");
     })
 });
 
@@ -69,8 +86,19 @@ test('Test /api/setData', () => {
             "name": "toto",
             "value": 'lol'
         })
-    }).then(data => {
-        expect(data.data).toBe('data here');
+    }).then(resp => {
+        expect(resp.status).toBe(200);
+        expect(resp.data.data).toBe(true); // TODO
+    })
+});
+
+test('Test /api/setData - whitout body', () => {
+    return fetchData({
+        url: `${URL}/api/setData`,
+        method: "POST",
+    }).catch(resp => {
+        expect(resp.response.status).toBe(400);
+        expect(resp.response.data.infos.code).toBe("EMPTY_BODY");
     })
 });
 

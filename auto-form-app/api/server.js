@@ -8,9 +8,8 @@ const DB = require("./db");
 const dir = join(__dirname, '..', 'public');
 const serve = require('serve-static')(dir);
 
-
-
 let db = null;
+
 const server = polka({
     onNoMatch: (req, res, next) => {
         console.log("404 - " + req.originalUrl);
@@ -43,18 +42,16 @@ server.post("/api/electron/:methodName", async (req, res, next) => {
     return;
 });
 
-
-
 server.post('/api/isOpen', (req, res) => {
     if (db === null) {
         return send(res, 200, {
             data: false,
-            infos: {}
+            infos: null
         });
     }
     return send(res, 200, {
         data: true,
-        infos: {}
+        infos: null
     });
 });
 
@@ -70,7 +67,7 @@ server.post('/api/open', async (req, res) => {
     db = await DB.open();
     send(res, 200, {
         data: true,
-        infos: {}
+        infos: null
     });
 });
 
@@ -79,7 +76,7 @@ server.post('/api/close', async (req, res) => {
     db = null; // close db
     send(res, 200, {
         data: true,
-        infos: {}
+        infos: null
     });
 });
 
@@ -90,13 +87,34 @@ server.post('/api/sendForm', (req, res) => {
 });
 
 server.post('/api/getData', (req, res) => {
-    res.end("data here");
+    if (req.body) {
+        // TODO
+        return send(res, 200, {
+            data: "TODO",
+            infos: null
+        });
+    }
+    return send(res, 400, {
+        data: null,
+        infos: {
+            code: "EMPTY_BODY"
+        }
+    });
 });
 
 server.post('/api/setData', (req, res) => {
-    // TODO
-    req.body;
-    res.end("data here");
+    if (req.body) {
+        return send(res, 200, {
+            data: true,
+            infos: null
+        });
+    }
+    return send(res, 400, {
+        data: null,
+        infos: {
+            code: "EMPTY_BODY"
+        }
+    });
 });
 server.post('/api/setFile', (req, res) => {
     if (db === null) {
@@ -118,12 +136,12 @@ server.post('/api/setFile', (req, res) => {
         // TODO save
         return send(res, 200, {
             data: true,
-            infos: {}
+            infos: null
         });
     }
     return send(res, 400, {
         data: false,
-        infos: {}
+        infos: null
     });
 });
 

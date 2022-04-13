@@ -1,5 +1,6 @@
 <script>
     import { translate } from "../../../useful";
+    import { setFile } from "../../api";
     export let data = [];
     export let name = "";
 </script>
@@ -17,18 +18,10 @@
                     <input
                         type="file"
                         on:input={(e) => {
-                            debugger;
                             const file = e.target.files[0];
                             const formData = new FormData();
                             formData.append("uploaded", file);
-                            debugger;
-                            fetch("http://localhost:3000/api/setData", {
-                                method: "POST",
-                                body: formData,
-                            })
-                                .then((response) => response.json())
-                                .then((success) => console.log(success))
-                                .catch((error) => console.log(error));
+                            setFile(formData);
                         }}
                     />
                 {/if}
