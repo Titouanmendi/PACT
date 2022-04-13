@@ -6,12 +6,18 @@ const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const { join } = require('path');
 const { randomBytes } = require("crypto");
+const process = require("process");
 const methods = require("./methods");
 const { getFromStore, Store } = require("./store");
 const CODES = require("./error-codes");
 const DB = require("./db");
 const dir = join(__dirname, '..', 'public');
 const serve = require('serve-static')(dir);
+
+let PORT = 3000;
+if (process.env.PORT) {
+    PORT = 4000;
+}
 
 let db = null;
 let SECRET_KEY = getFromStore("SECRET_KEY", randomBytes(32).toString("base64"));
@@ -218,6 +224,6 @@ server.post('/api/setFile', (req, res) => {
 
 const listen = getFromStore("listen", "127.0.0.1");
 
-server.listen(3000, listen);
+server.listen(PORT, listen);
 
 module.exports = server;
