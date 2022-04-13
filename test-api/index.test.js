@@ -17,12 +17,43 @@ test('Test si le serveur est en ligne', () => {
 });
 
 
+test('Test /api/isOpen', () => {
+    return fetchData({
+        url: `${URL}/api/isOpen`,
+        method: "POST"
+    }).then(resp => {
+        expect(resp.status).toBe(200);
+        expect(resp.data.data).toBe(false);
+    })
+});
+
+test('Test /api/open', () => {
+    return fetchData({
+        url: `${URL}/api/open`,
+        method: "POST"
+    }).then(resp => {
+        expect(resp.status).toBe(200);
+        expect(resp.data.data).toBe(true);
+    })
+});
+
+test('Test /api/open', () => {
+    return fetchData({
+        url: `${URL}/api/open`,
+        method: "POST"
+    }).catch(resp => {
+        expect(resp.response.status).toBe(400);
+        expect(resp.response.data.data).toBe(null);
+        expect(resp.response.data.infos.code).toBe("DB_ALREADY_OPEN");
+    })
+});
+
 test('Test /api/getData', () => {
     return fetchData({
         url: `${URL}/api/getData`,
         method: "POST"
-    }).then(data => {
-        expect(data.data).toBe('data here');
+    }).then(resp => {
+        expect(resp.data).toBe('data here');
     })
 });
 
@@ -60,8 +91,69 @@ test('Test /api/setFile', () => {
             ...form.getHeaders(),
             "Content-Length": form.getLengthSync(),
         },
-    }).then(data => {
-        expect(data.data).toBe('file received');
+    }).then(resp => {
+        expect(resp.status).toBe(200);
+        expect(resp.data.data).toBe(true);
+    })
+});
+
+test('Test /api/setFile - wrong', () => {
+    var form = new FormData();
+    form.append('toto', "tata");
+    return fetchData({
+        url: `${URL}/api/setFile`,
+        method: "POST",
+        data: form,
+        headers: {
+            ...form.getHeaders(),
+            "Content-Length": form.getLengthSync(),
+        },
+    }).catch(resp => {
+        expect(resp.response.status).toBe(400);
+        expect(resp.response.data.data).toBe(false);
+    })
+});
+
+test('Test /api/close', () => {
+    return fetchData({
+        url: `${URL}/api/close`,
+        method: "POST"
+    }).then((resp) => {
+        expect(resp.status).toBe(200);
+        expect(resp.data.data).toBe(true);
+    });
+});
+
+test('Test /api/isOpen when DB is closed', () => {
+    return fetchData({
+        url: `${URL}/api/isOpen`,
+        method: "POST"
+    }).then(resp => {
+        expect(resp.status).toBe(200);
+        expect(resp.data.data).toBe(false);
+    })
+});
+
+test('Test /api/setFile when DB is closed', () => {
+    var form = new FormData();
+    const file = fs.createReadStream('./temp.txt');
+    form.append('uploaded', file, {
+        filename: 'temp.tx',
+        filepath: '/temp.txt',
+        contentType: 'text/plain',
+        knownLength: fs.statSync("./temp.txt").size
+    });
+    return fetchData({
+        url: `${URL}/api/setFile`,
+        method: "POST",
+        data: form,
+        headers: {
+            ...form.getHeaders(),
+            "Content-Length": form.getLengthSync(),
+        },
+    }).catch(resp => {
+        expect(resp.response.status).toBe(400);
+        expect(resp.response.data.infos.code).toBe("DB_NOT_OPEN");
     })
 });
 

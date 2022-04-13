@@ -1,42 +1,16 @@
 const polka = require("polka");
+const send = require('@polka/send-type');
 const { json, urlencoded } = require('body-parser');
 const fileUpload = require('express-fileupload');
-const fs = require("fs");
 const { join } = require('path');
-const AdmZip = require("adm-zip");
 const methods = require("./methods");
-const { cipherFile, decipherFile } = require("../lib");
-const Store = require("./store");
-
-let db;
-let currentConfig = new Store();
-
-const activate = async () => {
-    const fileName = currentConfig.get("fileName");
-    const key = currentConfig.get("key");
-    const iv = currentConfig.get("iv");
-    if (fs.existsSync(fileName)) {
-        try {
-            const buff = await decipherFile(key, iv, fileName, null);
-            db = new AdmZip(buff);
-        } catch (e) {
-            db = new AdmZip();
-        }
-    } else {
-        fs.writeFileSync(fileName, "");
-        db = new AdmZip();
-        const tempBuffer = db.toBuffer()
-        await cipherFile(key, iv, tempBuffer, fileName);
-    }
-}
-
-activate();
-
-
-
+const DB = require("./db");
 const dir = join(__dirname, '..', 'public');
 const serve = require('serve-static')(dir);
 
+
+
+let db = null;
 const server = polka({
     onNoMatch: (req, res, next) => {
         console.log("404 - " + req.originalUrl);
@@ -46,7 +20,7 @@ const server = polka({
 
 function authFunction(req, res, next) {
     // make auth here
-    console.log("AUTH HERE")
+    console.log(req.originalUrl + " -> " + "AUTH HERE")
     next();
 }
 
@@ -58,7 +32,7 @@ server
     .use('/', serve);
 
 
-server.post("/api/method/:methodName", async (req, res, next) => {
+server.post("/api/electron/:methodName", async (req, res, next) => {
     try {
         if (req.params && req.params.methodName && methods[req.params.methodName]) {
             await methods[req.params.methodName]();
@@ -67,6 +41,46 @@ server.post("/api/method/:methodName", async (req, res, next) => {
 
     }
     return;
+});
+
+
+
+server.post('/api/isOpen', (req, res) => {
+    if (db === null) {
+        return send(res, 200, {
+            data: false,
+            infos: {}
+        });
+    }
+    return send(res, 200, {
+        data: true,
+        infos: {}
+    });
+});
+
+server.post('/api/open', async (req, res) => {
+    if (db !== null) {
+        return send(res, 400, {
+            data: null,
+            infos: {
+                code: "DB_ALREADY_OPEN"
+            }
+        });
+    }
+    db = await DB.open();
+    send(res, 200, {
+        data: true,
+        infos: {}
+    });
+});
+
+server.post('/api/close', async (req, res) => {
+    await DB.save(db); // save
+    db = null; // close db
+    send(res, 200, {
+        data: true,
+        infos: {}
+    });
 });
 
 server.post('/api/sendForm', (req, res) => {
@@ -85,6 +99,14 @@ server.post('/api/setData', (req, res) => {
     res.end("data here");
 });
 server.post('/api/setFile', (req, res) => {
+    if (db === null) {
+        return send(res, 400, {
+            data: null,
+            infos: {
+                code: "DB_NOT_OPEN"
+            }
+        });
+    }
     let file = null;
     if (req.files) {
         if (req.files.uploaded && req.files.uploaded.data) {
@@ -92,13 +114,17 @@ server.post('/api/setFile', (req, res) => {
         }
     }
     if (file) {
-        db.addFile("test.txt", file, ""); // TODO save
+        db.addFile("test.txt", file, "");
+        // TODO save
+        return send(res, 200, {
+            data: true,
+            infos: {}
+        });
     }
-    if (file) {
-        res.end("file received");
-    } else {
-        res.end("file not received");
-    }
+    return send(res, 400, {
+        data: false,
+        infos: {}
+    });
 });
 
 server.listen(3000);
