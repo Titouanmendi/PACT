@@ -5,6 +5,10 @@ api:
 	rm auto-form-config.json
 	rm bdd.zip.enc
 
+solo-api:
+	cd auto-form-app; npm install
+	cd auto-form-app; npm run api
+
 cipher:
 	cd test-cipher; make
 

@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 const { join } = require('path');
 const { randomBytes } = require("crypto");
 const methods = require("./methods");
-const { getFromStore } = require("./store");
+const { getFromStore, Store } = require("./store");
 const CODES = require("./error-codes");
 const DB = require("./db");
 const dir = join(__dirname, '..', 'public');
@@ -172,6 +172,21 @@ server.post('/api/setData', (req, res) => {
         }
     });
 });
+
+server.post('/api/changeListen', (req, res) => {
+    const store = new Store();
+    const listen = store.get("listen");
+    if (listen && listen === "127.0.0.1") {
+        store.set("listen", "0.0.0.0");
+    } else {
+        store.set("listen", "127.0.0.1");
+    }
+    return send(res, 200, {
+        data: true,
+        infos: null
+    });
+});
+
 server.post('/api/setFile', (req, res) => {
     if (db === null) {
         return send(res, 400, {
@@ -201,6 +216,8 @@ server.post('/api/setFile', (req, res) => {
     });
 });
 
-server.listen(3000);
+const listen = getFromStore("listen", "127.0.0.1");
+
+server.listen(3000, listen);
 
 module.exports = server;
