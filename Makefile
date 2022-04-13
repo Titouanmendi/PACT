@@ -10,6 +10,7 @@ clean:
 
 interface:
 	cd auto-form-app; npm install
+	cd auto-form-app; npm run build
 	cd auto-form-app; DEVMODE=true PORT=true npm run api &
 	cd test-interface-app; npm install
 	cd test-interface-app; npm test

@@ -3,12 +3,16 @@ describe('example to-do app', () => {
     cy.visit('/');
   })
 
+  it('Check if online', () => {
+    // beforeEach
+  });
+
   it('Text input', () => {
     cy.contains("Identité - papiers - citoyenneté").click();
     cy.contains("Généralités").click();
     cy.wait(500);
     cy.get('input').first().type('Welcome');
-  })
+  });
 
   it('Add file', () => {
     cy.contains("Logement").click();
