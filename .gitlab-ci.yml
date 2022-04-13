@@ -22,12 +22,18 @@ build-report:
    only:
       - master
 
-make-test:
+make-api-test:
    stage: build
    image: alpine
    script:
       - apk update && apk add make nodejs npm
       - make api
+
+make-interface-test:
+   stage: build
+   image: alpine
+   script:
+      - apk update && apk add make nodejs npm
       - make interface
 
 
