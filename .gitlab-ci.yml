@@ -33,7 +33,7 @@ make-interface-test:
    stage: build
    image: alpine
    script:
-      - apk update && apk add make nodejs npm
+      - apk update && apk add make nodejs npm xvfb
       - make interface
 
 
