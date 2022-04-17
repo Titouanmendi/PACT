@@ -1,7 +1,7 @@
 export default [
     {
-        translate: "trans:principal_residence",
-        type: "file",
+        translate: "trans:adress",
+        type: "text",
     },
     {
         translate: "trans:ownership_and_notarial_deeds",
