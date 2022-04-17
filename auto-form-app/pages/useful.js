@@ -8,8 +8,8 @@ export const translate = (toTranslate = "") => {
         return langs[actualLang][code];
     }
     return "NOT_TRANSLATED" + toTranslate;
-}
+};
 
 export const secondPartTrans = (toTranslate = "") => {
     return toTranslate.slice(6);
-}
+};

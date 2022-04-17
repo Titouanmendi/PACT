@@ -3,85 +3,69 @@
 // })
 // need an external repository
 
-const path = require('path');
-const fs = require('fs');
-const glob = require('glob');
-const { app, BrowserWindow, ipcMain } = require('electron');
+const path = require("path");
+const { app, BrowserWindow } = require("electron");
 
 const server = require("./api/server");
 
+app.setName("Auto-form");
 
-const debug = /--debug/.test(process.argv[2])
-
-if (process.mas) {
-  app.setName('Auto-form')
-}
-
-let mainWindow = null
+let mainWindow = null;
 
 function initialize() {
-  makeSingleInstance()
+    makeSingleInstance();
 
-  loadDemos()
+    function createWindow() {
+        const windowOptions = {
+            width: 1080,
+            minWidth: 680,
+            height: 840,
+            title: app.getName(),
+            webPreferences: {
+                contextIsolation: true,
+            },
+        };
 
-  function createWindow() {
-    const windowOptions = {
-      width: 1080,
-      minWidth: 680,
-      height: 840,
-      title: app.getName(),
-      webPreferences: {
-        contextIsolation: true
-      }
+        if (process.platform === "linux") {
+            windowOptions.icon = path.join(
+                __dirname,
+                "assets",
+                "app-icon",
+                "png",
+                "1024.png"
+            );
+        }
+
+        mainWindow = new BrowserWindow(windowOptions);
+        const finalPath = path.join(
+            "file://",
+            __dirname,
+            "public",
+            "/index.html"
+        );
+        mainWindow.loadURL(finalPath);
+
+        mainWindow.on("closed", () => {
+            mainWindow = null;
+        });
     }
 
-    if (process.platform === 'linux') {
-      windowOptions.icon = path.join(__dirname, '/assets/app-icon/png/512.png')
-    }
+    app.on("ready", () => {
+        createWindow();
+    });
 
-    mainWindow = new BrowserWindow(windowOptions)
-    const finalPath = path.join('file://', __dirname, 'public', '/index.html');
-    mainWindow.loadURL(finalPath);
-    //mainWindow.loadURL(path.join('file://', __dirname, '/index.html'))
+    app.on("window-all-closed", () => {
+        if (process.platform !== "darwin") {
+            app.quit();
+        }
+    });
 
-    // Launch fullscreen with DevTools open, usage: npm run debug
-    if (debug) {
-      mainWindow.webContents.openDevTools()
-      mainWindow.maximize()
-      //require('devtron').install()
-    }
-
-    mainWindow.on('closed', () => {
-      mainWindow = null
-    })
-  }
-
-  app.on('ready', () => {
-    createWindow()
-  })
-
-  app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-      app.quit()
-    }
-  })
-
-  app.on('activate', () => {
-    if (mainWindow === null) {
-      createWindow()
-    }
-  })
+    app.on("activate", () => {
+        if (mainWindow === null) {
+            createWindow();
+        }
+    });
 }
-
-ipcMain.on("toMain", (event, args) => {
-  fs.readFile("path/to/file", (error, data) => {
-    // Do something with file contents
-
-    // Send result back to renderer process
-    responseObj = { "hello": "world" }
-    mainWindow.webContents.send("fromMain", responseObj);
-  });
-});
 
 // Make this app a single instance app.
 //
@@ -91,22 +75,19 @@ ipcMain.on("toMain", (event, args) => {
 // Returns true if the current version of the app should quit instead of
 // launching.
 function makeSingleInstance() {
-  if (process.mas) return
-
-  app.requestSingleInstanceLock()
-
-  app.on('second-instance', () => {
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore()
-      mainWindow.focus()
+    if (process.mas) {
+        return;
     }
-  })
+    app.requestSingleInstanceLock();
+
+    app.on("second-instance", () => {
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) {
+                mainWindow.restore();
+            }
+            mainWindow.focus();
+        }
+    });
 }
 
-// Require each JS file in the main-process dir
-function loadDemos() {
-  const files = glob.sync(path.join(__dirname, 'main-process/**/*.js'))
-  files.forEach((file) => { require(file) })
-}
-
-initialize()
+initialize();
