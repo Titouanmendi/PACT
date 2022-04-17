@@ -1,5 +1,6 @@
 <script>
     import { translate } from "../../../useful";
+    import { setFile } from "../../api";
     export let data = [];
     export let name = "";
 </script>
@@ -13,7 +14,19 @@
         {#each data as oneInput}
             <div class="one-input">
                 <p>{translate(oneInput.translate)}</p>
-                <input type={oneInput.type} />
+                {#if oneInput.type == "file"}
+                    <input
+                        type="file"
+                        on:input={(e) => {
+                            const file = e.target.files[0];
+                            const formData = new FormData();
+                            formData.append("uploaded", file);
+                            setFile(formData);
+                        }}
+                    />
+                {:else}
+                    <input type={oneInput.type} />
+                {/if}
             </div>
         {/each}
     </div>
