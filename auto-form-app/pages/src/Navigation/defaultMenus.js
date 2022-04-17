@@ -98,7 +98,7 @@ const defaultMenus = [
             },
             {
                 icon: "../public/img/icons.svg",
-                title: "trans:taxes-money",
+                title: "trans:taxes_money",
                 component: Pages.Custom,
             },
             {

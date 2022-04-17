@@ -12,6 +12,10 @@ import scholarship from "./scholarship"
 import professional_activity from "./professional_activity";
 import principal_residence from "./principal_residence";
 import secondary_residence from "./secondary_residence";
+import taxes_money from "./taxes_money";
+import healthcare from "./healthcare";
+import leisure from "./leisure";
+import foreigner from "./foreigner";
 
 
 export default {
@@ -29,4 +33,8 @@ export default {
     professional_activity,
     principal_residence,
     secondary_residence,
+    taxes_money,
+    healthcare,
+    leisure,
+    foreigner,
 }

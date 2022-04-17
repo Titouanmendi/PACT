@@ -5,7 +5,7 @@ export const fr_FR = {
     "transports": "Moyens de locomotion",
     "work-unemployment-income": "Emploi-chômage-revenus",
     "housing": "Logement",
-    "taxes-money": "Impots - argent",
+    "taxes_money": "Impots - argent",
     "healthcare": "Social - santé",
     "leisure": "Loisirs",
     "foreigner": "Étrangers",
@@ -98,7 +98,7 @@ export const fr_FR = {
     "social_housing_application_certificate": "Attestation de demande de logement social",
     "domiciliation_certificate": "Attestation de domiciliation",
     "claim_reimbursement_records": "Dossiers de remboursements de sinistres",
-    "second_home": "Résidence secondaire",//ss
+    "secondary_residence": "Résidence secondaire",//ss
 
     //impots argents
     "income_tax_receipts": "Justificatifs d'impôts sur le revenus",
