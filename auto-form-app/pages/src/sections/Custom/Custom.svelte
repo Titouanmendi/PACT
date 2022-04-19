@@ -1,8 +1,46 @@
 <script>
+    import { onMount } from "svelte";
+
     import { translate } from "../../../useful";
-    import { setFile } from "../../api";
+    import { getData, saveData } from "../../api";
     export let data = [];
     export let name = "";
+    let listData = [];
+    onMount(() => {
+        getData(JSON.stringify({ path: name })).then((res) => {
+            if (res && res.data && res.data.length > 0) {
+                for (const oneElement of res.data) {
+                    // put in data;
+                    const correctName =
+                        oneElement.entryName.split(";")[1] || "";
+                    const index = data.findIndex((el) => {
+                        return el.translate == correctName;
+                    });
+                    if (index > -1) {
+                        if (
+                            oneElement.comment &&
+                            oneElement.comment.startsWith("file")
+                        ) {
+                            data[index].value = true;
+                        } else {
+                            data[index].value = oneElement.value;
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    const addToList = (data) => {
+        const index = listData.findIndex((el) => {
+            return el.name === data.name;
+        });
+        if (index > -1) {
+            listData[index] = data;
+        } else {
+            listData.push(data);
+        }
+    };
 </script>
 
 <div id="main">
@@ -21,14 +59,37 @@
                             const file = e.target.files[0];
                             const formData = new FormData();
                             formData.append("uploaded", file);
-                            setFile(formData);
+                            addToList({
+                                name: `${name};${oneInput.translate}`,
+                                type: oneInput.type,
+                                value: formData,
+                            });
                         }}
                     />
                 {:else}
-                    <input type={oneInput.type} />
+                    <input
+                        type={oneInput.type}
+                        value={oneInput.value || null}
+                        on:input={(e) => {
+                            // TODO check if already in array
+                            addToList({
+                                name: `${name};${oneInput.translate}`,
+                                type: oneInput.type,
+                                value: e.target.value,
+                            });
+                        }}
+                    />
                 {/if}
             </div>
         {/each}
+        <button
+            on:click={() => {
+                console.log(listData);
+                saveData(listData);
+            }}
+        >
+            Save
+        </button>
     </div>
 </div>
 

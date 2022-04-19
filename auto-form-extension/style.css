@@ -1,8 +1,6 @@
 button {
-    height: 30px;
-    width: 30px;
     outline: none;
-    margin: 10px;
+    margin: 0px;
     border: none;
     border-radius: 2px;
 }
@@ -12,18 +10,19 @@ button {
 }
 
 body {
-    width: 200px;
+    width: 300px;
     margin: 0px;
 }
 
 #big-content {
     width: 100%;
     height: 100%;
-    background-color: blue;
+    background-color: gray;
     padding: 5px;
 }
 
 #content {
+    padding: 5px;
     width: 100%;
     height: 100%;
     background-color: white;
@@ -31,4 +30,8 @@ body {
 
 #result {
     margin: 0px;
+    overflow-y: auto;
+}
+#password-part{
+    display: none;
 }

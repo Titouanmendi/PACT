@@ -7,10 +7,20 @@
 <body>
     <div id="big-content">
         <div id="content">
-            <button id="changeColor">Click me</button>
-            <pre id="result">
-
-            </pre>
+            <div id="default-part">
+                <button id="changeColor">Click me</button>
+                <pre id="result"></pre>
+            </div>
+            <div id="password-part">
+                <label id="password-txt">Please set the password</label>
+                <input
+                    type="password"
+                    id="password-input"
+                    placeholder="type your password"
+                />
+                <br />
+                <button id="set-password">Set password</button>
+            </div>
         </div>
     </div>
     <script type="module" src="popup.js"></script>

@@ -3,6 +3,7 @@
     import sections from "./sections/index";
     import Navigation from "./Navigation/Navigation.svelte";
     import allDatas from "./data/index";
+    import { login, setPassword } from "./api";
     let actualPage = null;
     let dataPage = null;
     let data_title = "";
@@ -19,6 +20,8 @@
         }
         timer();
     };
+    let password = "";
+    let needSetPassword = true;
     let visible = false;
     const timer = () => {
         setTimeout(() => {
@@ -26,14 +29,47 @@
         }, 200);
     };
     changeNav(sections.About);
+    const tryLogin = async () => {
+        try {
+            await login();
+            needSetPassword = false;
+        } catch (e) {
+            debugger;
+            if (e === "NO_PASS") {
+                needSetPassword = true;
+            } else if (e === "ERROR") {
+                // wtf ?
+            } else if (e === "BAD_PASSWORD") {
+                needSetPassword = true;
+            }
+        }
+    };
+    tryLogin();
 </script>
 
-<Navigation {changeNav} />
+{#if needSetPassword}
+    <p>password</p>
+    <input bind:value={password} />
+    <button
+        on:click={(e) => {
+            setPassword(password);
+            tryLogin();
+        }}
+    >
+        Ok
+    </button>
+{:else}
+    <Navigation {changeNav} />
 
-{#if visible}
-    <main in:fade class="content">
-        <svelte:component this={actualPage} data={dataPage} name={data_title} />
-    </main>
+    {#if visible}
+        <main in:fade class="content">
+            <svelte:component
+                this={actualPage}
+                data={dataPage}
+                name={data_title}
+            />
+        </main>
+    {/if}
 {/if}
 
 <style>

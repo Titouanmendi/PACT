@@ -4,7 +4,18 @@
 // need an external repository
 
 const path = require("path");
+const process = require("process");
 const { app, BrowserWindow } = require("electron");
+
+process.on("uncaughtException", (err, origin) => {
+    console.error("Uncaught Exception origin ->", origin);
+    console.error("Uncaught Exception err ->", err);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+    console.error("Unhandled rejection promise ->", promise);
+    console.error("Unhandled rejection reason  ->", reason);
+});
 
 const server = require("./api/server");
 

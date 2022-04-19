@@ -1,15 +1,42 @@
-const allRoutes = {
-    ping: async () => {
-        let ans;
-        await fetch("http://localhost:3000/api/setData", {
-            method: "post"
-        }).then(async (data) => {
+let token = "";
+
+export const setToken = (newToken) => {
+    token = newToken;
+};
+
+export const ping = async () => {
+    let ans;
+    await fetch("http://localhost:3000/api/isOpen", {
+        method: "post",
+    }).then(async (data) => {
+        ans = await data.json();
+    });
+    return ans;
+};
+
+const login = async (data) => {
+    let ans;
+    await fetch("http://localhost:3000/login", {
+        method: "post",
+        headers: {
+            "Content-type": "application/json",
+        },
+        body: data,
+    })
+        .then(async (data) => {
             ans = await data.json();
         })
-        return ans;
-    }
-}
+        .catch(async (data) => {
+            ans = await data.json();
+        });
+    return ans;
+};
 
-export {
-    allRoutes
-}
+export const log = async () => {
+    const result = await chrome.storage.local.get("password");
+    if (!result || !result.password) {
+        throw "NO_PASS";
+    }
+    const res = await login(JSON.stringify({ password: result.password }));
+    return res;
+};
