@@ -23,6 +23,7 @@
     let password = "";
     let needSetPassword = true;
     let visible = false;
+    let startMsg = "";
     const timer = () => {
         setTimeout(() => {
             visible = true;
@@ -30,16 +31,18 @@
     };
     changeNav(sections.About);
     const tryLogin = async () => {
+        startMsg = "";
         try {
             await login();
             needSetPassword = false;
         } catch (e) {
-            debugger;
             if (e === "NO_PASS") {
+                startMsg = "No password given";
                 needSetPassword = true;
             } else if (e === "ERROR") {
-                // wtf ?
+                startMsg = "Error login";
             } else if (e === "BAD_PASSWORD") {
+                startMsg = "Incorrect password";
                 needSetPassword = true;
             }
         }
@@ -48,19 +51,22 @@
 </script>
 
 {#if needSetPassword}
-    <p>password</p>
-    <input bind:value={password} />
-    <button
-        on:click={(e) => {
-            setPassword(password);
-            tryLogin();
-        }}
-    >
-        Ok
-    </button>
+    <div class="start">
+        <img src="./img/auto_form.svg" alt="" />
+        <p>Password</p>
+        <input bind:value={password} />
+        <p class="start-msg">{startMsg}</p>
+        <button
+            on:click={(e) => {
+                setPassword(password);
+                tryLogin();
+            }}
+        >
+            Connect
+        </button>
+    </div>
 {:else}
     <Navigation {changeNav} />
-
     {#if visible}
         <main in:fade class="content">
             <svelte:component
@@ -73,6 +79,24 @@
 {/if}
 
 <style>
+    .start-msg {
+        color: red;
+    }
+    .start {
+        text-align: center;
+        margin: auto;
+    }
+    input,
+    button {
+        font-family: inherit;
+        font-size: inherit;
+        -webkit-padding: 0.4em 0;
+        padding: 0.4em;
+        margin: 0 0 0.5em 0;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+    }
     .content {
         flex: 1;
         position: relative;
