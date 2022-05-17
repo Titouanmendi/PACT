@@ -1,5 +1,6 @@
 const polka = require("polka");
 const send = require("@polka/send-type");
+const cors = require("cors")({ origin: true });
 const { json, urlencoded } = require("body-parser");
 const fileUpload = require("express-fileupload");
 const bcrypt = require("bcrypt");
@@ -94,6 +95,7 @@ const login = async (req, res, next) => {
 };
 
 server
+    .use(cors)
     .use(fileUpload())
     .use(json())
     .use(urlencoded({ extended: true }))
