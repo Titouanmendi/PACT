@@ -9,9 +9,17 @@ button {
     box-sizing: border-box;
 }
 
+html {
+    width: 100%;
+    height: 100%;
+}
+
 body {
-    width: 300px;
     margin: 0px;
+    width: 100%;
+    min-width: 300px;
+    height: 100%;
+    min-height: 100px;
 }
 
 #big-content {
@@ -22,16 +30,25 @@ body {
 }
 
 #content {
-    padding: 5px;
+    padding: 8px;
     width: 100%;
     height: 100%;
     background-color: white;
+}
+
+p {
+    margin-top: 5px;
+    margin-bottom: 0px;
 }
 
 #result {
     margin: 0px;
     overflow-y: auto;
 }
-#password-part{
+#password-part {
     display: none;
+}
+
+#fill-label {
+    text-align: center;
 }

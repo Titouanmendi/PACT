@@ -8,9 +8,13 @@ export const ping = async () => {
     let ans;
     await fetch("http://localhost:3000/api/isOpen", {
         method: "post",
-    }).then(async (data) => {
-        ans = await data.json();
-    });
+    })
+        .then(async (data) => {
+            ans = await data.json();
+        })
+        .catch(() => {
+            ans = null;
+        });
     return ans;
 };
 
@@ -23,9 +27,13 @@ export const sendForm = async (data) => {
             "Content-type": "application/json",
         },
         body: JSON.stringify(data),
-    }).then(async (data) => {
-        ans = await data.json();
-    });
+    })
+        .then(async (data) => {
+            ans = await data.json();
+        })
+        .catch(() => {
+            ans = null;
+        });
     return ans;
 };
 
@@ -42,7 +50,7 @@ const login = async (data) => {
             ans = await data.json();
         })
         .catch(async (data) => {
-            ans = await data.json();
+            ans = {};
         });
     return ans;
 };

@@ -2,15 +2,24 @@
 
 <head>
     <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
 </head>
 
 <body>
     <div id="big-content">
         <div id="content">
             <div id="default-part">
-                <label id="remplir-txt">Fill the form?</label>
+                <label id="fill-label">Fill the form?</label>
                 <button id="changeColor">Click me</button>
-                <pre id="result"></pre>
+                <p id="result-text"></p>
+                <details id="result-details">
+                    <summary>Plus de détails</summary>
+                    <pre id="result"></pre>
+                </details>
+                <div id="tab-res"></div>
+            </div>
+            <div id="message-part">
+                <p></p>
             </div>
             <div id="password-part">
                 <label id="password-txt">Please set the password</label>
