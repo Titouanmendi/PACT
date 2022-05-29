@@ -5,7 +5,7 @@
 
 const path = require("path");
 const process = require("process");
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 
 process.on("uncaughtException", (err, origin) => {
     console.error("Uncaught Exception origin ->", origin);
@@ -63,6 +63,19 @@ function initialize() {
 
     app.on("ready", () => {
         createWindow();
+        ipcMain.on("ondragstart", (event, filePath = event) => {
+            const ico = path.join(
+                __dirname,
+                "assets",
+                "app-icon",
+                "png",
+                "16.png"
+            );
+            mainWindow.webContents.startDrag({
+                file: filePath,
+                icon: ico,
+            });
+        });
     });
 
     app.on("window-all-closed", () => {
