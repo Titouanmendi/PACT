@@ -14,6 +14,7 @@ const CODES = require("./error-codes");
 const DB = require("./db");
 const dir = join(__dirname, "..", "public");
 const serve = require("serve-static")(dir);
+const { analyse } = require("./fonctions");
 
 let PORT = 3000;
 if (process.env.PORT) {
@@ -104,16 +105,22 @@ server
     .use("/", serve);
 
 server.post("/api/electron/:methodName", async (req, res, next) => {
-    try {
-        if (
-            req.params &&
-            req.params.methodName &&
-            methods[req.params.methodName]
-        ) {
-            await methods[req.params.methodName]();
+    if (req.params && req.params.methodName && methods[req.params.methodName]) {
+        try {
+            await methods[req.params.methodName](req, res);
+        } catch (e) {
+            return send(res, 200, {
+                data: null,
+                infos: {
+                    code: "error API",
+                },
+            });
         }
-    } catch (e) {}
-    return;
+    }
+    return send(res, 200, {
+        data: null,
+        infos: null,
+    });
 });
 
 server.post("/api/isOpen", (req, res) => {
@@ -155,9 +162,11 @@ server.post("/api/close", async (req, res) => {
 });
 
 server.post("/api/sendForm", (req, res) => {
-    // analyse les données envoyé
-    // renvoie les données stocké (selon les champs)
-    res.end("data here");
+    const result = analyse(db, req.body);
+    send(res, 200, {
+        data: result,
+        infos: null,
+    });
 });
 
 server.post("/api/getData", (req, res) => {
@@ -194,7 +203,12 @@ server.post("/api/setData", async (req, res) => {
         });
     }
     if (req.body && req.body.name) {
-        await DB.set(db, req.body.name, req.body.value);
+        await DB.set(
+            db,
+            req.body.name,
+            req.body.value,
+            req.body.keywords || []
+        );
         return send(res, 200, {
             data: true,
             infos: null,
@@ -219,6 +233,74 @@ server.post("/api/changeListen", (req, res) => {
     return send(res, 200, {
         data: true,
         infos: null,
+    });
+});
+
+server.post("/api/getFile", (req, res) => {
+    if (db === null) {
+        return send(res, 400, {
+            data: null,
+            infos: {
+                code: CODES.DB_NOT_OPEN,
+            },
+        });
+    }
+    if (req && req.body && req.body.path) {
+        let fieldName = req.body.path;
+        const { data, comment } = DB.getFile(db, fieldName);
+        if (data === null) {
+            return send(res, 400, {
+                data: null,
+                infos: {
+                    code: CODES.FILE_NOT_FOUND,
+                },
+            });
+        }
+        var fileContents = Buffer.from(data, "base64");
+        // var readStream = new stream.PassThrough();
+        // readStream.end(fileContents);
+        //readStream.pipe(response);
+        let fileName = comment.split("filename=")[1] || fieldName;
+        return send(res, 200, fileContents, {
+            "Content-disposition": `attachment;fieldname=${fieldName};filename=${fileName}`,
+        });
+    }
+    return send(res, 400, {
+        data: false,
+        infos: null,
+    });
+});
+
+server.post("/api/isFile", (req, res) => {
+    if (db === null) {
+        return send(res, 400, {
+            data: null,
+            infos: {
+                code: CODES.DB_NOT_OPEN,
+            },
+        });
+    }
+    if (req && req.body && req.body.path) {
+        let fieldName = req.body.path;
+        const { data } = DB.getFile(db, fieldName, true);
+        if (data === null) {
+            return send(res, 400, {
+                data: null,
+                infos: {
+                    code: CODES.FILE_NOT_FOUND,
+                },
+            });
+        }
+        return send(res, 400, {
+            data: data,
+            infos: null,
+        });
+    }
+    return send(res, 400, {
+        data: null,
+        infos: {
+            code: CODES.NO_FILENAME,
+        },
     });
 });
 
@@ -247,6 +329,14 @@ server.post("/api/setFile", (req, res) => {
                     "";
             }
         }
+    }
+    if (!fileName || !fieldName) {
+        return send(res, 400, {
+            data: null,
+            infos: {
+                code: CODES.NO_FILENAME,
+            },
+        });
     }
     if (file) {
         db.addFile(fieldName, file, `file;filename=${fileName}`);

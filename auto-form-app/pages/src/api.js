@@ -15,15 +15,19 @@ const getPassword = () => {
 };
 
 export const saveData = async (list) => {
-    debugger;
     for (const oneElement of list) {
         if (oneElement.type === "file") {
-            await setFile(oneElement.value, oneElement.name);
+            await setFile(
+                oneElement.value,
+                oneElement.name,
+                oneElement.fileName || oneElement.name
+            );
         } else {
             await setData(
                 JSON.stringify({
                     name: oneElement.name,
                     value: oneElement.value,
+                    keywords: oneElement.keywords,
                 })
             );
         }
@@ -109,4 +113,39 @@ export const setFile = async (body, nameOfField = "", nameOfFile = "") => {
         body: body,
     });
     return await data.json();
+};
+
+export const isFile = async (fieldName) => {
+    const data = await fetch(`${URL_SERVER}/api/isFile`, {
+        headers: {
+            "Content-Disposition": `attachment;fieldname=${nameOfField};filename=${nameOfFile}`,
+            Authorization: `Bearer ${access_token}`,
+        },
+        method: "POST",
+        body: body,
+    });
+    return await data.json();
+};
+
+export const getFile = async (fieldName) => {
+    const resp = await fetch("http://localhost:3000/api/getFile", {
+        headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+        },
+        method: "POST",
+        body: JSON.stringify({
+            path: fieldName,
+        }),
+    });
+    const name =
+        resp.headers.get("Content-disposition").split("filename=")[1] || "temp";
+    const b = await resp.blob();
+    var url = window.URL.createObjectURL(b);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
 };

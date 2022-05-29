@@ -2,7 +2,6 @@ const fs = require("fs");
 const AdmZip = require("adm-zip");
 const { cipherFile, decipherFile } = require("./lib");
 const { Store } = require("./store");
-const { resolve } = require("path");
 
 const open = async () => {
     let currentConfig = new Store();
@@ -55,6 +54,33 @@ const save = async (db) => {
 //     });
 // };
 
+const getAll = (db) => {
+    if (db === null || typeof db === "undefined") {
+        return "DB_IS_NULL";
+    }
+    let results = [];
+    const entries = db.getEntries();
+    entries.forEach(function (zipEntry) {
+        if (!zipEntry.comment.startsWith("file")) {
+            let data = zipEntry.getData().toString();
+            try {
+                data = JSON.parse(data);
+            } catch (e) {
+                data = [];
+            }
+            for (const oneData of data) {
+                results.push({
+                    entryName: oneData.name,
+                    name: oneData.name,
+                    value: oneData.value,
+                    keywords: oneData.keywords || [],
+                });
+            }
+        }
+    });
+    return results;
+};
+
 const get = (db, name) => {
     if (db === null) {
         return "DB_IS_NULL";
@@ -64,7 +90,6 @@ const get = (db, name) => {
     entries.forEach(function (zipEntry) {
         if (zipEntry.entryName.startsWith(name)) {
             if (zipEntry.entryName == name) {
-                // need to JSON.parse
                 let data = zipEntry.getData().toString();
                 try {
                     data = JSON.parse(data);
@@ -76,6 +101,7 @@ const get = (db, name) => {
                         entryName: oneData.name,
                         name: oneData.name,
                         value: oneData.value,
+                        keywords: oneData.keywords || [],
                     });
                 }
             } else {
@@ -86,8 +112,11 @@ const get = (db, name) => {
     return results;
 };
 
-const set = async (db, key, value) => {
-    const entryName = key.split(";")[0];
+const set = async (db, key, value, keywords = []) => {
+    if (db === null) {
+        return "DB_IS_NULL";
+    }
+    const entryName = key.split("#")[0];
     const correctEntry = db.getEntries().find(function (zipEntry) {
         if (zipEntry.entryName == entryName) {
             return true;
@@ -110,11 +139,13 @@ const set = async (db, key, value) => {
         arrayData[index] = {
             name: key,
             value: value,
+            keywords: keywords,
         };
     } else {
         arrayData.push({
             name: key,
             value: value,
+            keywords: keywords,
         });
     }
     const str = JSON.stringify(arrayData);
@@ -126,9 +157,38 @@ const set = async (db, key, value) => {
     await save(db);
 };
 
+const getFile = (db, name, check = false) => {
+    if (db === null) {
+        return "DB_IS_NULL";
+    }
+    let file = null;
+    let comment = "";
+    const entries = db.getEntries();
+    entries.forEach(function (zipEntry) {
+        if (zipEntry.entryName.startsWith(name)) {
+            comment = zipEntry.comment;
+            if (check) {
+                file = comment.split("filename=")[1] || name;
+            } else {
+                try {
+                    file = zipEntry.getData();
+                } catch {
+                    file = null;
+                }
+            }
+        }
+    });
+    return {
+        data: file,
+        comment: comment,
+    };
+};
+
 module.exports = {
     open,
     save,
     get,
     set,
+    getAll,
+    getFile,
 };
