@@ -3,11 +3,7 @@ let access_token = "";
 import { URL_SERVER } from "./url";
 
 const getPassword = () => {
-    if (
-        window &&
-        window.localStorage &&
-        window.localStorage.getItem("password")
-    ) {
+    if (window && window.localStorage && window.localStorage.getItem("password")) {
         return window.localStorage.getItem("password");
     } else {
         return null;
@@ -17,11 +13,7 @@ const getPassword = () => {
 export const saveData = async (list) => {
     for (const oneElement of list) {
         if (oneElement.type === "file") {
-            await setFile(
-                oneElement.value,
-                oneElement.name,
-                oneElement.fileName || oneElement.name
-            );
+            await setFile(oneElement.value, oneElement.name, oneElement.fileName || oneElement.name);
         } else {
             await setData(
                 JSON.stringify({
@@ -138,8 +130,7 @@ export const getFile = async (fieldName) => {
             path: fieldName,
         }),
     });
-    const name =
-        resp.headers.get("Content-disposition").split("filename=")[1] || "temp";
+    const name = resp.headers.get("Content-disposition").split("filename=")[1] || "temp";
     const b = await resp.blob();
     var url = window.URL.createObjectURL(b);
     var a = document.createElement("a");
@@ -148,4 +139,13 @@ export const getFile = async (fieldName) => {
     document.body.appendChild(a);
     a.click();
     a.remove();
+};
+
+export const startDrag = async () => {
+    await fetch(`${URL_SERVER}/api/electron/startDrag`, {
+        headers: {
+            Authorization: `Bearer ${access_token}`,
+        },
+        method: "POST",
+    });
 };
