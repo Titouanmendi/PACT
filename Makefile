@@ -29,4 +29,7 @@ app:
 dev:
 	cd auto-form-app; npm run pages-dev
 
+remove:
+	#rm ~/.local/share/bdd.zip.enc
+
 .PHONY: api cipher app dev
