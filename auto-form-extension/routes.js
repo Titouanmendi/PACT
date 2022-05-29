@@ -14,6 +14,21 @@ export const ping = async () => {
     return ans;
 };
 
+export const sendForm = async (data) => {
+    let ans;
+    await fetch("http://localhost:3000/api/sendForm", {
+        method: "post",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+    }).then(async (data) => {
+        ans = await data.json();
+    });
+    return ans;
+};
+
 const login = async (data) => {
     let ans;
     await fetch("http://localhost:3000/login", {

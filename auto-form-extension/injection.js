@@ -1,4 +1,4 @@
-const modifyDOM = () => {
+export const modifyDOM = () => {
     const forms = document.querySelectorAll("form");
     const interrestings = [
         "for",
@@ -11,7 +11,6 @@ const modifyDOM = () => {
         "id",
     ];
     const destroyItem = (item) => {
-        debugger;
         let res = {};
         if (item.children) {
             res.children = [];
@@ -33,4 +32,20 @@ const modifyDOM = () => {
     return results;
 };
 
-export { modifyDOM };
+export const fillDOM = (results) => {
+    const forms = document.querySelectorAll("form");
+    const destroyAndFillItem = (data, formsElements) => {
+        if (formsElements.children) {
+            [...formsElements.children].forEach((children, index) => {
+                destroyAndFillItem(data.children[index], children);
+            });
+        }
+        debugger;
+        if (formsElements.localName === "input" && data.value) {
+            formsElements.value = data.value;
+        }
+    };
+    [...forms].forEach((oneForm, index) => {
+        destroyAndFillItem(results[index] || null, oneForm);
+    });
+};

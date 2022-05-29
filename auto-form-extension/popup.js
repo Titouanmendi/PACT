@@ -1,5 +1,5 @@
-import { ping, log, setToken } from "./routes.js";
-import { modifyDOM } from "./injection.js";
+import { ping, log, setToken, sendForm } from "./routes.js";
+import { modifyDOM, fillDOM } from "./injection.js";
 
 const button = document.getElementById("changeColor");
 const bigContent = document.getElementById("big-content");
@@ -14,13 +14,20 @@ button.addEventListener("click", async function (event) {
             target: { tabId: tab.id, allFrames: true },
             function: modifyDOM,
         },
-        (results) => {
+        async (results) => {
             let res = {};
             if (typeof results !== "undefined" && results && results[0]) {
                 res = results[0].result;
             }
             result.innerHTML = JSON.stringify(res, null, 4);
-            debugger;
+            const resp = await sendForm(res);
+            if (resp && resp.data) {
+                chrome.scripting.executeScript({
+                    target: { tabId: tab.id },
+                    function: fillDOM,
+                    args: [resp.data],
+                });
+            }
         }
     );
 });
