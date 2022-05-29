@@ -4,21 +4,8 @@
     import { translate, secondPartTrans } from "../../useful";
     import Pages from "../sections/index";
     const othersMenus = [];
-
     const menus = [...defaultMenus, ...othersMenus];
-
     let value = "";
-    const test = () => {
-        fetch("http://localhost:3000/api/method/openFileFolder", {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify({ toto: "lol" }),
-        }).then((e) => {
-            value = "END";
-        });
-    };
 </script>
 
 <nav class="nav js-nav is-shown">
@@ -53,10 +40,7 @@
                                 <p
                                     type="button"
                                     on:click={() => {
-                                        changeNav(
-                                            oneSubLink.component,
-                                            secondPartTrans(oneSubLink.title)
-                                        );
+                                        changeNav(oneSubLink.component, secondPartTrans(oneSubLink.title));
                                     }}
                                     class="nav-button subMenus"
                                 >
@@ -68,10 +52,7 @@
                         <div
                             class="menu"
                             on:click={() => {
-                                changeNav(
-                                    oneLinks.component,
-                                    secondPartTrans(oneLinks.title)
-                                );
+                                changeNav(oneLinks.component, secondPartTrans(oneLinks.title));
                             }}
                         >
                             <h5 type="button" class="bigtitle nav-button">
@@ -92,13 +73,16 @@
                 changeNav(Pages.About);
             }}>About</button
         >
-        <button
-            type="button"
-            on:click={() => {
-                test();
-            }}
-            class="nav-footer-button">val : {value}</button
-        >
+        <p>Groupe 5.2</p>
+        <br />
+        <p>WEBERT Nans</p>
+        <p>BOHORQUEZ CARO Maria</p>
+        <p>MENDIHARAT Titouan</p>
+        <p>DARRE Victor</p>
+        <p>ROUX Nelson</p>
+        <p>KHAIR Mohamed</p>
+        <br />
+        <p>Made with love &lt;3</p>
     </footer>
 </nav>
 

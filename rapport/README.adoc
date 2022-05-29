@@ -99,12 +99,20 @@ Nous nous sommes divisés en binôme ou trinôme, chacun d'entre nous ayant 2 ou
 include::pan2/module_design/objectifs.adoc[Module Design]
 
 <<<
- 
+
 include::pan2/module_application/module_applications.adoc[Module Application]
 
 <<<
 
 include::pan2/module_tests/module_tests.adoc[Module Tests & Intégration]
+
+== PAN3
+
+
+<<<
+
+include::pan3/readme.adoc[Oral]
+
 
 <<<
 

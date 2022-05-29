@@ -58,12 +58,9 @@ function authFunction(req, res, next) {
 const login = async (req, res, next) => {
     let password = req.body.password;
     if (password) {
-        const passwordHash = await getFromStoreCallback(
-            "PASSWORD",
-            async () => {
-                return await bcrypt.hash("PASSWORD", 10);
-            }
-        );
+        const passwordHash = await getFromStoreCallback("PASSWORD", async () => {
+            return await bcrypt.hash("PASSWORD", 10);
+        });
         const match = await bcrypt.compare(password, passwordHash);
         if (match) {
             const token = jwt.sign(
@@ -203,12 +200,7 @@ server.post("/api/setData", async (req, res) => {
         });
     }
     if (req.body && req.body.name) {
-        await DB.set(
-            db,
-            req.body.name,
-            req.body.value,
-            req.body.keywords || []
-        );
+        await DB.set(db, req.body.name, req.body.value, req.body.keywords || []);
         return send(res, 200, {
             data: true,
             infos: null,
@@ -271,6 +263,8 @@ server.post("/api/getFile", (req, res) => {
     });
 });
 
+server.post("/api/resetKeywords", (req, res) => {});
+
 server.post("/api/isFile", (req, res) => {
     if (db === null) {
         return send(res, 400, {
@@ -320,13 +314,8 @@ server.post("/api/setFile", (req, res) => {
         if (req.files.uploaded && req.files.uploaded.data) {
             file = req.files.uploaded.data;
             if (req && req.headers && req.headers["content-disposition"]) {
-                fieldName =
-                    req.headers["content-disposition"]
-                        .split("fieldname=")[1]
-                        .split(";")[0] || "";
-                fileName =
-                    req.headers["content-disposition"].split("filename=")[1] ||
-                    "";
+                fieldName = req.headers["content-disposition"].split("fieldname=")[1].split(";")[0] || "";
+                fileName = req.headers["content-disposition"].split("filename=")[1] || "";
             }
         }
     }

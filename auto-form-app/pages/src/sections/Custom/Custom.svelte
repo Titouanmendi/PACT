@@ -12,21 +12,15 @@
             if (res && res.data && res.data.length > 0) {
                 for (const oneElement of res.data) {
                     // put in data;
-                    const correctName =
-                        oneElement.entryName.split("#")[1] || "";
+                    const correctName = oneElement.entryName.split("#")[1] || "";
                     const index = data.findIndex((el) => {
                         return el.translate == correctName;
                     });
                     if (index > -1) {
                         data[index].keywords = oneElement.keywords;
-                        if (
-                            oneElement.comment &&
-                            oneElement.comment.startsWith("file")
-                        ) {
+                        if (oneElement.comment && oneElement.comment.startsWith("file")) {
                             data[index].fieldName = oneElement.entryName;
-                            data[index].fileName =
-                                oneElement.comment.split("filename=")[1] ||
-                                "Error filename";
+                            data[index].fileName = oneElement.comment.split("filename=")[1] || "Error filename";
                         } else {
                             data[index].value = oneElement.value || "";
                         }
@@ -73,9 +67,7 @@
                             formData.append("uploaded", file);
                             addToList({
                                 name: `${name}#${oneInput.translate}`,
-                                fileName:
-                                    file.name ||
-                                    `${name}#${oneInput.translate}`,
+                                fileName: file.name || `${name}#${oneInput.translate}`,
                                 type: oneInput.type,
                                 value: formData,
                                 keywords: oneInput.keywords || [],
@@ -83,10 +75,7 @@
                         }}
                     />
                     {#if oneInput.fieldName}
-                        <Downloader
-                            fileName={oneInput.fileName}
-                            fieldName={oneInput.fieldName}
-                        />
+                        <Downloader fileName={oneInput.fileName} fieldName={oneInput.fieldName} />
                     {/if}
                 {:else}
                     <input
@@ -108,17 +97,10 @@
                                     <span
                                         class="keyword_delete"
                                         on:click={() => {
-                                            const index =
-                                                oneInput.keywords.indexOf(
-                                                    keyword
-                                                );
+                                            const index = oneInput.keywords.indexOf(keyword);
                                             if (index > -1) {
-                                                oneInput.keywords.splice(
-                                                    index,
-                                                    1
-                                                );
-                                                oneInput.keywords =
-                                                    oneInput.keywords; // update
+                                                oneInput.keywords.splice(index, 1);
+                                                oneInput.keywords = oneInput.keywords; // update
                                             }
                                             add(oneInput);
                                         }}>x</span
@@ -139,15 +121,11 @@
                         <span
                             class="keyword_plus"
                             on:click={(e) => {
-                                const newValue =
-                                    e.target.previousElementSibling.value.toLowerCase();
+                                const newValue = e.target.previousElementSibling.value.toLowerCase();
                                 if (!oneInput.keywords) {
                                     oneInput.keywords = [];
                                 }
-                                if (
-                                    !oneInput.keywords.includes(newValue) &&
-                                    newValue !== ""
-                                ) {
+                                if (!oneInput.keywords.includes(newValue) && newValue !== "") {
                                     oneInput.keywords.push(newValue);
                                     oneInput.keywords = oneInput.keywords;
                                 }
@@ -220,7 +198,7 @@
         display: inline;
     }
     .keyword {
-        background-color: aquamarine;
+        background-color: #65aeff;
         border-radius: 5px;
         margin-right: 2px;
         padding: 2px;
@@ -236,7 +214,7 @@
         width: 21px;
         padding-left: 6px;
         display: inline-block;
-        background-color: darkgrey;
+        background-color: lavender;
     }
     input {
         font-family: inherit;
