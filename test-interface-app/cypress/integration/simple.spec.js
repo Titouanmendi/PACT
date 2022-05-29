@@ -27,6 +27,7 @@ describe("Interface tests", () => {
     it("Add file", () => {
         cy.get("input").type("PASSWORD");
         cy.get("button").click();
+        cy.wait(1000);
         cy.contains("Auto-Form");
 
         cy.contains("Logement").click();

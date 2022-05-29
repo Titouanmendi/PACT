@@ -10,6 +10,7 @@ clean:
 
 interface:
 	cd auto-form-app; npm install
+	cd auto-form-app; echo "export const URL_SERVER = 'http://localhost:4000';" > pages/src/url.js
 	cd auto-form-app; npm run build
 	cd auto-form-app; DEVMODE=true PORT=true npm run api &
 	cd test-interface-app; npm install
@@ -27,6 +28,7 @@ app:
 	cd auto-form-app; npm run start
 
 dev:
+	cd auto-form-app; echo "export const URL_SERVER = 'http://localhost:3000';" > pages/src/url.js
 	cd auto-form-app; npm run pages-dev
 
 remove:

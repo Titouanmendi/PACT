@@ -1,6 +1,6 @@
 let access_token = "";
 
-const URL_SERVER = "http://localhost:3000";
+import { URL_SERVER } from "./url";
 
 const getPassword = () => {
     if (
@@ -128,7 +128,7 @@ export const isFile = async (fieldName) => {
 };
 
 export const getFile = async (fieldName) => {
-    const resp = await fetch("http://localhost:3000/api/getFile", {
+    const resp = await fetch(`${URL_SERVER}/api/getFile`, {
         headers: {
             "Content-type": "application/json",
             Authorization: `Bearer ${access_token}`,
