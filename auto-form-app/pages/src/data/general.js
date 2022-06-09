@@ -7,12 +7,17 @@ export default [
         translate: "trans:firstName",
         type: "text",
     },
+
     {
         translate: "trans:birthday",
         type: "date",
     },
     {
         translate: "trans:gender",
+        type: "text",
+    },
+    {
+        translate: "trans:city_of_birth",
         type: "text",
     },
     {

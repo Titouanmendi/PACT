@@ -22,9 +22,8 @@ button.addEventListener("click", async function (event) {
             if (typeof results !== "undefined" && results && results[0]) {
                 res = results[0].result;
             }
-            document.getElementById("result-text").innerHTML = `${res.length} formulaire${
-                res.length > 1 ? "s" : ""
-            } détecté${res.length > 1 ? "s" : ""}`;
+            document.getElementById("result-text").innerHTML = `${res.length} formulaire${res.length > 1 ? "s" : ""
+                } détecté${res.length > 1 ? "s" : ""}`;
             result.innerHTML = JSON.stringify(res, null, 4);
             document.getElementById("result-details").style.display = "block";
             const resp = await sendForm(res);
@@ -90,6 +89,8 @@ const addPassword = () => {
     document.getElementById("set-password").onclick = async () => {
         const newPass = document.getElementById("password-input").value;
         await chrome.storage.local.set({ password: newPass });
+        defaultPart.style.display = "block";
+        passwordPart.style.display = "none";
         startLog();
     };
 };
@@ -106,7 +107,7 @@ const startLog = () => {
             bigContent.style.backgroundColor = "green";
         } else {
             ping()
-                .catch(() => {})
+                .catch(() => { })
                 .then((data) => {
                     if (!data) {
                         // no answer
@@ -120,7 +121,9 @@ const startLog = () => {
                     }
                 });
         }
-    });
+    }).catch((e) => {
+        addPassword();
+    })
 };
 startLog();
 
