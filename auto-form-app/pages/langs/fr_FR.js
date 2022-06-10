@@ -27,6 +27,8 @@ export const fr_FR = {
     "residency_card": "Carte de résident.e",
     "residency_card_UE": "Carte de ressortissant d'un État membre de l'Union européenne ou de l'Espace économique européen",
     "birth_certificate": "Acte de naissance",
+    "mail": "Mail",
+    "city_of_birth": "Ville de naissance",
 
     // Identité - Papiers - Citoyenneté : contact 
     "contact": "Contact",
